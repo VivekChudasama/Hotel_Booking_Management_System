@@ -1,10 +1,10 @@
-import { registerUserService, loginUserService } from '../services/authService.js';
+import authService from '../services/authService.js';
 import { Constants } from '../config/constants.js';
 import { ResponseMessages } from '../config/response_messages.js';
 
-export const register = async (req, res) => {
+const register = async (req, res, next) => {
     try {
-        const result = await registerUserService(req.body);
+        const result = await authService.registerUserService(req.body);
         
         // Remove password from response
         const userObj = result.user.toObject();
@@ -22,10 +22,10 @@ export const register = async (req, res) => {
     }
 };
 
-export const login = async (req, res) => {
+const login = async (req, res, next) => {
     try {
         const { email, password } = req.body;
-        const result = await loginUserService(email, password);
+        const result = await authService.loginUserService(email, password);
 
         // Remove password from response
         const userObj = result.user.toObject();
@@ -43,8 +43,8 @@ export const login = async (req, res) => {
     }
 };
 
-export const logout = (req, res) => {
-    res.status(Constants.RESPONSE_STATUS_CODE.SUCCESS_CODE).json({
-        message: ResponseMessages.auth.USER_LOGGED_OUT_SUCCESS
-    });
-};
+
+export default {
+    register,
+    login
+}

@@ -11,6 +11,11 @@ const app = express();
 
 app.use(cors());
 
+app.use((req, res, next) => {
+  console.log(`${req.method} request to ${req.url}`);
+  next();
+});
+
 // Middleware to parse request body 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -20,5 +25,5 @@ app.use('/users', userRoutes);
 app.use('/hotels', hotelRoutes);
 app.use('/Booking', bookingRoutes);
 app.use('/rooms', roomRoutes);
-
+ 
 export default app;

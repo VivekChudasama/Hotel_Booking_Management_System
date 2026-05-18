@@ -1,11 +1,13 @@
-import * as authRepository from '../repositories/authRepository.js';
+import authRepository from '../repositories/authRepository.js';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
+import dotenv from 'dotenv'
 
+dotenv.config();
 const JWT_SECRET = process.env.JWT_SECRET;
 const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN;
 
-export const registerUserService = async (userData) => {
+const registerUserService = async (userData) => {
     const existingUser = await authRepository.findUserByEmail(userData.email);
     if (existingUser) {
         throw new Error('USER_ALREADY_EXISTS');
@@ -28,14 +30,14 @@ export const registerUserService = async (userData) => {
     return { user: newUser, token };
 };
 
-export const loginUserService = async (email, password) => {
+const loginUserService = async (email, password) => {
     const user = await authRepository.findUserByEmail(email);
     if (!user) {
         throw new Error('INVALID_CREDENTIALS');
     }
 
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) {
+    const isValidPassword = await bcrypt.compare(password, user.password);
+    if (!isValidPassword) {
         throw new Error('INVALID_CREDENTIALS');
     }
 
@@ -47,3 +49,8 @@ export const loginUserService = async (email, password) => {
 
     return { user, token };
 };
+
+export default {
+    registerUserService,
+    loginUserService
+}
