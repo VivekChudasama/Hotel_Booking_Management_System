@@ -1,7 +1,7 @@
 import { Hotel } from '../entities/hotel.js';
 
 const getHotelList = async () => {
-    return await Hotel.find({});
+    return await Hotel.find();
 };
 
 const createHotel = async (hotelData) => {
@@ -11,6 +11,10 @@ const createHotel = async (hotelData) => {
 
 const getHotelById = async (id) => {
     return await Hotel.findById(id);
+};
+
+const getHotelByEmail = async (email) => {
+    return await Hotel.findOne({ email });
 };
 
 const updateHotelById = async (id) => {
@@ -25,6 +29,7 @@ export default {
     getHotelList,
     createHotel,
     getHotelById,
+    getHotelByEmail,
     updateHotelById,
     deleteHotelById
 }

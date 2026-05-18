@@ -25,6 +25,7 @@ export class ResponseMessages {
         CHILD_COUNT_MIN: 'Child count cannot be negative',
         CHECK_IN_DATE: 'Check-in date is required',
         CHECK_OUT_DATE: 'Check-out date is required',
+        VALID_BOOKING_DATE_FORMATE: 'Booking date must be a valid ISO8601 date',
         MIN_CHECK_OUT_DATE: 'Check-out date should be greater than the check-in date',
         BOOKING_CREATED_SUCCESSFULLY: "Booking successfully",
         BOOKING_NOT_FOUND: 'Booking not found',

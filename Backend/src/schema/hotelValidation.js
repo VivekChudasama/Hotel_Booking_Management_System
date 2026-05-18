@@ -1,11 +1,12 @@
 import { body } from 'express-validator';
 import { ResponseMessages } from '../config/response_messages.js';
+import { Constants } from '../config/constants.js';
 
 const validateCreateHotel = [
     body('name').trim().notEmpty().withMessage(ResponseMessages.auth.NAME_REQUIRED)
         .bail()
         .isLength({ min: 3, max: 70 }).withMessage()
-        .matches(/^[a-zA-Z\s.]+$/).withMessage(ResponseMessages.auth.VALID_NAME_FORMATE),
+        .matches(Constants.REGEX.USER_NAME_VALIDATION_REGEX).withMessage(ResponseMessages.auth.VALID_NAME_FORMATE),
 
     body('email').trim().notEmpty().withMessage(ResponseMessages.auth.EMAIL_REQUIRED)
         .bail()
@@ -24,12 +25,12 @@ const validateCreateHotel = [
     body('address').trim().notEmpty().withMessage(ResponseMessages.hotel.ADDRESS_REQUIRED)
         .bail()
         .isLength({ max: 256 }).withMessage(ResponseMessages.hotel.VALID_ADDRESS_LENGTH)
-        .matches(/^[a-zA-Z0-9 .-]+$/).withMessage(ResponseMessages.hotel.VALID_ADDRESS_FORMATE),
+        .matches(Constants.REGEX.ADDRESS_VALIDATION_REGEX).withMessage(ResponseMessages.hotel.VALID_ADDRESS_FORMATE),
 
     body('city').trim().notEmpty().withMessage(ResponseMessages.hotel.CITY_NAME_REQUIRED)
         .bail()
         .isLength({ max: 30 }).withMessage(ResponseMessages.hotel.VALID_CITY_NAME_LENGTH)
-        .matches(/^[a-zA-Z]+$/).withMessage(ResponseMessages.hotel.VALID_CITY_NAME_FORMATE)
+        .matches(Constants.REGEX.CITY_NAME_VALIDATION_REGEX).withMessage(ResponseMessages.hotel.VALID_CITY_NAME_FORMATE)
 ];
 
 

@@ -1,11 +1,12 @@
 import { body } from 'express-validator';
 import { ResponseMessages } from '../config/response_messages.js';
+import { Constants } from '../config/constants.js';
 
 const validateRegister = [
     body('name').trim().notEmpty().withMessage(ResponseMessages.auth.NAME_REQUIRED)
         .bail()
         .isLength({ min: 3, max: 70 }).withMessage()
-        .matches(/^[a-zA-Z\s.]+$/).withMessage(ResponseMessages.auth.VALID_NAME_FORMATE),
+        .matches(Constants.REGEX.USER_NAME_VALIDATION_REGEX).withMessage(ResponseMessages.auth.VALID_NAME_FORMATE),
 
     body('email').trim().notEmpty().withMessage(ResponseMessages.auth.EMAIL_REQUIRED)
         .bail()
@@ -19,7 +20,7 @@ const validateRegister = [
 
     body('password').notEmpty().withMessage(ResponseMessages.auth.PASSWORD_REQUIRED).isLength({ min: 6 })
         .bail()
-        .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/)
+        .matches(Constants.REGEX.PASSWORD_VALIDATION_REGEX)
         .withMessage(ResponseMessages.auth.VALID_PASSWORD_REQUIRED),
 
     body('role').notEmpty().withMessage(ResponseMessages.user.USER_ROLE_REQUIRED)
