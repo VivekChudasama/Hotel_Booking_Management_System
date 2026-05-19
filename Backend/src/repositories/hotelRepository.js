@@ -17,8 +17,12 @@ const getHotelByEmail = async (email) => {
     return await Hotel.findOne({ email });
 };
 
-const updateHotelById = async (id) => {
-    return await Hotel.findByIdAndUpdate(id);
+const getHotelByPhone = async (phone_number) => {
+    return await Hotel.findOne({ phone_number });
+};
+
+const updateHotelById = async (id, updateHotelData) => {
+    return await Hotel.findByIdAndUpdate(id, updateHotelData, { useFindAndModify: true });
 };
 
 const deleteHotelById = async (id) => {
@@ -30,6 +34,7 @@ export default {
     createHotel,
     getHotelById,
     getHotelByEmail,
+    getHotelByPhone,
     updateHotelById,
     deleteHotelById
 }

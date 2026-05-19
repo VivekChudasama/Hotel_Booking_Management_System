@@ -5,7 +5,7 @@ import { ResponseMessages } from '../config/response_messages.js';
 const register = async (req, res, next) => {
     try {
         const result = await authService.registerUserService(req.body);
-        
+
         // Remove password from response
         const userObj = result.user.toObject();
         delete userObj.password;
@@ -15,8 +15,11 @@ const register = async (req, res, next) => {
             data: { user: userObj, token: result.token }
         });
     } catch (error) {
-        if (error.message === 'USER_ALREADY_EXISTS') {
-            return res.status(Constants.RESPONSE_STATUS_CODE.FAIL_CODE).json({ message: ResponseMessages.auth.USER_ALREADY_EXISTS });
+        if (error.message === 'USER_EMAIL_ALREADY_EXISTS') {
+            return res.status(Constants.RESPONSE_STATUS_CODE.FAIL_CODE).json({ message: ResponseMessages.auth.USER_EMAIL_ALREADY_EXISTS });
+        }
+        if (error.message === 'USER_PHONE_NUMBER_EXISTS') {
+            return res.status(Constants.RESPONSE_STATUS_CODE.FAIL_CODE).json({ message: ResponseMessages.auth.USER_PHONE_NUMBER_EXISTS });
         }
         res.status(Constants.RESPONSE_STATUS_CODE.INTERNAL_SERVER_ERROR_CODE).json({ message: error.message });
     }

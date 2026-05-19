@@ -9,7 +9,17 @@ const getBookingDetailsService = async (id) => {
 }
 
 const cancelBookingService = async (id) => {
-    return await bookingRepository.deleteBooking(id);
+    const booking = await bookingRepository.getBookingById(id);
+    if (!booking) {
+        return null;
+    }
+
+    if (booking.booking_status === 'pending' || booking.booking_status === 'confirmed') {
+        booking.booking_status = 'cancelled';
+        await booking.save();
+    }
+    
+    return booking;
 }
 
 const getBookingHistoryService = async (userId) => {

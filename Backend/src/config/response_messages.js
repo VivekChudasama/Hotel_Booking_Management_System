@@ -2,9 +2,9 @@ export class ResponseMessages {
     static hotel = {
         HOTEL_NAME_REQUIRED: 'Hotel name is required',
         EMAIL_REQUIRED: 'Email is required',
-        USER_EMAIL_ALREADY_EXISTS: 'Hotel with this email already exists',
-        USER_PHONE_NUMBER_REQUIRED: 'Phone number is required ',
-        USER_PHONE_NUMBER_EXISTS: 'Hotel with this phone number already exists',
+        EMAIL_ALREADY_EXISTS: 'Hotel with this email already exists',
+        PHONE_NUMBER_REQUIRED: 'Phone number is required ',
+        PHONE_NUMBER_EXISTS: 'Hotel with this phone number already exists',
         DESCRIPTION_REQUIRED: 'Description is required',
         VALID_DESCRIPTION_LENGTH: 'Description must be less than 1024 characters',
         ADDRESS_REQUIRED: 'Address is required',
@@ -14,6 +14,7 @@ export class ResponseMessages {
         VALID_CITY_NAME_LENGTH: 'City Name must be less than 30 characters',
         VALID_CITY_NAME_FORMATE: 'City Name can only contain letters',
         HOTEL_NOT_FOUND: 'Hotel not found',
+        HOTEL_ID_REQUIRED: 'Hotel ID is required',
         HOTEL_DELETED_SUCCESSFULLY: 'Hotel deleted successfully'
     }
     static booking = {
@@ -30,16 +31,21 @@ export class ResponseMessages {
         BOOKING_CREATED_SUCCESSFULLY: "Booking successfully",
         BOOKING_NOT_FOUND: 'Booking not found',
         BOOKING_CANCELLED_SUCCESSFULLY: 'Booking cancelled successfully'
-    }
+    } 
     static auth = {
         USER_REGISTERED_SUCCESS: 'User registered successfully',
         USER_LOGGED_IN_SUCCESS: 'User logged in successfully',
         USER_LOGGED_OUT_SUCCESS: 'User logged out successfully',
         USER_ALREADY_EXISTS: 'User is already exist',
         PASSWORD_REQUIRED: 'Password is Required',
-        VALID_PASSWORD_REQUIRED: 'Password should be combination of one uppercase, one lower case, one special char, one digit and min 6 char long',
+        VALID_PASSWORD_REQUIRED: 'Password must be at least 8 characters long and include at least 3 of the following 4 conditions: one uppercase letter, one lowercase letter, one digit, and one special character',
         INCREDENTIALS: 'Email or password is incorrect',
+        INVALID_CREDENTIALS: 'Email or password is incorrect',
+        TOKEN_REQUIRED: 'Token is required',
+        INVALID_TOKEN: 'Invalid or expired token',
+        ACCESS_DENIED: 'Access denied. Admin role required',
         VALID_NAME_FORMATE: 'Name can only contain letters, spaces, and dots',
+        VALID_NAME_LENGTH: 'Name must be between 3 and 70 characters',
         INVALID_EMAIL_FORMATE: 'Invalid email format',
         MAX_EMAIL_LENGTH: 'Email must be less than 254 characters',
         USER_EMAIL_ALREADY_EXISTS: 'User with this email already exists',
@@ -73,7 +79,8 @@ export class ResponseMessages {
         ADDRESS_REQUIRED: 'Address is required',
         PROFILE_IMAGES_REQUIRED: 'User profile images is required',
         USER_ROLE_REQUIRED: 'User role is required',
-        USER_IN_ROLE: 'User role must be either customer or admin'
+        USER_IN_ROLE: 'User role must be either customer or admin',
+        INVALID_IMAGE_URL: 'Invalid image URL'
     }
     static room_inventory = {
         ROOM_ID_REQUIRED: 'Room ID is required',

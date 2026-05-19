@@ -1,18 +1,24 @@
 import mongoose from 'mongoose';
+import { Tables } from '../config/tables.js';
 
 const bookingSchema = new mongoose.Schema({
     user_id: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
     room_id: { type: mongoose.Schema.Types.ObjectId, ref: 'Room', required: true },
     guests: {
-        adultCount: { type: Number, required: true },
-        childCount: { type: Number, default: 0 }
+        adult_count: { type: Number, required: true },
+        child_count: { type: Number, default: 0 }
     },
     from: { type: Date, required: true },
-    to: { type: Date, required: true }, 
-    checkInDate: { type: Date, default: null},
-    checkOutDate: { type: Date, default: null},
-    totalAmount: { type: Number, required: true },
-    booking_status: { type: String, enum: ['pending', 'confirmed', 'cancelled', 'checked in', 'checked out'], default: 'pending' }
+    to: { type: Date, required: true },
+    check_in_date: { type: Date, default: null },
+    check_out_date: { type: Date, default: null },
+    total_amount: { type: Number, required: true },
+    booking_status: {
+        type: String,
+        enum: ['pending', 'confirmed', 'cancelled', 'checked in', 'checked out'],
+        default: 'pending',
+        required: true
+    }
 }, { timestamps: true });
 
-export const Booking = mongoose.model('Bookings', bookingSchema);
+export const Booking = mongoose.models[Tables.BOOKING] || mongoose.model(Tables.BOOKING, bookingSchema);

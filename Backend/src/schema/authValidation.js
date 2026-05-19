@@ -5,7 +5,7 @@ import { Constants } from '../config/constants.js';
 const validateRegister = [
     body('name').trim().notEmpty().withMessage(ResponseMessages.auth.NAME_REQUIRED)
         .bail()
-        .isLength({ min: 3, max: 70 }).withMessage()
+        .isLength({ min: 3, max: 70 }).withMessage(ResponseMessages.auth.VALID_NAME_LENGTH)
         .matches(Constants.REGEX.USER_NAME_VALIDATION_REGEX).withMessage(ResponseMessages.auth.VALID_NAME_FORMATE),
 
     body('email').trim().notEmpty().withMessage(ResponseMessages.auth.EMAIL_REQUIRED)
@@ -14,11 +14,14 @@ const validateRegister = [
         .isLength({ max: 254 }).withMessage(ResponseMessages.auth.MAX_EMAIL_LENGTH)
         .normalizeEmail(),
 
-    body('phone_number').trim().notEmpty().withMessage(ResponseMessages.auth.USER_PHONE_NUMBER_REQUIRED)
+    body('phone_number').isMobilePhone().trim().notEmpty().withMessage(ResponseMessages.auth.USER_PHONE_NUMBER_REQUIRED)
         .bail()
         .isLength({ min: 10, max: 10 }).withMessage(ResponseMessages.auth.USER_PHONE_NUMBER_LENGTH),
 
-    body('password').notEmpty().withMessage(ResponseMessages.auth.PASSWORD_REQUIRED).isLength({ min: 6 })
+    body('profile_image').optional().isURL().withMessage(ResponseMessages.user.INVALID_IMAGE_URL),
+
+    body('password').notEmpty().withMessage(ResponseMessages.auth.PASSWORD_REQUIRED)
+        .isLength({ min: 8 }).withMessage(ResponseMessages.auth.VALID_PASSWORD_REQUIRED)
         .bail()
         .matches(Constants.REGEX.PASSWORD_VALIDATION_REGEX)
         .withMessage(ResponseMessages.auth.VALID_PASSWORD_REQUIRED),

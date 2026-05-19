@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import { Tables } from '../config/tables.js';
 
 const hotelSchema = new mongoose.Schema({
     name: { type: String, required: true }, 
@@ -20,4 +21,4 @@ hotelSchema.post('save', function(error, doc, next) {
   }
 });
 
-export const Hotel = mongoose.model('Hotels', hotelSchema);
+export const Hotel = mongoose.model(Tables.HOTEL, hotelSchema);
