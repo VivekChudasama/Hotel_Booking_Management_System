@@ -17,9 +17,20 @@ const getBookingsByUserId = async (userId) => {
     return await Booking.find({ user_id: userId });
 };
 
+const findOverlappingBooking = async (roomId, fromDate, toDate) => {
+    return await Booking.findOne({
+        room_id: roomId,
+        booking_status: { $in: ['pending', 'confirmed', 'checked in'] },
+        $or: [
+            { from: { $lt: toDate }, to: { $gt: fromDate } }
+        ]
+    });
+};
+
 export default {
     createBooking,
     getBookingById,
     deleteBooking,
-    getBookingsByUserId
+    getBookingsByUserId,
+    findOverlappingBooking
 }

@@ -15,10 +15,10 @@ const register = async (req, res, next) => {
             data: { user: userObj, token: result.token }
         });
     } catch (error) {
-        if (error.message === 'USER_EMAIL_ALREADY_EXISTS') {
+        if (error.message === ResponseMessages.auth.USER_EMAIL_ALREADY_EXISTS) {
             return res.status(Constants.RESPONSE_STATUS_CODE.FAIL_CODE).json({ message: ResponseMessages.auth.USER_EMAIL_ALREADY_EXISTS });
         }
-        if (error.message === 'USER_PHONE_NUMBER_EXISTS') {
+        if (error.message === ResponseMessages.auth.USER_PHONE_NUMBER_EXISTS) {
             return res.status(Constants.RESPONSE_STATUS_CODE.FAIL_CODE).json({ message: ResponseMessages.auth.USER_PHONE_NUMBER_EXISTS });
         }
         res.status(Constants.RESPONSE_STATUS_CODE.INTERNAL_SERVER_ERROR_CODE).json({ message: error.message });
@@ -39,7 +39,7 @@ const login = async (req, res, next) => {
             data: { user: userObj, token: result.token }
         });
     } catch (error) {
-        if (error.message === 'INVALID_CREDENTIALS') {
+        if (error.message === ResponseMessages.auth.INVALID_CREDENTIALS) {
             return res.status(Constants.RESPONSE_STATUS_CODE.FAIL_CODE).json({ message: ResponseMessages.auth.INVALID_CREDENTIALS });
         }
         res.status(Constants.RESPONSE_STATUS_CODE.INTERNAL_SERVER_ERROR_CODE).json({ message: error.message });

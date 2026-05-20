@@ -1,12 +1,13 @@
 import { body, param } from 'express-validator';
 import { ResponseMessages } from '../config/response_messages.js';
 import { Constants } from '../config/constants.js';
+import { validateImageURL } from '../util/imageValidator.js';
 
 const validateCreateHotel = [
     body('name').trim().notEmpty().withMessage(ResponseMessages.auth.NAME_REQUIRED)
         .bail()
-        .isLength({ min: 3, max: 70 }).withMessage()
-        .matches(Constants.REGEX.USER_NAME_VALIDATION_REGEX).withMessage(ResponseMessages.auth.VALID_NAME_FORMATE),
+        .isLength({ min: 3, max: 70 }).withMessage(ResponseMessages.auth.VALID_NAME_LENGTH)
+        .matches(Constants.REGEX.HOTEL_NAME_VALIDATION_REGEX).withMessage(ResponseMessages.hotel.VALID_HOTEL_NAME_FORMATE),
 
     body('email').trim().notEmpty().withMessage(ResponseMessages.hotel.EMAIL_REQUIRED)
         .bail()
@@ -18,7 +19,10 @@ const validateCreateHotel = [
         .bail()
         .isLength({ min: 10, max: 10 }).withMessage(ResponseMessages.auth.USER_PHONE_NUMBER_LENGTH),
 
-    body('images').optional().isURL().withMessage(ResponseMessages.user.INVALID_IMAGE_URL),
+    body('images').optional().isArray().withMessage('Images must be an array of URLs'),
+    body('images.*').isURL().withMessage(ResponseMessages.user.INVALID_IMAGE_URL)
+        .bail()
+        .custom(validateImageURL),
 
     body('description').trim().notEmpty().withMessage(ResponseMessages.hotel.DESCRIPTION_REQUIRED)
         .bail()
@@ -41,7 +45,7 @@ const validateUpdateHotel = [
     body('name').optional().trim().notEmpty().withMessage(ResponseMessages.auth.NAME_REQUIRED)
         .bail()
         .isLength({ min: 3, max: 70 }).withMessage(ResponseMessages.auth.VALID_NAME_LENGTH)
-        .matches(Constants.REGEX.USER_NAME_VALIDATION_REGEX).withMessage(ResponseMessages.auth.VALID_NAME_FORMATE),
+        .matches(Constants.REGEX.HOTEL_NAME_VALIDATION_REGEX).withMessage(ResponseMessages.hotel.VALID_HOTEL_NAME_FORMATE),
 
     body('email').optional().trim().notEmpty().withMessage(ResponseMessages.auth.EMAIL_REQUIRED)
         .bail()
@@ -53,7 +57,10 @@ const validateUpdateHotel = [
         .bail()
         .isLength({ min: 10, max: 10 }).withMessage(ResponseMessages.auth.USER_PHONE_NUMBER_LENGTH),
 
-    body('images').optional().isURL().withMessage(ResponseMessages.user.INVALID_IMAGE_URL),
+    body('images').optional().isArray().withMessage('Images must be an array of URLs'),
+    body('images.*').isURL().withMessage(ResponseMessages.user.INVALID_IMAGE_URL)
+        .bail()
+        .custom(validateImageURL),
 
     body('description').optional().trim().notEmpty().withMessage(ResponseMessages.hotel.DESCRIPTION_REQUIRED)
         .bail()

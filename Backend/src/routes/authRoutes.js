@@ -12,4 +12,4 @@ router.post('/register', authValidation.validateRegister, handleValidationErrors
 router.post('/login', authValidation.validateLogin, handleValidationErrors, authController.login);
 
 export default router;
-  
+

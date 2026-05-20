@@ -1,6 +1,7 @@
 export class ResponseMessages {
     static hotel = {
         HOTEL_NAME_REQUIRED: 'Hotel name is required',
+        VALID_HOTEL_NAME_FORMATE: 'Hotel name can only contain letters, numbers, spaces, dots, commas, apostrophes, and hyphens',
         EMAIL_REQUIRED: 'Email is required',
         EMAIL_ALREADY_EXISTS: 'Hotel with this email already exists',
         PHONE_NUMBER_REQUIRED: 'Phone number is required ',
@@ -30,7 +31,11 @@ export class ResponseMessages {
         MIN_CHECK_OUT_DATE: 'Check-out date should be greater than the check-in date',
         BOOKING_CREATED_SUCCESSFULLY: "Booking successfully",
         BOOKING_NOT_FOUND: 'Booking not found',
-        BOOKING_CANCELLED_SUCCESSFULLY: 'Booking cancelled successfully'
+        BOOKING_CANCELLED_SUCCESSFULLY: 'Booking cancelled successfully',
+        ROOM_ALREADY_BOOKED: 'Room is already booked for these dates',
+        TOTAL_AMOUNT_REQUIRED: 'Total amount is required',
+        TOTAL_AMOUNT_NUMERIC: 'Total amount must be a number',
+        INVALID_BOOKING_STATUS: 'Invalid booking status'
     } 
     static auth = {
         USER_REGISTERED_SUCCESS: 'User registered successfully',

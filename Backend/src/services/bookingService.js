@@ -1,6 +1,14 @@
-import  bookingRepository  from '../repositories/bookingRepository.js'
+import bookingRepository from '../repositories/bookingRepository.js';
+import { ResponseMessages } from '../config/response_messages.js';
 
 const createBookingService = async (bookingData) => {
+    const { room_id, from, to } = bookingData;
+    const overlappingBooking = await bookingRepository.findOverlappingBooking(room_id, from, to);
+    
+    if (overlappingBooking) {
+        throw new Error(ResponseMessages.booking.ROOM_ALREADY_BOOKED);
+    }
+
     return await bookingRepository.createBooking(bookingData);
 };
 
