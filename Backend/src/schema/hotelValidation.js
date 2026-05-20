@@ -26,6 +26,7 @@ const validateCreateHotel = [
 
     body('description').trim().notEmpty().withMessage(ResponseMessages.hotel.DESCRIPTION_REQUIRED)
         .bail()
+        .isString().withMessage(ResponseMessages.hotel.VALID_DESCRIPTION_FORMATE)
         .isLength({ max: 1024 }).withMessage(ResponseMessages.hotel.VALID_DESCRIPTION_LENGTH),
 
     body('address').trim().notEmpty().withMessage(ResponseMessages.hotel.ADDRESS_REQUIRED)

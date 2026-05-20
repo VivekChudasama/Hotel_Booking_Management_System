@@ -3,7 +3,6 @@ import { ResponseMessages } from '../config/response_messages.js';
 
 const validateCreateBooking = [
     body('user_id').isMongoId().notEmpty().withMessage(ResponseMessages.booking.USER_ID_REQUIRED),
-    body('room_id').isMongoId().notEmpty().withMessage(ResponseMessages.booking.ROOM_ID_REQUIRED),
     
     body('guests.adult_count').notEmpty().withMessage(ResponseMessages.booking.ADULT_COUNT_MIN)
         .bail()

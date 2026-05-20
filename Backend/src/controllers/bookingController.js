@@ -40,9 +40,19 @@ const getBookingHistory = async (req, res) => {
     }
 };
 
+const getAllUsersBooking = async (req, res) => {
+    try {
+        const bookings = await bookingService.getAllUserBookingService();
+        res.status(Constants.RESPONSE_STATUS_CODE.SUCCESS_CODE).json(bookings);
+    } catch {
+        res.status(Constants.RESPONSE_STATUS_CODE.FAIL_CODE).json({ message: error.message });
+    }
+}
+
 export default {
     createBooking,
     getBookingDetails,
     cancelBooking,
-    getBookingHistory
+    getBookingHistory,
+    getAllUsersBooking
 }

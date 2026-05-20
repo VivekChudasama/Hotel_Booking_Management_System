@@ -34,10 +34,15 @@ const getBookingHistoryService = async (userId) => {
     return await bookingRepository.getBookingsByUserId(userId)
 }
 
+const getAllUserBookingService = async () => {
+    return await bookingRepository.getAllUserBookings()
+}
+
 export default {
     createBookingService,
     getBookingDetailsService,
     cancelBookingService,
-    getBookingHistoryService
+    getBookingHistoryService,
+    getAllUserBookingService
 }
 

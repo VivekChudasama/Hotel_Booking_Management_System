@@ -8,6 +8,7 @@ export class ResponseMessages {
         PHONE_NUMBER_EXISTS: 'Hotel with this phone number already exists',
         DESCRIPTION_REQUIRED: 'Description is required',
         VALID_DESCRIPTION_LENGTH: 'Description must be less than 1024 characters',
+        VALID_DESCRIPTION_FORMATE: 'Description should be a string formate',
         ADDRESS_REQUIRED: 'Address is required',
         VALID_ADDRESS_LENGTH: 'Address must be less than 256 characters',
         VALID_ADDRESS_FORMATE: 'Address can only contain letters, number, spaces, hyphen, and dots ',
@@ -18,6 +19,7 @@ export class ResponseMessages {
         HOTEL_ID_REQUIRED: 'Hotel ID is required',
         HOTEL_DELETED_SUCCESSFULLY: 'Hotel deleted successfully'
     }
+
     static booking = {
         USER_ID_REQUIRED: 'User ID is required',
         ROOM_ID_REQUIRED: 'Room ID is required',
@@ -36,7 +38,8 @@ export class ResponseMessages {
         TOTAL_AMOUNT_REQUIRED: 'Total amount is required',
         TOTAL_AMOUNT_NUMERIC: 'Total amount must be a number',
         INVALID_BOOKING_STATUS: 'Invalid booking status'
-    } 
+    }
+
     static auth = {
         USER_REGISTERED_SUCCESS: 'User registered successfully',
         USER_LOGGED_IN_SUCCESS: 'User logged in successfully',
@@ -59,12 +62,14 @@ export class ResponseMessages {
         USER_PHONE_NUMBER_REQUIRED: 'Phone number is required ',
         USER_PHONE_NUMBER_LENGTH: 'Phone number must be of 10 characters'
     }
+
     static payment = {
         BOOKING_ID_REQUIRED: 'Booking ID is required',
         PAYMENT_AMOUNT_REQUIRED: 'Total Payment amount is required',
         PAYMENT_METHOD_REQUIRED: 'Payment method is required',
         PAYMENT_STATUS_REQUIRED: 'Payment status is required',
     }
+
     static room = {
         HOTEL_ID_REQUIRED: 'Hotel ID is required',
         HOTEL_ROOM_TYPE_REQUIRED: 'Room type is required',
@@ -73,8 +78,12 @@ export class ResponseMessages {
         HOTEL_ROOM_PRICE_PER_NIGHT_REQUIRED: 'Room price per night is required',
         HOTEL_ROOM_CAPACITY_REQUIRED: 'Room capacity is required',
         HOTEL_ROOM_IMAGE_REQUIRED: 'Room image is required',
-        HOTEL_ROOM_COUNT_REQUIRED: 'Room count is required'
+        HOTEL_ROOM_COUNT_REQUIRED: 'Room count is required',
+        HOTEL_ROOM_NOT_FOUND: 'Room not found',
+        HOTEL_ROOM_DELETED_SUCCESSFULLY: 'Hotel Room Deleted Successfully',
+        HOTEL_ROOM_UPDATED_SUCCESSFULLY: 'Hotel Room Updated Successfully'
     }
+
     static user = {
         USER_NAME_REQUIRED: 'User name is required',
         EMAIL_REQUIRED: 'Email is required',
@@ -86,6 +95,7 @@ export class ResponseMessages {
         USER_IN_ROLE: 'User role must be either customer or admin',
         INVALID_IMAGE_URL: 'Invalid image URL'
     }
+
     static room_inventory = {
         ROOM_ID_REQUIRED: 'Room ID is required',
         HOTEL_ID_REQUIRED: ' Hotel ID is required',

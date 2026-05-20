@@ -15,6 +15,7 @@ export class Constants {
         USER_NAME_VALIDATION_REGEX: /^[a-zA-Z\s.]+$/,
         HOTEL_NAME_VALIDATION_REGEX: /^[a-zA-Z0-9\s.,'&-]+$/,
         ADDRESS_VALIDATION_REGEX: /^[a-zA-Z0-9 .-]+$/,
-        CITY_NAME_VALIDATION_REGEX: /^[a-zA-Z]+$/
+        CITY_NAME_VALIDATION_REGEX: /^[a-zA-Z]+$/,
+        ROOM_TYPE_NAME_VALIDATION_REGEX: /^[a-zA-Z0-9\s\-_\(\)]+$/,
     }
 }
