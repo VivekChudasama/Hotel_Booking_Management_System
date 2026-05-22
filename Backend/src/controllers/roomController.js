@@ -4,7 +4,8 @@ import { ResponseMessages } from '../config/response_messages.js';
 
 const getRoomList = async (req, res) => {
     try {
-        const roomList = await roomService.getroomListService();
+        const { hotel_id } = req.params;
+        const roomList = await roomService.getroomListService(hotel_id);
         res.status(Constants.RESPONSE_STATUS_CODE.SUCCESS_CODE).json(roomList);
     } catch (error) {
         res.status(Constants.RESPONSE_STATUS_CODE.FAIL_CODE).json({ message: error.message });

@@ -6,6 +6,7 @@ import authRoutes from './routes/authRoutes.js';
 import hotelRoutes from './routes/hotelRoutes.js';
 import roomRoutes from './routes/roomRoutes.js';
 import userRoutes from './routes/userRoutes.js';
+import roomInventoryRoutes from './routes/roomInventoryRoutes.js';
 
 const app = express();
 

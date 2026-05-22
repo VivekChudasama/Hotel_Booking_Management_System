@@ -3,7 +3,11 @@ import { Tables } from '../config/tables.js';
 
 const roomSchema = new mongoose.Schema({
     hotel_id: { type: mongoose.Schema.Types.ObjectId, ref: 'Hotel', required: true },
-    room_type: { type: String, required: true },
+    room_type: {
+        type: String,
+        enum: ['Standard Room' , 'Deluxe Room', 'Suite', 'Executive Room', 'Family Room'],
+        required: true
+    },
     room_description: { type: String, required: true },
     amenities: { type: [String], required: true },
     price_per_night: { type: Number, required: true },

@@ -60,7 +60,7 @@ const deleteHotelService = async (id) => {
         });
 
         if (activeBookings.length > 0) {
-            throw new Error('Cannot delete hotel because it has active bookings');
+            throw new Error(ResponseMessages.hotel.ACTIVE_BOOKINGS_EXIST);
         }
     }
 

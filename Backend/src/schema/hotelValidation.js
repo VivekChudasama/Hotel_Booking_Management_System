@@ -19,7 +19,7 @@ const validateCreateHotel = [
         .bail()
         .isLength({ min: 10, max: 10 }).withMessage(ResponseMessages.auth.USER_PHONE_NUMBER_LENGTH),
 
-    body('images').optional().isArray().withMessage('Images must be an array of URLs'),
+    body('images').optional().isArray().withMessage(ResponseMessages.room.HOTEL_ROOM_IMAGE_REQUIRED),
     body('images.*').isURL().withMessage(ResponseMessages.user.INVALID_IMAGE_URL)
         .bail()
         .custom(validateImageURL),
@@ -58,7 +58,7 @@ const validateUpdateHotel = [
         .bail()
         .isLength({ min: 10, max: 10 }).withMessage(ResponseMessages.auth.USER_PHONE_NUMBER_LENGTH),
 
-    body('images').optional().isArray().withMessage('Images must be an array of URLs'),
+    body('images').optional().isArray().withMessage(ResponseMessages.room.HOTEL_ROOM_IMAGE_REQUIRED),
     body('images.*').isURL().withMessage(ResponseMessages.user.INVALID_IMAGE_URL)
         .bail()
         .custom(validateImageURL),

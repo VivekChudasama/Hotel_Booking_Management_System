@@ -1,4 +1,4 @@
-import { Booking } from '../entities/Booking.js';
+import { Booking } from '../entities/booking.js';
 
 const createBooking = async (bookingData) => {
     const booking = new Booking(bookingData);
@@ -25,6 +25,10 @@ const findOverlappingBooking = async (roomId, fromDate, toDate) => {
 
 const getAllUserBookings = async () => {
     return await Booking.find()
+        .populate('user_id', 'name email phone_number')
+        .populate('room_id', 'room_type room_description price_per_night')
+        .populate('hotel_id', 'name city')
+        .sort({ createdAt: -1 });
 }
 
 export default {

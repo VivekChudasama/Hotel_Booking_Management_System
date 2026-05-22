@@ -21,13 +21,10 @@ const getRoomById = async (id) => {
     return await Room.findById(id)
 }
 
-
-
 export default {
     getHotelSpecificRoomsList,
     createRoom,
     updateRoomById,
     deleteRoomById,
     getRoomById,
-   
 }
