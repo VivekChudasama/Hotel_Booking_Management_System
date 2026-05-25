@@ -6,7 +6,6 @@ import { RoomInventory } from '../entities/room_inventory.js';
 import { ResponseMessages } from '../config/response_messages.js';
 
 const getroomListService = async (id) => {
-    const getUserRole = User.findById(id).select('role');
     return await roomRepository.getHotelSpecificRoomsList(id);
 };
 
@@ -101,7 +100,7 @@ const updateRoomService = async (id, updateRoomData) => {
             });
             if (duplicates.length > 0) {
                 const dupNumbers = duplicates.map(d => d.room_number).join(', ');
-                throw new Error(`room number(s) ${dupNumbers} already exist in this hotel.`);
+                throw new Error(`room number ${dupNumbers} already exist in this hotel.`);
             }
             
             const uniqueNumbers = new Set(roomNumbers);

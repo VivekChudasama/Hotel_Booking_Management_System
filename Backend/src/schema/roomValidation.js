@@ -8,7 +8,9 @@ const validateCreateRoom = [
         .isMongoId().withMessage(ResponseMessages.hotel.VALID_HOTEL_ID),
 
     body('room_type').trim().notEmpty().withMessage(ResponseMessages.room.HOTEL_ROOM_TYPE_REQUIRED).bail()
-        .isString().withMessage(ResponseMessages.room.VALID_ROOM_TYPE_FORMATE),
+        .isString().withMessage(ResponseMessages.room.VALID_ROOM_TYPE_FORMATE)
+        .isIn(['Standard Room', 'Deluxe Room', 'Suite', 'Executive Room', 'Family Room'])
+        .withMessage(ResponseMessages.room.HOTEL_ROOM_TYPE),
 
     body('room_description').trim().notEmpty().withMessage(ResponseMessages.room.HOTEL_ROOM_DESCRIPTION_REQUIRED).bail()
         .isString().withMessage(ResponseMessages.room.VALID_ROOM_DESCRIPTION_FORMATE)
@@ -47,7 +49,9 @@ const validateUpdateRoom = [
         .isMongoId().withMessage(ResponseMessages.hotel.VALID_HOTEL_ID),
 
     body('room_type').optional().trim().notEmpty().withMessage(ResponseMessages.room.HOTEL_ROOM_TYPE_REQUIRED).bail()
-        .isString().withMessage(ResponseMessages.room.VALID_ROOM_TYPE_FORMATE),
+        .isString().withMessage(ResponseMessages.room.VALID_ROOM_TYPE_FORMATE)
+        .isIn(['Standard Room', 'Deluxe Room', 'Suite', 'Executive Room', 'Family Room'])
+        .withMessage(ResponseMessages.room.HOTEL_ROOM_TYPE),
 
     body('room_description').optional().trim().notEmpty().withMessage(ResponseMessages.room.HOTEL_ROOM_DESCRIPTION_REQUIRED).bail()
         .isString().withMessage(ResponseMessages.room.VALID_ROOM_DESCRIPTION_FORMATE)
