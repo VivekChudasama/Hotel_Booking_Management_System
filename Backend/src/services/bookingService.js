@@ -1,40 +1,29 @@
 import bookingRepository from '../repositories/bookingRepository.js';
+import roomInventoryRepositories from '../repositories/roomInventoryRepositories.js';
 import roomRepository from '../repositories/roomRepository.js';
 import { ResponseMessages } from '../config/response_messages.js';
 
 const createBookingService = async (bookingData) => {
     const { room_id, hotel_id, from, to } = bookingData;
 
-    // Retrieve Room category details for snapshotting
+    // Retrieve room category details
     const room = await roomRepository.getRoomById(room_id);
     if (!room) {
         throw new Error(ResponseMessages.room.HOTEL_ROOM_NOT_FOUND);
     }
 
-    // Check room inventory for an available physical room of this type in this specific hotel
-    const availableRoomInventory = await roomInventoryRepositories.findAvailableRoom(room_id, hotel_id);
+    const bookedInventoryIds = await bookingRepository.getBookedInventoryIdsForDates(room_id, from, to);
+
+    // Check room inventory for an available room of this type in the specific hotel
+    const availableRoomInventory = await roomInventoryRepositories.findAvailableRoomForDates(room_id, hotel_id, bookedInventoryIds);
     if (!availableRoomInventory) {
         throw new Error(ResponseMessages.booking.NO_AVAILABLE_ROOMS);
     }
 
-    const overlappingBooking = await bookingRepository.findOverlappingBooking(room_id, from, to);
-    
-    if (overlappingBooking) {
-        throw new Error(ResponseMessages.booking.ROOM_ALREADY_BOOKED);
-    }
-
-    // Snapshot the room details so that updates to Room don't change this booking
-    bookingData.room_details = {
-        room_type: room.room_type,
-        room_description: room.room_description,
-        price_per_night: room.price_per_night,
-        room_images: room.room_images,
-        amenities: room.amenities
-    };
+    // Assign specific room to booking
+    bookingData.room_inventory_id = availableRoomInventory._id;
 
     const booking = await bookingRepository.createBooking(bookingData);
-
-    // Update the room inventory table with the booking
 
     return booking;
 };
@@ -64,9 +53,6 @@ const cancelBookingService = async (id) => {
     if (booking.booking_status === 'pending' || booking.booking_status === 'confirmed') {
         booking.booking_status = 'cancelled';
         await booking.save();
-
-        // Release the associated room inventory
-        await roomInventoryRepositories.releaseRoomInventory(booking._id);
     }
     
     return booking;
@@ -88,4 +74,3 @@ export default {
     getBookingHistoryService,
     getAllUserBookingService
 }
-

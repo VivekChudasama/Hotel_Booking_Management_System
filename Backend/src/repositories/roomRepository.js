@@ -1,7 +1,18 @@
+import mongoose from 'mongoose';
 import { Room } from '../entities/room.js'
 
 const getHotelSpecificRoomsList = async (id) => {
-    return await Room.find({ hotel_id: id })
+    return await Room.aggregate([
+        { $match: { hotel_id: new mongoose.Types.ObjectId(id) } },
+        {
+            $lookup: {
+                from: 'room_inventorys',
+                localField: '_id',
+                foreignField: 'room_id',
+                as: 'room_inventories'
+            }
+        }
+    ]);
 }
 
 const createRoom = async (roomData) => {

@@ -1,6 +1,6 @@
 import { body } from 'express-validator';
 import { ResponseMessages } from '../config/response_messages.js';
-import { Constants } from '../config/constants.js';
+import { Constants } from '../config/Constants.js';
 import { validateImageURL } from '../util/imageValidator.js';
 
 const validateRegister = [

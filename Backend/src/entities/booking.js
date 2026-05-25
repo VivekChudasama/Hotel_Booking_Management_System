@@ -2,8 +2,7 @@ import mongoose from 'mongoose';
 import { Tables } from '../config/tables.js';
 
 const bookingSchema = new mongoose.Schema({
-    user_id: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
-    room_id: { type: mongoose.Schema.Types.ObjectId, ref: 'Room', required: true },
+    user_id: { type: mongoose.Schema.Types.ObjectId, ref: 'user', required: true },
     guests: {
         adult_count: { type: Number, required: true },
         child_count: { type: Number, default: 0 }

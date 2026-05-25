@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken';
-import { Constants } from '../config/constants.js';
+import { Constants } from '../config/Constants.js';
 import { ResponseMessages } from '../config/response_messages.js';
 
 export const verifyToken = (req, res, next) => {

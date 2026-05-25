@@ -1,6 +1,6 @@
 import { body, param } from 'express-validator';
 import { ResponseMessages } from '../config/response_messages.js';
-import { Constants } from '../config/constants.js';
+import { Constants } from '../config/Constants.js';
 import { validateImageURL } from '../util/imageValidator.js';
 
 const validateCreateHotel = [
@@ -19,7 +19,7 @@ const validateCreateHotel = [
         .bail()
         .isLength({ min: 10, max: 10 }).withMessage(ResponseMessages.auth.USER_PHONE_NUMBER_LENGTH),
 
-    body('images').optional().isArray().withMessage(ResponseMessages.room.HOTEL_ROOM_IMAGE_REQUIRED),
+    body('images').optional().isArray().withMessage(ResponseMessages.hotel.VALID_IMAGE_FORMATE),
     body('images.*').isURL().withMessage(ResponseMessages.user.INVALID_IMAGE_URL)
         .bail()
         .custom(validateImageURL),
@@ -58,7 +58,7 @@ const validateUpdateHotel = [
         .bail()
         .isLength({ min: 10, max: 10 }).withMessage(ResponseMessages.auth.USER_PHONE_NUMBER_LENGTH),
 
-    body('images').optional().isArray().withMessage(ResponseMessages.room.HOTEL_ROOM_IMAGE_REQUIRED),
+    body('images').optional().isArray().withMessage(ResponseMessages.hotel.VALID_IMAGE_FORMATE),
     body('images.*').isURL().withMessage(ResponseMessages.user.INVALID_IMAGE_URL)
         .bail()
         .custom(validateImageURL),

@@ -1,5 +1,5 @@
 import hotelService from '../services/hotelService.js';
-import { Constants } from '../config/constants.js';
+import { Constants } from '../config/Constants.js';
 import { ResponseMessages } from '../config/response_messages.js';
 import mongoose from 'mongoose';
 

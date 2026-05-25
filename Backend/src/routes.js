@@ -26,5 +26,6 @@ app.use('/users', userRoutes);
 app.use('/hotels', hotelRoutes);
 app.use('/Booking', bookingRoutes);
 app.use('/rooms', roomRoutes);
+app.use('/room_inventory', roomInventoryRoutes);
  
 export default app;

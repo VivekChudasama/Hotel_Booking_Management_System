@@ -1,10 +1,10 @@
 import roomService from '../services/roomService.js';
-import { Constants } from '../config/constants.js';
+import { Constants } from '../config/Constants.js';
 import { ResponseMessages } from '../config/response_messages.js';
 
 const getRoomList = async (req, res) => {
     try {
-        const { hotel_id } = req.params;
+        const hotel_id = req.params.hotel_id;
         const roomList = await roomService.getroomListService(hotel_id);
         res.status(Constants.RESPONSE_STATUS_CODE.SUCCESS_CODE).json(roomList);
     } catch (error) {
@@ -28,7 +28,7 @@ const updateRoom = async (req, res) => {
         const updateRoomData = req.body;
         const room = await roomService.updateRoomService(room_id, updateRoomData);
         if (!room) return res.status(Constants.RESPONSE_STATUS_CODE.NOT_FOUND_CODE).json({ message: ResponseMessages.room.HOTEL_ROOM_NOT_FOUND })
-        res.status(Constants.RESPONSE_STATUS_CODE.SUCCESS_CODE).json({ message: ResponseMessages.room.HOTEL_ROOM_UPDATED_SUCCESSFULLY })
+        res.status(Constants.RESPONSE_STATUS_CODE.SUCCESS_CODE).json({ message: ResponseMessages.room.HOTEL_ROOM_UPDATED_SUCCESSFULLY, room })
     } catch (error) {
         res.status(Constants.RESPONSE_STATUS_CODE.FAIL_CODE).json({ message: error.message });
     }

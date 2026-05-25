@@ -1,5 +1,5 @@
 import { validationResult } from 'express-validator';
-import { Constants } from '../config/constants.js';
+import { Constants } from '../config/Constants.js';
 
 export const handleValidationErrors = (req, res, next) => {
     const errors = validationResult(req);

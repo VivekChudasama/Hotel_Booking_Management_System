@@ -1,5 +1,5 @@
 import bookingService from '../services/bookingService.js';
-import { Constants } from '../config/constants.js';
+import { Constants } from '../config/Constants.js';
 import { ResponseMessages } from '../config/response_messages.js';
 
 const createBooking = async (req, res) => {

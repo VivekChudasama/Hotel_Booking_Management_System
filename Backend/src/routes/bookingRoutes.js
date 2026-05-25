@@ -15,7 +15,7 @@ router.get('/:booking_id', verifyToken, bookingValidation.validateBookingId, han
 //cancle booking by booking_id
 router.put('/:booking_id/cancel', verifyToken, bookingValidation.validateBookingId, handleValidationErrors, bookingController.cancelBooking);
 
-//update booking (admin only)
+//update booking by booking_id
 router.put('/:booking_id', verifyToken, isAdmin, bookingValidation.validateUpdateBooking, handleValidationErrors, bookingController.updateBooking);
 
 //user booking history by user_id

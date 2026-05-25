@@ -1,7 +1,7 @@
 import app from './routes.js';
 import { connectDB } from './util/database.js';
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT;
 // Connect to 
 connectDB().then(() => {
     console.log('Connected to database');

@@ -1,4 +1,4 @@
-import { User } from '../entities/User.js';
+import { User } from '../entities/user.js';
 
 const findUserByEmail = async (email) => {
     return await User.findOne({ email });

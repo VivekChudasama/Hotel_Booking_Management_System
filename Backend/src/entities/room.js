@@ -2,10 +2,10 @@ import mongoose from 'mongoose';
 import { Tables } from '../config/tables.js';
 
 const roomSchema = new mongoose.Schema({
-    hotel_id: { type: mongoose.Schema.Types.ObjectId, ref: 'Hotel', required: true },
+    hotel_id: { type: mongoose.Schema.Types.ObjectId, ref: 'hotel', required: true },
     room_type: {
         type: String,
-        enum: ['Standard Room' , 'Deluxe Room', 'Suite', 'Executive Room', 'Family Room'],
+        enum: ['Standard room', 'Deluxe room', 'Suite', 'Executive room', 'Family room'],
         required: true
     },
     room_description: { type: String, required: true },
@@ -16,7 +16,7 @@ const roomSchema = new mongoose.Schema({
         children_count: { type: Number, required: true }
     },
     room_images: [{ type: String }],
-    roomCount: { type: Number, required: true }
+    room_count: { type: Number, required: true }
 }, { timestamps: true });
 
 export const Room = mongoose.model(Tables.ROOM, roomSchema);

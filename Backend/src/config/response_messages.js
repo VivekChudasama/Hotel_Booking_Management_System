@@ -45,6 +45,7 @@ export class ResponseMessages {
 
     static hotel = {
         ACTIVE_BOOKINGS_EXIST: 'Cannot delete hotel because it has active bookings',
+        VALID_HOTEL_ID: 'hotel ID must be a valid MongoId',
         ADDRESS_REQUIRED: 'Address is required',
         CITY_NAME_REQUIRED: 'City Name is required',
         DESCRIPTION_REQUIRED: 'Description is required',
@@ -54,6 +55,7 @@ export class ResponseMessages {
         HOTEL_ID_REQUIRED: 'Hotel ID is required',
         HOTEL_NAME_REQUIRED: 'Hotel name is required',
         HOTEL_NOT_FOUND: 'Hotel not found',
+        VALID_IMAGE_FORMATE: 'Images must be an array of URLs',
         PHONE_NUMBER_EXISTS: 'Hotel with this phone number already exists',
         PHONE_NUMBER_REQUIRED: 'Phone number is required ',
         VALID_ADDRESS_FORMATE: 'Address can only contain letters, number, spaces, hyphen, and dots ',
@@ -62,58 +64,58 @@ export class ResponseMessages {
         VALID_CITY_NAME_LENGTH: 'City Name must be less than 30 characters',
         VALID_DESCRIPTION_FORMATE: 'Description should be a string formate',
         VALID_DESCRIPTION_LENGTH: 'Description must be less than 1024 characters',
-        VALID_HOTEL_NAME_FORMATE: 'Hotel name can only contain letters, numbers, spaces, dots, commas, apostrophes, and hyphens'
+        VALID_HOTEL_NAME_FORMATE: 'hotel name can only contain letters, numbers, spaces, dots, commas, apostrophes, and hyphens'
     }
 
     static payment = {
         BOOKING_ID_REQUIRED: 'Booking ID is required',
-        PAYMENT_AMOUNT_REQUIRED: 'Total Payment amount is required',
+        PAYMENT_AMOUNT_REQUIRED: 'Total payment amount is required',
         PAYMENT_METHOD_REQUIRED: 'Payment method is required',
         PAYMENT_STATUS_REQUIRED: 'Payment status is required'
     }
 
     static room = {
         ACTIVE_BOOKINGS_EXIST: 'Cannot delete hotel room because it has active bookings',
+        VALID_ROOM_ID: 'room ID must be a valid MongoId',
+        VALID_ROOM_NUMBER: 'room number must be a positive integer',
+        VALID_ROOM_STATUS: 'Status must be either available or occupied',
         HOTEL_ID_REQUIRED: 'Hotel ID is required',
-        INVALID_HOTEL_ID: 'Invalid Hotel ID',
-        INVALID_ROOM_ID: 'Invalid Room ID',
         HOTEL_ROOM_AMENITIES_REQUIRED: 'Room amenities is required',
-        HOTEL_ROOM_AMENITIES_ARRAY: 'Each amenity cannot be empty',
-        HOTEL_ROOM_AMENITIES_LENGTH: 'Amenities must be a non-empty array',
-        HOTEL_ROOM_AMENITIES_FORMATE: 'Each amenity must be a string',
+        VALID_ROOM_AMENIRIES_FORMATE: 'Amenities must be a non-empty array',
+        VALID_ROOM_AMENIRIES_ARRAY: 'Each amenity cannot be empty',
+        VALID_ROOM_AMENIRIES_ARRAY_FORMATE: 'Each amenity must be a string',
         HOTEL_ROOM_CAPACITY_REQUIRED: 'Room capacity is required',
         HOTEL_ROOM_COUNT_REQUIRED: 'Room count is required',
-        MIN_HOTEL_ROOM_COUNT: 'Room count must be at least 1',
-        HOTEL_ROOM_CHILDREN_COUNT_REQUIRED: 'Children count is required',
-        HOTEL_ROOM_DELETED_SUCCESSFULLY: 'Hotel Room Deleted Successfully',
+        HOTEL_ROOM_DELETED_SUCCESSFULLY: 'Hotel room Deleted Successfully',
         HOTEL_ROOM_DESCRIPTION_REQUIRED: 'Room description is required',
         HOTEL_ROOM_IMAGE_REQUIRED: 'Room image is required',
-        HOTEL_ROOM_NOT_FOUND: 'Room not found',
-        HOTEL_ROOM_IMAGE_REQUIRED: 'Images must be an array of URLs',
+        HOTEL_ROOM_ID_REQUIRED: 'Room_ID is required',
+        VALID_ROOM_ID_FORMATE:'Invalid room ID format',
         HOTEL_ROOM_PRICE_PER_NIGHT_REQUIRED: 'Room price per night is required',
-        MIN_HOTEL_ROOM_PRICE_PER_NIGHT: 'Please enter correct postive integer valve grater then 0',
+        MIN_ROOM_PRICE_PER_NIGHT: 'Price per night must be at least 1',
+        MIN_ROOM_COUNT:'room count must be at least 1',
         HOTEL_ROOM_TYPE_REQUIRED: 'Room type is required',
-        HOTEL_ROOM_TYPE_FORMATE: 'Room type must be a string',
-        HOTEL_ROOM_TYPE: 'Room type must be one of the following: Standard Room, Deluxe Room, Suite, Executive Room, or Family Room.',
-        HOTEL_ROOM_DESCRIPTION_FORMATE: 'Room description must be a string',
-        HOTEL_ROOM_UPDATED_SUCCESSFULLY: 'Hotel Room Updated Successfully',
-        ROOM_TYPE_ALREADY_EXISTS: 'This room type is already created for this hotel'
+        VALID_ROOM_TYPE_FORMATE: 'room type must be a string',
+        VALID_ROOM_DESCRIPTION_FORMATE: 'room description must be a string',
+        HOTEL_ROOM_UPDATED_SUCCESSFULLY: 'Hotel room Updated Successfully',
+        ROOM_TYPE_ALREADY_EXISTS: 'This room type is already created for this hotel',
+        CHILD_COUNT_REQUIRED: 'Children count is required',
+        ROOM_IMAGES_REQUIRED: 'Room images is required'
     }
 
     static room_inventory = {
-        ROOM_INVENTORY_ID_REQUIRED:'Room Inventory ID is required',
-        ROOM_INVENTORY_ROOM_NOT_FOUND: 'Room in room inventory not found',
         BOOKING_ID_REQUIRED: 'Booking ID is required',
         HOTEL_ID_REQUIRED: ' Hotel ID is required',
         MAX_ROOMS_REACHED: 'Cannot create more physical rooms in inventory for this room type. Maximum allowed count is ',
         ROOM_ALREADY_CREATED: 'Room is already created for this hotel and room type with the given room number.',
         ROOM_ID_REQUIRED: 'Room ID is required',
         ROOM_NUMBER_REQUIRED: 'Room number is required',
-        ROOM_NUMBER_TYPE: 'Room number must be a positive integer',
         ROOM_STATUS: 'Room status is required',
-        ROOM_TYPE_NOT_FOUND: 'Room type (Room ID) not found.',
-        ROOM_STATUS_TYPE: 'Status must be either available or occupied',
-        ROOM_INVENTORY_ROOM_DELETED_SUCCESSFULLY: 'Room of Room Inventory Deleted Successfully'
+        ROOM_TYPE_NOT_FOUND: 'Room type (room ID) not found.',
+        ROOM_INVENTORY_DELETED_SUCCESSFULLY: 'Room from room inventory deleted successfully',
+        ROOM_INVENTORY_NOT_FOUND: 'Room not found in room inventory',
+        DUPLICATE_ROOM_NUMBER_IN_ROOM_INVENTORY: 'Duplicate room numbers found in the request payload',
+        ROOM_INVENTORY_ROOM_DELETED_SUCCESSFULLY: 'Room deleted successfully from room inventory.'
     }
 
     static user = {

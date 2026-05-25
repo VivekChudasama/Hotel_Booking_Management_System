@@ -6,16 +6,16 @@ import { verifyToken, isAdmin } from '../middleware/authMiddleware.js';
 
 const router = express.Router();
 
-// get rooms list
+// get room list
 router.get('/:hotel_id/rooms', verifyToken,  roomController.getRoomList);
 
-// add new room and room inventory to hotel by hotel id
+// add new room(admin only)
 router.post('/:hotel_id/room', verifyToken, isAdmin, roomValidation.validateCreateRoom , handleValidationErrors, roomController.createRoom);
 
-// update room and room inventory by room id and hotel id 
-router.put('/:hotel_id/:room_id', verifyToken, isAdmin, roomController.updateRoom);
+// update room by id(admin only)
+router.put('/:hotel_id/room/:room_id', verifyToken, isAdmin, roomController.updateRoom);
 
-// delete room and all room of room_inventory by id
-router.delete('/:hotel_id/:room_id', verifyToken, isAdmin, roomController.deleteRoom);
+// delete room by id(admin only)
+router.delete('/:room_id', verifyToken, isAdmin, roomController.deleteRoom);
 
 export default router;

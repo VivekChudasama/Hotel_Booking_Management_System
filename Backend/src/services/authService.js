@@ -9,6 +9,7 @@ const JWT_SECRET = process.env.JWT_SECRET;
 const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN;
 
 const registerUserService = async (userData) => {
+    //verify email is already exist or not
     if (userData.email) {
         const existingUserByEmail = await authRepository.findUserByEmail(userData.email);
         if (existingUserByEmail) {
@@ -16,6 +17,7 @@ const registerUserService = async (userData) => {
         }
     }
 
+    //verify phone_number is already exist or not
     if (userData.phone_number) {
         const existingUserByPhone = await authRepository.findUserByPhone(userData.phone_number);
         if (existingUserByPhone) {
@@ -23,6 +25,7 @@ const registerUserService = async (userData) => {
         }
     }
 
+    //hash the password using bycrypt
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(userData.password, salt);
 
@@ -41,11 +44,13 @@ const registerUserService = async (userData) => {
 };
 
 const loginUserService = async (email, password) => {
+    //validate email is valid or not
     const user = await authRepository.findUserByEmail(email);
     if (!user) {
         throw new Error(ResponseMessages.auth.INVALID_CREDENTIALS);
     }
 
+    //validate password is valid or not
     const isValidPassword = await bcrypt.compare(password, user.password);
     if (!isValidPassword) {
         throw new Error(ResponseMessages.auth.INVALID_CREDENTIALS);

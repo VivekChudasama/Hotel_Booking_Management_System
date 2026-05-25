@@ -1,6 +1,5 @@
 import hotelRepository from '../repositories/hotelRepository.js';
 import { ResponseMessages } from '../config/response_messages.js'
-import { Room } from '../entities/room.js';
 import { Booking } from '../entities/booking.js';
 import roomRepository from '../repositories/roomRepository.js';
 
@@ -49,7 +48,7 @@ const deleteHotelService = async (id) => {
     }
 
     // Find all rooms for the specific hotel
-    const rooms = await roomRepository.getHotelSpecificRooms;
+    const rooms = await roomRepository.getHotelSpecificRoomsList(id);
     const roomIds = rooms?.map(room => room._id) || [];
 
     // Check if there are active bookings for the rooms
