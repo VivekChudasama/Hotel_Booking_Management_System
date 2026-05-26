@@ -15,9 +15,53 @@ const createRoomService = async (roomData) => {
         hotel_id: roomData.hotel_id,
         room_type: roomData.room_type
     });
-    
+
     if (existingRoom) {
-        throw new Error(ResponseMessages.room.ROOM_TYPE_ALREADY_EXISTS);
+        const session = await mongoose.startSession();
+        session.startTransaction();
+        try {
+            if (roomData.room_inventories && roomData.room_inventories.length > 0) {
+                const roomNumbers = roomData.room_inventories.map(inv => inv.room_number);
+                const duplicates = await RoomInventory.find({
+                    hotel_id: roomData.hotel_id,
+                    room_number: { $in: roomNumbers }
+                }).session(session);
+
+                if (roomData.room_inventories && roomData.room_inventories.length > roomData.room_count) {
+                    throw new Error(`Cannot create more than ${roomData.room_count} rooms in room inventories.`);
+                }
+
+                const duplicateNumbers = duplicates.map(d => d.room_number);
+
+                // Filter out the duplicates, only insert the NEW ones
+                const newInventoriesData = roomData.room_inventories.filter(inv => !duplicateNumbers.includes(inv.room_number));
+
+                if (newInventoriesData.length > 0) {
+                    const uniqueNumbers = new Set(newInventoriesData.map(inv => inv.room_number));
+                    if (uniqueNumbers.size !== newInventoriesData.length) {
+                        throw new Error(ResponseMessages.room_inventory.DUPLICATE_ROOM_NUMBER_IN_ROOM_INVENTORY);
+                    }
+
+                    const inventoryData = newInventoriesData.map(inv => ({
+                        ...inv,
+                        hotel_id: existingRoom.hotel_id,
+                        room_id: existingRoom._id
+                    }));
+                    await RoomInventory.insertMany(inventoryData, { session });
+                }
+
+                if (roomData.room_count && roomData.room_count > existingRoom.room_count) {
+                    await Room.updateOne({ _id: existingRoom._id }, { $set: { room_count: roomData.room_count } }, { session });
+                }
+            }
+            await session.commitTransaction();
+            session.endSession();
+            return await roomRepository.getRoomById(existingRoom._id);
+        } catch (error) {
+            await session.abortTransaction();
+            session.endSession();
+            throw error;
+        }
     }
 
     const session = await mongoose.startSession();
@@ -25,7 +69,7 @@ const createRoomService = async (roomData) => {
 
     try {
         const { room_inventories, ...roomFields } = roomData;
-        
+
         if (room_inventories && room_inventories.length > roomFields.room_count) {
             throw new Error(`Cannot create more than ${roomFields.room_count} rooms in room inventories.`);
         }
@@ -42,14 +86,14 @@ const createRoomService = async (roomData) => {
                 const dupNumbers = duplicates.map(d => d.room_number).join(', ');
                 throw new Error(`room number(s) ${dupNumbers} already exist in this hotel.`);
             }
-            
+
             // Also check for duplicates within the payload itself
             const uniqueNumbers = new Set(roomNumbers);
             if (uniqueNumbers.size !== roomNumbers.length) {
                 throw new Error(ResponseMessages.room_inventory.DUPLICATE_ROOM_NUMBER_IN_ROOM_INVENTORY);
             }
         }
-        
+
         // Create the room
         const [savedRoom] = await Room.create([roomFields], { session });
 
@@ -89,41 +133,46 @@ const updateRoomService = async (id, updateRoomData) => {
         }
     }
 
-    if (room_inventories && Array.isArray(room_inventories)) {
-        const roomNumbers = room_inventories.map(inventories => inventories.room_number).filter(Boolean);
-        if (roomNumbers.length > 0) {
-            const updatingIds = room_inventories.map(inventories => inventories._id).filter(Boolean);
-            const duplicates = await RoomInventory.find({
-                hotel_id: existingRoom.hotel_id,
-                room_number: { $in: roomNumbers },
-                _id: { $nin: updatingIds }
-            });
-            if (duplicates.length > 0) {
-                const dupNumbers = duplicates.map(d => d.room_number).join(', ');
-                throw new Error(`room number ${dupNumbers} already exist in this hotel.`);
-            }
-            
-            const uniqueNumbers = new Set(roomNumbers);
-            if (uniqueNumbers.size !== roomNumbers.length) {
-                throw new Error(ResponseMessages.room_inventory.DUPLICATE_ROOM_NUMBER_IN_ROOM_INVENTORY);
-            }
-        }
-    }
-
     if (Object.keys(roomFields).length > 0) {
         await Room.updateOne({ _id: id }, { $set: roomFields });
     }
 
     if (room_inventories && Array.isArray(room_inventories)) {
-        const inventoryUpdateOperations = room_inventories.filter(inventories => inventories._id).map(inventories => ({
-            updateOne: {
-                filter: { _id: inventories._id },
-                update: { $set: inventories }
+        const roomNumbers = room_inventories.map(inv => inv.room_number).filter(Boolean);
+        const existingInventories = await RoomInventory.find({
+            hotel_id: existingRoom.hotel_id,
+            room_number: { $in: roomNumbers }
+        });
+
+        const inventoryUpdateOperations = [];
+        const newInventories = [];
+
+        for (const inv of room_inventories) {
+            if (!inv.room_number) continue;
+            const existing = existingInventories.find(e => e.room_number === inv.room_number);
+
+            if (existing) {
+                inventoryUpdateOperations.push({
+                    updateOne: {
+                        filter: { _id: existing._id },
+                        update: { $set: inv }
+                    }
+                });
+            } else {
+                newInventories.push({
+                    ...inv,
+                    hotel_id: existingRoom.hotel_id,
+                    room_id: existingRoom._id
+                });
             }
-        }));
+        }
 
         if (inventoryUpdateOperations.length > 0) {
             await RoomInventory.bulkWrite(inventoryUpdateOperations);
+        }
+
+        if (newInventories.length > 0) {
+            await RoomInventory.insertMany(newInventories);
         }
     }
 
@@ -138,7 +187,7 @@ const deleteRoomService = async (id) => {
     }
 
     // Check if there are active bookings for this specific room
-    const activeBookings = await booking.find({
+    const activeBookings = await Booking.find({
         room_id: id,
         booking_status: { $in: ['pending', 'confirmed', 'checked in'] }
     });
@@ -149,7 +198,7 @@ const deleteRoomService = async (id) => {
 
     // Delete associated room inventory entries
     await RoomInventory.deleteMany({ room_id: id });
-    
+
     return await Room.findOneAndDelete({ _id: id });
 }
 

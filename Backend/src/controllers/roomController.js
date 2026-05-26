@@ -5,7 +5,8 @@ import { ResponseMessages } from '../config/response_messages.js';
 const getRoomList = async (req, res) => {
     try {
         const hotel_id = req.params.hotel_id;
-        const roomList = await roomService.getroomListService(hotel_id);
+        const role = req.user ? req.user.role : null;
+        const roomList = await roomService.getroomListService(hotel_id, role);
         res.status(Constants.RESPONSE_STATUS_CODE.SUCCESS_CODE).json(roomList);
     } catch (error) {
         res.status(Constants.RESPONSE_STATUS_CODE.FAIL_CODE).json({ message: error.message });
@@ -14,7 +15,8 @@ const getRoomList = async (req, res) => {
 
 const createRoom = async (req, res) => {
     try {
-        const savedRoom = await roomService.createRoomService(req.body);
+        const roomData = { ...req.body, hotel_id: req.params.hotel_id };
+        const savedRoom = await roomService.createRoomService(roomData);
         res.status(Constants.RESPONSE_STATUS_CODE.CREATED_SUCCESS_CODE).json(savedRoom);
     } catch (error) {
         res.status(Constants.RESPONSE_STATUS_CODE.FAIL_CODE).json({ message: error.message });

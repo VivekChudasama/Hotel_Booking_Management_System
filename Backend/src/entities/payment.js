@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 import { Tables } from '../config/tables.js';
 
 const paymentSchema = new mongoose.Schema({
-    booking_id: { type: mongoose.Schema.Types.ObjectId, ref: 'booking', required: true },
+    booking_id: { type: mongoose.Schema.Types.ObjectId, ref: 'Bookings', required: true, index: true },
     amount: { type: Number, required: true },
     payment_date: { type: Date, default: Date.now },
     payment_method: { type: String, required: true },

@@ -29,6 +29,21 @@ const deleteRoomInventoryService = async (inventoryId) => {
     return deletedInventory;
 };
 
+const getAvailableRoomsByHotelService = async (hotelId) => {
+    return await roomInventoryRepositories.getAvailableRoomsByHotel(hotelId);
+};
+
+const getAllRoomNumbersService = async (hotelId, roomId) => {
+    return await roomInventoryRepositories.getAllRoomNumbers(hotelId, roomId);
+};
+
+const getAllRoomNumbersByHotelService = async (hotelId) => {
+    return await roomInventoryRepositories.getAllRoomNumbersByHotel(hotelId);
+};
+
 export default {
-    deleteRoomInventoryService
+    deleteRoomInventoryService,
+    getAvailableRoomsByHotelService,
+    getAllRoomNumbersService,
+    getAllRoomNumbersByHotelService
 };

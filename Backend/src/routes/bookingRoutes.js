@@ -19,7 +19,7 @@ router.put('/:booking_id/cancel', verifyToken, bookingValidation.validateBooking
 router.put('/:booking_id', verifyToken, isAdmin, bookingValidation.validateUpdateBooking, handleValidationErrors, bookingController.updateBooking);
 
 //user booking history by user_id
-router.get('/user/:user_id/booking_history', verifyToken, bookingValidation.validateUserIdParam, handleValidationErrors, bookingController.getBookingHistory);
+router.get('/:user_id/booking_history', verifyToken, bookingValidation.validateUserIdParam, handleValidationErrors, bookingController.getBookingHistory);
 
 //all user's booking(admin only)
 router.get('/', verifyToken, isAdmin, bookingController.getAllUsersBooking)

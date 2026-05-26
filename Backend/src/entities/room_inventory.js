@@ -2,8 +2,8 @@ import mongoose from 'mongoose';
 import { Tables } from '../config/tables.js';
 
 const roomInventorySchema = new mongoose.Schema({
-    hotel_id: { type: mongoose.Schema.Types.ObjectId, ref: 'hotel', required: true },
-    room_id: { type: mongoose.Schema.Types.ObjectId, ref: 'room', required: true },
+    hotel_id: { type: mongoose.Schema.Types.ObjectId, ref: 'Hotels', required: true, index: true },
+    room_id: { type: mongoose.Schema.Types.ObjectId, ref: 'Rooms', required: true, index: true },
     room_number: { type: Number, required: true },
     status: {
         type: String,
@@ -11,7 +11,7 @@ const roomInventorySchema = new mongoose.Schema({
         default: 'available',
         required: true
     },
-    booking_id: { type: mongoose.Schema.Types.ObjectId, ref: 'booking', default: null },
+    booking_id: { type: mongoose.Schema.Types.ObjectId, ref: 'Bookings', default: null },
 
 }, { timestamps: true });
 

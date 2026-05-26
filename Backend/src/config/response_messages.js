@@ -24,6 +24,7 @@ export class ResponseMessages {
 
     static booking = {
         ADULT_COUNT_MIN: 'Adult count must be at least 1',
+        ADULT_COUNT_MAX: 'Adult count must be less then or equal to 10',
         BOOKING_CANCELLED_SUCCESSFULLY: 'Booking cancelled successfully',
         BOOKING_CREATED_SUCCESSFULLY: 'Booking successfully',
         BOOKING_ID_REQUIRED: 'Booking ID is required',
@@ -31,10 +32,12 @@ export class ResponseMessages {
         CHECK_IN_DATE: 'Check-in date is required',
         CHECK_OUT_DATE: 'Check-out date is required',
         CHILD_COUNT_MIN: 'Child count cannot be negative',
+        CHILD_COUNT_MAX: 'Child count must be less than or equal to 10',
         HOTEL_ID_REQUIRED: 'Hotel ID is required',
         INVALID_BOOKING_STATUS: 'Invalid booking status',
         MIN_CHECK_OUT_DATE: 'Check-out date should be greater than the check-in date',
         NO_AVAILABLE_ROOMS: 'No available rooms in inventory for the selected room type in this hotel',
+        PAST_DATE_BOOKING: 'Check-in date cannot be in the past',
         ROOM_ALREADY_BOOKED: 'Room is already booked for these dates',
         ROOM_ID_REQUIRED: 'Room ID is required',
         TOTAL_AMOUNT_NUMERIC: 'Total amount must be a number',
@@ -78,6 +81,7 @@ export class ResponseMessages {
         ACTIVE_BOOKINGS_EXIST: 'Cannot delete hotel room because it has active bookings',
         VALID_ROOM_ID: 'room ID must be a valid MongoId',
         VALID_ROOM_NUMBER: 'room number must be a positive integer',
+        MAX_ROOM_NUMBER: 'Room number must be less then or equal to 1000',
         VALID_ROOM_STATUS: 'Status must be either available or occupied',
         HOTEL_ID_REQUIRED: 'Hotel ID is required',
         HOTEL_ROOM_AMENITIES_REQUIRED: 'Room amenities is required',
@@ -93,7 +97,9 @@ export class ResponseMessages {
         VALID_ROOM_ID_FORMATE: 'Invalid room ID format',
         HOTEL_ROOM_PRICE_PER_NIGHT_REQUIRED: 'Room price per night is required',
         MIN_ROOM_PRICE_PER_NIGHT: 'Price per night must be at least 1',
+        MAX_ROOM_PRICE_PER_NIGHT: 'Price per night must be less then or equal to 100000000',
         MIN_ROOM_COUNT: 'room count must be at least 1',
+        MAX_ROOM_COUNT: 'room count must be less than or equal to 100',
         HOTEL_ROOM_TYPE_FORMATE: 'Room type must be a string',
         HOTEL_ROOM_TYPE: 'Room type must be one of the following: Standard Room, Deluxe Room, Suite, Executive Room, or Family Room.',
         HOTEL_ROOM_TYPE_REQUIRED: 'Room type is required',
@@ -108,6 +114,8 @@ export class ResponseMessages {
     static room_inventory = {
         BOOKING_ID_REQUIRED: 'Booking ID is required',
         HOTEL_ID_REQUIRED: ' Hotel ID is required',
+        ROOM_INVENTORY_ID_REQUIRED: 'Room inventory id is required',
+        INVALID_MONGODB_ID: 'Mongodb ID is invalid',
         MAX_ROOMS_REACHED: 'Cannot create more physical rooms in inventory for this room type. Maximum allowed count is ',
         ROOM_ALREADY_CREATED: 'Room is already created for this hotel and room type with the given room number.',
         ROOM_ID_REQUIRED: 'Room ID is required',
@@ -117,7 +125,8 @@ export class ResponseMessages {
         ROOM_INVENTORY_DELETED_SUCCESSFULLY: 'Room from room inventory deleted successfully',
         ROOM_INVENTORY_NOT_FOUND: 'Room not found in room inventory',
         DUPLICATE_ROOM_NUMBER_IN_ROOM_INVENTORY: 'Duplicate room numbers found in the request payload',
-        ROOM_INVENTORY_ROOM_DELETED_SUCCESSFULLY: 'Room deleted successfully from room inventory.'
+        ROOM_INVENTORY_ROOM_DELETED_SUCCESSFULLY: 'Room deleted successfully from room inventory.',
+        VALID_ROOM_INVENTORIES_ARRAY: 'Room inventories must be an array'
     }
 
     static user = {

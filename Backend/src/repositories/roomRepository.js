@@ -1,8 +1,8 @@
 import mongoose from 'mongoose';
 import { Room } from '../entities/room.js'
 
-const getHotelSpecificRoomsList = async (id) => {
-    return await Room.aggregate([
+const getHotelSpecificRoomsList = async (id, role) => {
+    const pipeline = [
         { $match: { hotel_id: new mongoose.Types.ObjectId(id) } },
         {
             $lookup: {
@@ -12,7 +12,23 @@ const getHotelSpecificRoomsList = async (id) => {
                 as: 'room_inventories'
             }
         }
-    ]);
+    ];
+
+    if (role !== 'admin') {
+        pipeline.push({
+            $addFields: {
+                room_inventories: {
+                    $filter: {
+                        input: '$room_inventories',
+                        as: 'inventory',
+                        cond: { $eq: ['$$inventory.status', 'available'] }
+                    }
+                }
+            }
+        });
+    }
+
+    return await Room.aggregate(pipeline);
 }
 
 const createRoom = async (roomData) => {

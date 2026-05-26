@@ -7,6 +7,6 @@ import { verifyToken, isAdmin } from '../middleware/authMiddleware.js';
 const router = express.Router();
 
 // Delete specific room inventory(admin only)
-router.delete('/:room_inventory_id', verifyToken, isAdmin, roomInventoryController.deleteRoomInventory);
+router.delete('/:room_inventory_id', verifyToken, isAdmin,roomInventoryValidation.validateDeleteRoomfromRoomInventory, handleValidationErrors, roomInventoryController.deleteRoomInventory);
 
 export default router;

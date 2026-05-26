@@ -1,5 +1,5 @@
 import { body, param } from 'express-validator';
-import { ResponseMessages } from '../config/response_messages.js';
+import { ResponseMessages } from '../config/response_messages';
 
 const validateCreateBooking = [
     body('user_id').isMongoId().notEmpty().withMessage(ResponseMessages.booking.USER_ID_REQUIRED),
@@ -10,13 +10,37 @@ const validateCreateBooking = [
 
     body('guests.adult_count').notEmpty().withMessage(ResponseMessages.booking.ADULT_COUNT_MIN)
         .bail()
-        .isInt({ min: 1 }).withMessage(ResponseMessages.booking.ADULT_COUNT_MIN),
+        .isInt()
+        .custom(value => {
+            if (value < 1) {
+                throw new Error(ResponseMessages.booking.ADULT_COUNT_MIN)
+            } else if (value > 10) {
+                throw new Error(ResponseMessages.booking.ADULT_COUNT_MAX)
+            }
+            return true
+        }),
 
-    body('guests.child_count').optional().isInt({ min: 0 }).withMessage(ResponseMessages.booking.CHILD_COUNT_MIN),
+    body('guests.child_count').optional().isInt()
+        .custom(value => {
+            if (value < 0) {
+                throw new Error(ResponseMessages.booking.CHILD_COUNT_MIN);
+            } else if (value > 10) {
+                throw new Error(ResponseMessages.booking.CHILD_COUNT_MAX);
+            }
+            return true;
+        }),
 
     body('from').notEmpty().withMessage(ResponseMessages.booking.CHECK_IN_DATE)
         .bail()
-        .isISO8601().withMessage(ResponseMessages.booking.VALID_BOOKING_DATE_FORMATE),
+        .isISO8601().withMessage(ResponseMessages.booking.VALID_BOOKING_DATE_FORMATE)
+        .custom((value) => {
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            if (new Date(value) < today) {
+                throw new Error(ResponseMessages.booking.PAST_DATE_BOOKING);
+            }
+            return true;
+        }),
 
     body('to').notEmpty().withMessage(ResponseMessages.booking.CHECK_OUT_DATE)
         .bail()

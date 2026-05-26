@@ -23,14 +23,38 @@ const validateCreateRoom = [
         .isString().withMessage(ResponseMessages.room.VALID_ROOM_AMENIRIES_ARRAY_FORMATE),
 
     body('price_per_night').notEmpty().withMessage(ResponseMessages.room.HOTEL_ROOM_PRICE_PER_NIGHT_REQUIRED).bail()
-        .isInt({ min: 1 }).withMessage(ResponseMessages.room.MIN_ROOM_PRICE_PER_NIGHT),
+        .isInt()
+        .custom(value => {
+            if (value < 1) {
+                throw new Error(ResponseMessages.room.MIN_ROOM_PRICE_PER_NIGHT)
+            } else if (value > 100000000) {
+                throw new Error(ResponseMessages.room.MAX_ROOM_PRICE_PER_NIGHT)
+            }
+            return true
+        }),
 
     body('room_capacity.adult_count').notEmpty().withMessage(ResponseMessages.booking.ADULT_COUNT_MIN).bail()
-        .isInt({ min: 1 }).withMessage(ResponseMessages.booking.ADULT_COUNT_MIN),
+        .isInt()
+        .custom(value => {
+            if (value < 1) {
+                throw new Error(ResponseMessages.booking.ADULT_COUNT_MIN)
+            } else if (value > 10) {
+                throw new Error(ResponseMessages.booking.ADULT_COUNT_MAX)
+            }
+            return true
+        }),
 
     body('room_capacity.children_count').notEmpty().withMessage(ResponseMessages.room.CHILD_COUNT_REQUIRED)
         .bail()
-        .isInt({ min: 0 }).withMessage(ResponseMessages.booking.CHILD_COUNT_MIN),
+        .isInt()
+        .custom(value => {
+            if (value < 0) {
+                throw new Error(ResponseMessages.booking.CHILD_COUNT_MIN);
+            } else if (value > 10) {
+                throw new Error(ResponseMessages.booking.CHILD_COUNT_MAX);
+            }
+            return true;
+        }),
 
     body('room_images').optional().isArray().withMessage(ResponseMessages.hotel.VALID_IMAGE_FORMATE),
     body('room_images.*').isURL().withMessage(ResponseMessages.room.ROOM_IMAGES_REQUIRED)
@@ -38,7 +62,28 @@ const validateCreateRoom = [
         .custom(validateImageURL),
 
     body('room_count').notEmpty().withMessage(ResponseMessages.room.HOTEL_ROOM_COUNT_REQUIRED).bail()
-        .isInt({ min: 1 }).withMessage(ResponseMessages.room.MIN_ROOM_COUNT)
+        .isInt()
+        .custom(value => {
+            if (value < 1) {
+                throw new Error(ResponseMessages.room.MIN_ROOM_COUNT);
+            } else if (value > 100) {
+                throw new Error(ResponseMessages.room.MAX_ROOM_COUNT);
+            }
+            return true;
+        }),
+
+    body('room_inventories').optional().isArray().withMessage(ResponseMessages.room_inventory.VALID_ROOM_INVENTORIES_ARRAY),
+    body('room_inventories.*.room_number').notEmpty().withMessage(ResponseMessages.room_inventory.ROOM_NUMBER_REQUIRED).bail()
+        .isInt()
+        .custom(value => {
+            if (value < 1) {
+                throw new Error(ResponseMessages.room.VALID_ROOM_NUMBER);
+            } else if (value > 1000) {
+                throw new Error(ResponseMessages.room.MAX_ROOM_NUMBER);
+            }
+            return true;
+        }),
+    body('room_inventories.*.status').optional().isIn(['available', 'occupied']).withMessage(ResponseMessages.room.VALID_ROOM_STATUS)
 ]
 
 const validateUpdateRoom = [
@@ -64,13 +109,37 @@ const validateUpdateRoom = [
         .isString().withMessage(ResponseMessages.room.VALID_ROOM_AMENIRIES_ARRAY_FORMATE),
 
     body('price_per_night').optional().notEmpty().withMessage(ResponseMessages.room.HOTEL_ROOM_PRICE_PER_NIGHT_REQUIRED).bail()
-        .isInt({ min: 1 }).withMessage(ResponseMessages.room.MIN_ROOM_PRICE_PER_NIGHT),
+        .isInt()
+        .custom(value => {
+            if (value < 1) {
+                throw new Error(ResponseMessages.room.MIN_ROOM_PRICE_PER_NIGHT)
+            } else if (value > 100000000) {
+                throw new Error(ResponseMessages.room.MAX_ROOM_PRICE_PER_NIGHT)
+            }
+            return true
+        }),
 
     body('room_capacity.adult_count').optional().notEmpty().withMessage(ResponseMessages.booking.ADULT_COUNT_MIN).bail()
-        .isInt({ min: 1 }).withMessage(ResponseMessages.booking.ADULT_COUNT_MIN),
+        .isInt()
+        .custom(value => {
+            if (value < 1) {
+                throw new Error(ResponseMessages.booking.ADULT_COUNT_MIN)
+            } else if (value > 10) {
+                throw new Error(ResponseMessages.booking.ADULT_COUNT_MAX)
+            }
+            return true
+        }),
 
     body('room_capacity.children_count').optional().notEmpty().withMessage(ResponseMessages.room.CHILD_COUNT_REQUIRED).bail()
-        .isInt({ min: 0 }).withMessage(ResponseMessages.booking.CHILD_COUNT_MIN),
+        .isInt()
+        .custom(value => {
+            if (value < 0) {
+                throw new Error(ResponseMessages.booking.CHILD_COUNT_MIN);
+            } else if (value > 10) {
+                throw new Error(ResponseMessages.booking.CHILD_COUNT_MAX);
+            }
+            return true;
+        }),
 
     body('room_images').optional().isArray().withMessage(ResponseMessages.hotel.VALID_IMAGE_FORMATE),
     body('room_images.*').isURL().withMessage(ResponseMessages.room.ROOM_IMAGES_REQUIRED)
@@ -78,7 +147,28 @@ const validateUpdateRoom = [
         .custom(validateImageURL),
 
     body('room_count').optional().notEmpty().withMessage(ResponseMessages.room.HOTEL_ROOM_COUNT_REQUIRED).bail()
-        .isInt({ min: 1 }).withMessage(ResponseMessages.room.MIN_ROOM_COUNT)
+        .isInt()
+        .custom(value => {
+            if (value < 1) {
+                throw new Error(ResponseMessages.room.MIN_ROOM_COUNT);
+            } else if (value > 100) {
+                throw new Error(ResponseMessages.room.MAX_ROOM_COUNT);
+            }
+            return true;
+        }),
+
+    body('room_inventories').optional().isArray().withMessage(ResponseMessages.room_inventory.VALID_ROOM_INVENTORIES_ARRAY),
+    body('room_inventories.*.room_number').notEmpty().withMessage(ResponseMessages.room_inventory.ROOM_NUMBER_REQUIRED).bail()
+        .isInt()
+        .custom(value => {
+            if (value < 1) {
+                throw new Error(ResponseMessages.room.VALID_ROOM_NUMBER);
+            } else if (value > 1000) {
+                throw new Error(ResponseMessages.room.MAX_ROOM_NUMBER);
+            }
+            return true;
+        }),
+    body('room_inventories.*.status').optional().isIn(['available', 'occupied']).withMessage(ResponseMessages.room.VALID_ROOM_STATUS)
 ]
 
 const validateRoomIdParam = [
