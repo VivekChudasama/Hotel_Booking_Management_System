@@ -59,11 +59,6 @@ const getAllRoomNumbers = async (hotelId, roomId) => {
     }).select('room_number status -_id');
 };
 
-const getAllRoomNumbersByHotel = async (hotelId) => {
-    return await RoomInventory.find({
-        hotel_id: hotelId
-    }).select('room_number status room_id -_id').populate('room_id', 'room_type');
-};
 
 const deleteRoomInventoryById = async (id) => {
     return await RoomInventory.findOneAndDelete({ _id: id });
@@ -79,6 +74,5 @@ export default {
     releaseRoomInventory,
     getAvailableRoomsByHotel,
     getAllRoomNumbers,
-    getAllRoomNumbersByHotel,
     deleteRoomInventoryById
 };

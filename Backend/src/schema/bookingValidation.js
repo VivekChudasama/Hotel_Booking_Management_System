@@ -1,5 +1,5 @@
 import { body, param } from 'express-validator';
-import { ResponseMessages } from '../config/response_messages';
+import { ResponseMessages } from '../config/response_messages.js';
 
 const validateCreateBooking = [
     body('user_id').isMongoId().notEmpty().withMessage(ResponseMessages.booking.USER_ID_REQUIRED),

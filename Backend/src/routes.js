@@ -24,7 +24,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use('/auth', authRoutes);
 app.use('/users', userRoutes);
 app.use('/hotels', hotelRoutes);
-app.use('/Booking', bookingRoutes);
+app.use('/booking', bookingRoutes);
 app.use('/rooms', roomRoutes);
 app.use('/room_inventory', roomInventoryRoutes);
  

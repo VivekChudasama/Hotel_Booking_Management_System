@@ -17,8 +17,6 @@ const getHotelInventory = async (req, res) => {
             return res.status(Constants.RESPONSE_STATUS_CODE.SUCCESS_CODE).json(roomNumbers);
         }
 
-        const roomNumbers = await roomInventoryService.getAllRoomNumbersByHotelService(hotel_id);
-        return res.status(Constants.RESPONSE_STATUS_CODE.SUCCESS_CODE).json(roomNumbers);
     } catch (error) {
         res.status(Constants.RESPONSE_STATUS_CODE.FAIL_CODE).json({ message: error.message });
     }
