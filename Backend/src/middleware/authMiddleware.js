@@ -2,6 +2,7 @@ import jwt from 'jsonwebtoken';
 import { Constants } from '../config/Constants.js';
 import { ResponseMessages } from '../config/response_messages.js';
 
+//verify user token
 export const verifyToken = (req, res, next) => {
     let token;
     const authHeader = req.headers['authorization'];
@@ -33,6 +34,7 @@ export const verifyToken = (req, res, next) => {
     }
 };
 
+//check user role is admin or not
 export const isAdmin = (req, res, next) => {
     if (!req.user) {
         return res.status(Constants.RESPONSE_STATUS_CODE.UNAUTHORIZED_CODE).json({

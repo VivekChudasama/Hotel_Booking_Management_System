@@ -3,7 +3,7 @@ import { Tables } from '../config/tables.js';
 
 const bookingSchema = new mongoose.Schema({
     user_id: { type: mongoose.Schema.Types.ObjectId, ref: 'Users', required: true, index: true },
-    // room_inventory_id: { type: mongoose.Schema.Types.ObjectId, ref: 'room_inventory', index: true },
+    room_inventory_id: { type: mongoose.Schema.Types.ObjectId, ref: 'room_inventory', index: true },
     guests: {
         adult_count: { type: Number, required: true },
         child_count: { type: Number, default: 0 }
@@ -21,5 +21,15 @@ const bookingSchema = new mongoose.Schema({
         index: true
     }
 }, { timestamps: true });
+
+bookingSchema.virtual('room_inventory', {
+    ref: Tables.ROOM_INVENTORY,
+    localField: '_id',
+    foreignField: 'booking_id',
+    justOne: true
+});
+
+bookingSchema.set('toObject', { virtuals: true });
+bookingSchema.set('toJSON', { virtuals: true });
 
 export const Booking = mongoose.models[Tables.BOOKING] || mongoose.model(Tables.BOOKING, bookingSchema);

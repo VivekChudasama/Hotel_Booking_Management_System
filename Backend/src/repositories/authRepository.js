@@ -1,13 +1,16 @@
 import { User } from '../entities/user.js';
 
+//find user by email
 const findUserByEmail = async (email) => {
     return await User.findOne({ email });
 };
 
+//find user by phone_number
 const findUserByPhone = async (phone_number) => {
     return await User.findOne({ phone_number });
 };
 
+//create new user
 const createUser = async (userData) => {
     const user = new User(userData);
     return await user.save();

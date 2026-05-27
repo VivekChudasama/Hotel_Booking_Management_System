@@ -19,14 +19,14 @@ const validateCreateHotel = [
         .bail()
         .isLength({ min: 10, max: 10 }).withMessage(ResponseMessages.auth.USER_PHONE_NUMBER_LENGTH),
 
-    body('images').optional().isArray().withMessage(ResponseMessages.hotel.VALID_IMAGE_FORMATE),
-    body('images.*').isURL().withMessage(ResponseMessages.user.INVALID_IMAGE_URL)
+    body('images').optional().isArray().withMessage(ResponseMessages.common.MUST_BE_ARRAY),
+    body('images.*').isURL().withMessage(ResponseMessages.common.MUST_BE_URL)
         .bail()
         .custom(validateImageURL),
 
     body('description').trim().notEmpty().withMessage(ResponseMessages.hotel.DESCRIPTION_REQUIRED)
         .bail()
-        .isString().withMessage(ResponseMessages.hotel.VALID_DESCRIPTION_FORMATE)
+        .isString().withMessage(ResponseMessages.common.MUST_BE_STRING)
         .isLength({ max: 1024 }).withMessage(ResponseMessages.hotel.VALID_DESCRIPTION_LENGTH),
 
     body('address').trim().notEmpty().withMessage(ResponseMessages.hotel.ADDRESS_REQUIRED)
@@ -41,7 +41,7 @@ const validateCreateHotel = [
 ];
 
 const validateUpdateHotel = [
-    param('hotel_id').isMongoId().notEmpty().withMessage(ResponseMessages.hotel.HOTEL_ID_REQUIRED),
+    param('hotel_id').isMongoId().withMessage(ResponseMessages.common.MUST_BE_MONGO_ID).notEmpty().withMessage(ResponseMessages.hotel.HOTEL_ID_REQUIRED),
 
     body('name').optional().trim().notEmpty().withMessage(ResponseMessages.auth.NAME_REQUIRED)
         .bail()
@@ -58,8 +58,8 @@ const validateUpdateHotel = [
         .bail()
         .isLength({ min: 10, max: 10 }).withMessage(ResponseMessages.auth.USER_PHONE_NUMBER_LENGTH),
 
-    body('images').optional().isArray().withMessage(ResponseMessages.hotel.VALID_IMAGE_FORMATE),
-    body('images.*').isURL().withMessage(ResponseMessages.user.INVALID_IMAGE_URL)
+    body('images').optional().isArray().withMessage(ResponseMessages.common.MUST_BE_ARRAY),
+    body('images.*').isURL().withMessage(ResponseMessages.common.MUST_BE_URL)
         .bail()
         .custom(validateImageURL),
 
@@ -79,7 +79,7 @@ const validateUpdateHotel = [
 ];
 
 const validateHotelIdParam = [
-    param('hotel_id').isMongoId().notEmpty().withMessage(ResponseMessages.hotel.HOTEL_ID_REQUIRED)
+    param('hotel_id').isMongoId().withMessage(ResponseMessages.common.MUST_BE_MONGO_ID).notEmpty().withMessage(ResponseMessages.hotel.HOTEL_ID_REQUIRED)
 ]
 
 export default {

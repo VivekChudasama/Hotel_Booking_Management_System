@@ -1,23 +1,49 @@
-import { param, query } from 'express-validator';
+import { body, param, query } from 'express-validator';
 import { ResponseMessages } from '../config/response_messages.js';
 
+const validateCreateRoomInventory = [
+    body('hotel_id').notEmpty().withMessage(ResponseMessages.room_inventory.HOTEL_ID_REQUIRED).bail()
+        .isMongoId().withMessage(ResponseMessages.hotel.VALID_HOTEL_ID),
+
+    body('room_id').notEmpty().withMessage(ResponseMessages.room_inventory.ROOM_ID_REQUIRED).bail()
+        .isMongoId().withMessage(ResponseMessages.room.VALID_ROOM_ID),
+
+    body('room_number').notEmpty().withMessage(ResponseMessages.room_inventory.ROOM_NUMBER_REQUIRED).bail()
+        .isInt({ min: 1 }).withMessage(ResponseMessages.room.VALID_ROOM_NUMBER),
+
+    body('status').optional().isIn(['available', 'occupied'])
+        .withMessage(ResponseMessages.room.VALID_ROOM_STATUS)
+];
+
+const validateGetAvailableRooms = [
+    param('hotel_id').notEmpty().withMessage(ResponseMessages.hotel.HOTEL_ID_REQUIRED).bail()
+        .isMongoId().withMessage(ResponseMessages.hotel.VALID_HOTEL_ID)
+];
+
+const validateGetAllRoomNumbers = [
+    param('hotel_id').notEmpty().withMessage(ResponseMessages.hotel.HOTEL_ID_REQUIRED).bail()
+        .isMongoId().withMessage(ResponseMessages.hotel.VALID_HOTEL_ID),
+
+    param('room_id').notEmpty().withMessage(ResponseMessages.room.HOTEL_ROOM_ID_REQUIRED).bail()
+        .isMongoId().withMessage(ResponseMessages.room.VALID_ROOM_ID)
+];
+
 const validateGetHotelInventory = [
-    param('hotel_id').notEmpty().withMessage(ResponseMessages.hotel.HOTEL_ID_REQUIRED)
-        .bail()
-        .isMongoId().withMessage(ResponseMessages.room_inventory.INVALID_MONGODB_ID),
-
+    param('hotel_id').notEmpty().withMessage(ResponseMessages.hotel.HOTEL_ID_REQUIRED).bail()
+        .isMongoId().withMessage(ResponseMessages.hotel.VALID_HOTEL_ID),
     query('room_id').optional().isMongoId().withMessage(ResponseMessages.room.VALID_ROOM_ID),
-
     query('status').optional().isIn(['available', 'occupied']).withMessage(ResponseMessages.room.VALID_ROOM_STATUS)
 ];
 
 const validateDeleteRoomfromRoomInventory = [
-    param('room_inventory_id').notEmpty().withMessage(ResponseMessages.room_inventory.ROOM_INVENTORY_ID_REQUIRED)
-        .bail()
-        .isMongoId().withMessage(ResponseMessages.room_inventory.INVALID_MONGODB_ID)
-]
+    param('room_inventory_id').notEmpty().withMessage(ResponseMessages.room_inventory.ROOM_INVENTORY_ID_REQUIRED).bail()
+        .isMongoId().withMessage(ResponseMessages.room_inventory.VALID_ROOM_INVENTORY_ID)
+];
 
 export default {
+    validateCreateRoomInventory,
+    validateGetAvailableRooms,
+    validateGetAllRoomNumbers,
     validateGetHotelInventory,
     validateDeleteRoomfromRoomInventory
 };

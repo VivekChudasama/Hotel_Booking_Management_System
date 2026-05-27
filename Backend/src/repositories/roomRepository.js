@@ -36,9 +36,9 @@ const createRoom = async (roomData) => {
     return await room.save();
 }
 
-const updateRoomById = async (id, updateRoomData) => {
-    return await Room.findByIdAndUpdate(id, updateRoomData, { useFindAndModify: true });
-}
+// const updateRoomById = async (id, updateRoomData) => {
+//     return await Room.findByIdAndUpdate(id, updateRoomData, { useFindAndModify: true });
+// }
 
 const deleteRoomById = async (id) => {
     return await Room.findByIdAndDelete(id)
@@ -51,7 +51,7 @@ const getRoomById = async (id) => {
 export default {
     getHotelSpecificRoomsList,
     createRoom,
-    updateRoomById,
+    // updateRoomById,
     deleteRoomById,
     getRoomById,
 }

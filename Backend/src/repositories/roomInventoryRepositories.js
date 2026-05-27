@@ -4,18 +4,18 @@ const getRoomInventoryRoomById = async (id) => {
     return await RoomInventory.findById({ _id: id })
 }
 
-const createRoomInventory = async (data) => {
-    const roomInventory = new RoomInventory(data);
-    return await roomInventory.save();
-};
+// const createRoomInventory = async (data) => {
+//     const roomInventory = new RoomInventory(data);
+//     return await roomInventory.save();
+// };
 
-const findRoomInventoryByRoomNumber = async (hotelId, roomId, roomNumber) => {
-    return await RoomInventory.findOne({
-        hotel_id: hotelId,
-        room_id: roomId,
-        room_number: roomNumber
-    });
-};
+// const findRoomInventoryByRoomNumber = async (hotelId, roomId, roomNumber) => {
+//     return await RoomInventory.findOne({
+//         hotel_id: hotelId,
+//         room_id: roomId,
+//         room_number: roomNumber
+//     });
+// };
 
 const findAvailableRoomForDates = async (roomId, hotelId, bookedInventoryIds) => {
     return await RoomInventory.findOne({
@@ -25,9 +25,9 @@ const findAvailableRoomForDates = async (roomId, hotelId, bookedInventoryIds) =>
     });
 };
 
-const countRoomInventoryByRoomId = async (roomId) => {
-    return await RoomInventory.countDocuments({ room_id: roomId });
-};
+// const countRoomInventoryByRoomId = async (roomId) => {
+//     return await RoomInventory.countDocuments({ room_id: roomId });
+// };
 
 const updateRoomInventoryStatus = async (inventoryId, status, bookingId) => {
     return await RoomInventory.findByIdAndUpdate(
@@ -37,13 +37,13 @@ const updateRoomInventoryStatus = async (inventoryId, status, bookingId) => {
     );
 };
 
-const releaseRoomInventory = async (bookingId) => {
-    return await RoomInventory.findOneAndUpdate(
-        { booking_id: bookingId },
-        { status: 'available', booking_id: null },
-        { new: true }
-    );
-};
+// const releaseRoomInventory = async (bookingId) => {
+//     return await RoomInventory.findOneAndUpdate(
+//         { booking_id: bookingId },
+//         { status: 'available', booking_id: null },
+//         { new: true }
+//     );
+// };
 
 const getAvailableRoomsByHotel = async (hotelId) => {
     return await RoomInventory.find({
@@ -56,7 +56,7 @@ const getAllRoomNumbers = async (hotelId, roomId) => {
     return await RoomInventory.find({
         hotel_id: hotelId,
         room_id: roomId
-    }).select('room_number status -_id');
+    }).select('room_number -_id');
 };
 
 
@@ -66,12 +66,12 @@ const deleteRoomInventoryById = async (id) => {
 
 export default {
     getRoomInventoryRoomById,
-    createRoomInventory,
-    findRoomInventoryByRoomNumber,
+    // createRoomInventory,
+    // findRoomInventoryByRoomNumber,
     findAvailableRoomForDates,
-    countRoomInventoryByRoomId,
+    // countRoomInventoryByRoomId,
     updateRoomInventoryStatus,
-    releaseRoomInventory,
+    // releaseRoomInventory,
     getAvailableRoomsByHotel,
     getAllRoomNumbers,
     deleteRoomInventoryById
