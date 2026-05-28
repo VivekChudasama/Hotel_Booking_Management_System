@@ -53,6 +53,10 @@ export class ResponseMessages {
         MAX_BOOKING_DATE: 'Booking date cannot be more than 6 months in the future',
         MAX_BOOKING_DURATION: 'Maximum booking duration is 60 days',
         ROOM_INVENTORY_ID_REQUIRED: 'Room inventory ID is required',
+        VALID_ADULT_COUNT_RANGE: 'Adult count must be an integer between 1 and 10',
+        VALID_CHILDREN_COUNT_RANGE: 'Children count must be an integer between 0 and 10',
+        VALID_TOTAL_AMOUNT_RANGE: 'Total amount must be a number greater than or equal to 1',
+
     }
 
     static hotel = {
@@ -77,13 +81,6 @@ export class ResponseMessages {
         VALID_DESCRIPTION_FORMATE: 'Description must be a valid string',
         VALID_DESCRIPTION_LENGTH: 'Description must be less than 1024 characters',
         VALID_HOTEL_NAME_FORMATE: 'Hotel name can only contain letters, numbers, spaces, dots, commas, apostrophes, and hyphens'
-    }
-
-    static payment = {
-        BOOKING_ID_REQUIRED: 'Booking ID is required',
-        PAYMENT_AMOUNT_REQUIRED: 'Total payment amount is required',
-        PAYMENT_METHOD_REQUIRED: 'Payment method is required',
-        PAYMENT_STATUS_REQUIRED: 'Payment status is required'
     }
 
     static room = {
@@ -116,6 +113,10 @@ export class ResponseMessages {
         CHILD_COUNT_REQUIRED: 'Children count is required',
         ROOM_IMAGES_REQUIRED: 'Room images is required',
         HOTEL_ROOM_NOT_FOUND: 'Hotel room not found',
+        VALID_PRICE_PER_NIGHT_RANGE: 'Price per night must be an integer between 1 and 1000000',
+        VALID_ADULT_COUNT_RANGE: 'Adult count must be an integer between 1 and 10',
+        VALID_CHILDREN_COUNT_RANGE: 'Children count must be an integer between 0 and 10',
+        VALID_ROOM_COUNT_RANGE: 'Room count must be an integer between 1 and 1000'
     }
 
     static room_inventory = {
@@ -131,7 +132,8 @@ export class ResponseMessages {
         ROOM_INVENTORY_NOT_FOUND: 'Room not found in room inventory',
         DUPLICATE_ROOM_NUMBER_IN_ROOM_INVENTORY: 'Duplicate room numbers found in the request payload',
         ROOM_INVENTORY_ROOM_DELETED_SUCCESSFULLY: 'Room deleted successfully from room inventory.',
-        VALID_ROOM_INVENTORIES_ARRAY: 'Room inventories must be an array'
+        VALID_ROOM_INVENTORIES_ARRAY: 'Room inventories must be an array',
+        VALID_ROOM_NUMBER_RANGE: 'Room number must be an integer greater than or equal to 1'
     }
 
     static user = {
@@ -145,5 +147,13 @@ export class ResponseMessages {
         USER_PHONE_NUMBER_REQUIRED: 'Phone number is required',
         USER_ROLE_REQUIRED: 'User role is required',
         USER_NOT_FOUND: 'User not found',
+    }
+
+    static payment = {
+        PAYMENT_AMOUNT_REQUIRED: 'Total payment amount is required',
+        PAYMENT_METHOD_REQUIRED: 'Payment method is required',
+        PAYMENT_STATUS_REQUIRED: 'Payment status is required',
+        ACCEPETED_PAYMENT_METHODS: 'Payment method must be one of the following: Card Payment, Digital Payment, or Cash Payment.',
+        INVALIDE_PAYMENT_STATUS: 'Invalid payment status. Payment status must be one of the following: pending, confirmed, or cancelled.'
     }
 }

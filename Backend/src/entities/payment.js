@@ -5,7 +5,11 @@ const paymentSchema = new mongoose.Schema({
     booking_id: { type: mongoose.Schema.Types.ObjectId, ref: 'Bookings', required: true, index: true },
     amount: { type: Number, required: true },
     payment_date: { type: Date, default: Date.now },
-    payment_method: { type: String, required: true },
+    payment_method: {
+        type: String,
+        enum: ['Card Payment', 'Digital Payment', 'Cash Payment'],
+        required: true
+    },
     payment_status: {
         type: String,
         enum: ['pending', 'confirmed', 'cancelled'],

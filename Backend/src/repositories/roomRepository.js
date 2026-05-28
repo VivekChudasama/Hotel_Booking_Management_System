@@ -26,6 +26,11 @@ const getHotelSpecificRoomsList = async (id, role) => {
                 }
             }
         });
+        pipeline.push({
+            $match: {
+                $expr: { $gt: [{ $size: '$room_inventories' }, 0] }
+            }
+        });
     }
 
     return await Room.aggregate(pipeline);
@@ -35,10 +40,6 @@ const createRoom = async (roomData) => {
     const room = new Room(roomData);
     return await room.save();
 }
-
-// const updateRoomById = async (id, updateRoomData) => {
-//     return await Room.findByIdAndUpdate(id, updateRoomData, { useFindAndModify: true });
-// }
 
 const deleteRoomById = async (id) => {
     return await Room.findByIdAndDelete(id)
@@ -51,7 +52,6 @@ const getRoomById = async (id) => {
 export default {
     getHotelSpecificRoomsList,
     createRoom,
-    // updateRoomById,
     deleteRoomById,
     getRoomById,
 }

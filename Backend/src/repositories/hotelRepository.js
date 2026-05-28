@@ -28,7 +28,7 @@ const getHotelByPhone = async (phone_number) => {
 
 //update hotel by id
 const updateHotelById = async (id, updateHotelData) => {
-    return await Hotel.findByIdAndUpdate(id, updateHotelData, { useFindAndModify: true });
+    return await Hotel.findByIdAndUpdate(id, updateHotelData, { new: true });
 };
 
 //delete hotel by id

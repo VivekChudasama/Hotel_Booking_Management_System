@@ -7,11 +7,14 @@ const roomInventorySchema = new mongoose.Schema({
     room_number: { type: Number, required: true },
     status: {
         type: String,
-        enum: ['available', 'occupied'],
         default: 'available',
         required: true
     },
-    booking_id: { type: mongoose.Schema.Types.ObjectId, ref: 'Bookings', default: null },
+    bookings: [{
+        booking_id: { type: mongoose.Schema.Types.ObjectId, ref: 'Bookings' },
+        from: { type: Date },
+        to: { type: Date }
+    }],
 
 }, { timestamps: true });
 

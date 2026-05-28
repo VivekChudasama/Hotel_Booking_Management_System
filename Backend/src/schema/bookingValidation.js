@@ -10,10 +10,10 @@ const validateCreateBooking = [
 
     body('guests.adult_count').notEmpty().withMessage(ResponseMessages.booking.ADULT_COUNT_MIN)
         .bail()
-        .isInt({ min: 1, max: 10 }).withMessage(ResponseMessages.common.MUST_BE_INTEGER),
+        .isInt({ min: 1, max: 10 }).withMessage(ResponseMessages.booking.VALID_ADULT_COUNT_RANGE),
 
     body('guests.child_count').optional().isInt({ min: 0, max: 10 })
-        .withMessage(ResponseMessages.common.MUST_BE_INTEGER),
+        .withMessage(ResponseMessages.booking.VALID_CHILDREN_COUNT_RANGE),
 
     body('from').notEmpty().withMessage(ResponseMessages.booking.CHECK_IN_DATE)
         .bail()
@@ -46,7 +46,7 @@ const validateCreateBooking = [
             const diffTime = Math.abs(toDate - fromDate);
             const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
             if (diffDays > 60) {
-                throw new Error("Maximum booking duration is 60 days");
+                throw new Error(ResponseMessages.booking.MAX_BOOKING_DURATION);
             }
             return true;
         }),
@@ -61,10 +61,18 @@ const validateCreateBooking = [
 
     body('total_amount').notEmpty().withMessage(ResponseMessages.booking.TOTAL_AMOUNT_REQUIRED)
         .bail()
-        .isFloat({ min: 0 }).withMessage(ResponseMessages.common.MUST_BE_NUMERIC),
+        .isFloat({ min: 1 }).withMessage(ResponseMessages.booking.VALID_TOTAL_AMOUNT_RANGE),
 
     body('booking_status').optional().isIn(['pending', 'confirmed', 'cancelled', 'checked in', 'checked out'])
-        .withMessage(ResponseMessages.booking.INVALID_BOOKING_STATUS)
+        .withMessage(ResponseMessages.booking.INVALID_BOOKING_STATUS),
+
+    body('payment_method').notEmpty().withMessage(ResponseMessages.payment.PAYMENT_METHOD_REQUIRED)
+        .bail()
+        .isString().withMessage("Payment method must be a string")
+        .isIn(['Card Payment', 'Digital Payment', 'Cash Payment']).withMessage(ResponseMessages.payment.ACCEPETED_PAYMENT_METHODS),
+
+    body('payment_status').optional().isIn(['pending', 'confirmed', 'cancelled'])
+        .withMessage(ResponseMessages.payment.INVALIDE_PAYMENT_STATUS)
 ]
 
 const validateBookingId = [

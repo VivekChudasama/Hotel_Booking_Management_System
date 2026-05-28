@@ -7,10 +7,12 @@ const getUserService = async (id) => {
     if (!existingUser) {
         throw new Error(ResponseMessages.user.USER_NOT_FOUND);
     }
+
     return existingUser
 }
 
 const updateUserService = async (id, updateUserData) => {
+    updateUserData = updateUserData || {};
     const existingUser = await userRepository.getUserById(id)
 
     if (!existingUser) {

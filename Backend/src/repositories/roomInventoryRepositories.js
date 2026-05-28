@@ -4,19 +4,6 @@ const getRoomInventoryRoomById = async (id) => {
     return await RoomInventory.findById({ _id: id })
 }
 
-// const createRoomInventory = async (data) => {
-//     const roomInventory = new RoomInventory(data);
-//     return await roomInventory.save();
-// };
-
-// const findRoomInventoryByRoomNumber = async (hotelId, roomId, roomNumber) => {
-//     return await RoomInventory.findOne({
-//         hotel_id: hotelId,
-//         room_id: roomId,
-//         room_number: roomNumber
-//     });
-// };
-
 const findAvailableRoomForDates = async (roomId, hotelId, bookedInventoryIds) => {
     return await RoomInventory.findOne({
         room_id: roomId,
@@ -25,25 +12,22 @@ const findAvailableRoomForDates = async (roomId, hotelId, bookedInventoryIds) =>
     });
 };
 
-// const countRoomInventoryByRoomId = async (roomId) => {
-//     return await RoomInventory.countDocuments({ room_id: roomId });
-// };
 
-const updateRoomInventoryStatus = async (inventoryId, status, bookingId) => {
+const addBookingToInventory = async (inventoryId, bookingId, from, to, session) => {
     return await RoomInventory.findByIdAndUpdate(
         inventoryId,
-        { status, booking_id: bookingId },
-        { new: true }
+        { $push: { bookings: { booking_id: bookingId, from, to } } },
+        { returnDocument: 'after', session }
     );
 };
 
-// const releaseRoomInventory = async (bookingId) => {
-//     return await RoomInventory.findOneAndUpdate(
-//         { booking_id: bookingId },
-//         { status: 'available', booking_id: null },
-//         { new: true }
-//     );
-// };
+const removeBookingFromInventory = async (bookingId) => {
+    return await RoomInventory.findOneAndUpdate(
+        { 'bookings.booking_id': bookingId },
+        { $pull: { bookings: { booking_id: bookingId } } },
+        { returnDocument: 'after' }
+    );
+};
 
 const getAvailableRoomsByHotel = async (hotelId) => {
     return await RoomInventory.find({
@@ -66,12 +50,9 @@ const deleteRoomInventoryById = async (id) => {
 
 export default {
     getRoomInventoryRoomById,
-    // createRoomInventory,
-    // findRoomInventoryByRoomNumber,
     findAvailableRoomForDates,
-    // countRoomInventoryByRoomId,
-    updateRoomInventoryStatus,
-    // releaseRoomInventory,
+    addBookingToInventory,
+    removeBookingFromInventory,
     getAvailableRoomsByHotel,
     getAllRoomNumbers,
     deleteRoomInventoryById
