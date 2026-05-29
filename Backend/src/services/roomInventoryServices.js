@@ -11,13 +11,12 @@ const deleteRoomInventoryService = async (inventoryId) => {
         throw new Error(ResponseMessages.room_inventory.ROOM_INVENTORY_NOT_FOUND);
     }
 
-    //check if there are active bookings for this specific room inventory
-    const activeBookings = await Booking.find({
-        room_inventory_id: inventoryId,
+    const hasActiveBookings = await Booking.exists({
+        room_inventory_ids: inventoryId,
         booking_status: { $in: ['pending', 'confirmed', 'checked in'] }
     });
 
-    if (activeBookings.length > 0) {
+    if (hasActiveBookings) {
         throw new Error(ResponseMessages.room.ACTIVE_BOOKINGS_EXIST);
     }
 
@@ -29,6 +28,11 @@ const deleteRoomInventoryService = async (inventoryId) => {
 };
 
 const getAvailableRoomsByHotelService = async (hotelId) => {
+    const hotel = await hotelRepository.getHotelById(hotelId)
+    if (!hotel) {
+        throw new Error(ResponseMessages.hotel.HOTEL_NOT_FOUND)
+    }
+
     return await roomInventoryRepositories.getAvailableRoomsByHotel(hotelId);
 };
 

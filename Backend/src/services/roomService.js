@@ -1,16 +1,21 @@
 import mongoose from 'mongoose';
 import roomRepository from '../repositories/roomRepository.js';
+import bookingRepository from '../repositories/bookingRepository.js';
 import { Room } from '../entities/room.js';
 import { Booking } from '../entities/booking.js';
 import { RoomInventory } from '../entities/room_inventory.js';
 import { ResponseMessages } from '../config/response_messages.js';
+import hotelRepository from '../repositories/hotelRepository.js';
 
-const getroomListService = async (id, role) => {
-    return await roomRepository.getHotelSpecificRoomsList(id, role);
+const getroomListService = async (id, role, query = {}) => {
+    let bookedInventoryIds = [];
+    if (query.from && query.to) {
+        bookedInventoryIds = await bookingRepository.getBookedInventoryIdsForHotelDates(id, query.from, query.to);
+    }
+    return await roomRepository.getHotelSpecificRoomsList(id, role, query, bookedInventoryIds);
 };
 
 // Creates a new room or updates the room count if the room type already exists.
-
 const createRoomService = async (roomData) => {
     const { room_inventories, hotel_id, room_type, ...roomFields } = roomData;
 
@@ -79,7 +84,6 @@ const createRoomService = async (roomData) => {
 };
 
 // Updates an existing room's details and manages its inventories.
-
 const updateRoomService = async (id, updateRoomData) => {
     const existingRoom = await roomRepository.getRoomById(id);
     if (!existingRoom) {
@@ -117,11 +121,11 @@ const updateRoomService = async (id, updateRoomData) => {
 
         for (const inv of room_inventories) {
             // Find the inventory ID from possible aliases
-            const inventoryId = inv.room_inventory_id || inv.Room_inventory_id || inv._id || inv.id;
+            const inventoryId = inv.room_inventory_id;
 
             if (inventoryId) {
                 // Update specific existing inventory item by inventory ID
-                const { room_inventory_id, Room_inventory_id, _id, id, ...updateFields } = inv;
+                const { room_inventory_id, ...updateFields } = inv;
                 inventoryUpdateOperations.push({
                     updateOne: {
                         filter: { _id: inventoryId },
@@ -161,9 +165,8 @@ const updateRoomService = async (id, updateRoomData) => {
     return await roomRepository.getRoomById(id);
 };
 
-/*
-Deletes a room and its associated inventories, ensuring no active bookings exist.
- */
+// Deletes a room and its associated inventories, ensuring no active bookings exist.
+
 const deleteRoomService = async (id) => {
     const existingRoom = await roomRepository.getRoomById(id);
     if (!existingRoom) {
@@ -174,16 +177,16 @@ const deleteRoomService = async (id) => {
     const inventories = await RoomInventory.find({ room_id: id }).select('_id');
     const inventoryIds = inventories.map(inv => inv._id);
 
-    const activeBookings = await Booking.find({
-        room_inventory_id: { $in: inventoryIds },
+    const hasActiveBookings = await Booking.exists({
+        room_inventory_ids: { $in: inventoryIds },
         booking_status: { $in: ['pending', 'confirmed', 'checked in'] }
     });
 
-    if (activeBookings.length > 0) {
+    if (hasActiveBookings) {
         throw new Error(ResponseMessages.room.ACTIVE_BOOKINGS_EXIST);
     }
 
-    // Safely delete inventories and the room
+    // delete inventories and the room
     await RoomInventory.deleteMany({ room_id: id });
     return await Room.findOneAndDelete({ _id: id });
 }

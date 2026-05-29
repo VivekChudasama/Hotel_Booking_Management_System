@@ -34,7 +34,6 @@ const updateUserService = async (id, updateUserData) => {
     }
 
     return await userRepository.updateUserById(id, updateUserData)
-
 }
 
 export default {

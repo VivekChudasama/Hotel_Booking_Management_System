@@ -7,15 +7,10 @@ const roomInventorySchema = new mongoose.Schema({
     room_number: { type: Number, required: true },
     status: {
         type: String,
+        enum: ['available', 'Out of Service'],
         default: 'available',
         required: true
-    },
-    bookings: [{
-        booking_id: { type: mongoose.Schema.Types.ObjectId, ref: 'Bookings' },
-        from: { type: Date },
-        to: { type: Date }
-    }],
-
+    }
 }, { timestamps: true });
 
 export const RoomInventory = mongoose.model(Tables.ROOM_INVENTORY, roomInventorySchema);

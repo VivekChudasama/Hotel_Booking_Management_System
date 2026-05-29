@@ -1,8 +1,14 @@
 import { Hotel } from '../entities/hotel.js';
 
-//get hotel list
-const getHotelList = async () => {
-    return await Hotel.find();
+const getHotelList = async (query = {}) => {
+    const filter = {};
+    if (query.city) {
+        filter.city = { $regex: query.city, $options: 'i' };
+    }
+    if (query.name) {
+        filter.name = { $regex: query.name, $options: 'i' };
+    }
+    return await Hotel.find(filter);
 };
 
 //create hotel

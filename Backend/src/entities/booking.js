@@ -3,7 +3,7 @@ import { Tables } from '../config/tables.js';
 
 const bookingSchema = new mongoose.Schema({
     user_id: { type: mongoose.Schema.Types.ObjectId, ref: 'Users', required: true, index: true },
-    room_inventory_id: { type: mongoose.Schema.Types.ObjectId, ref: 'Room_Inventorys', index: true },
+    room_inventory_ids: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Room_Inventorys', index: true }],
     guests: {
         adult_count: { type: Number, required: true },
         child_count: { type: Number, default: 0 }
@@ -21,5 +21,7 @@ const bookingSchema = new mongoose.Schema({
         index: true
     }
 }, { timestamps: true });
+
+bookingSchema.index({ room_inventory_ids: 1, booking_status: 1, from: 1, to: 1 });
 
 export const Booking = mongoose.models[Tables.BOOKING] || mongoose.model(Tables.BOOKING, bookingSchema);

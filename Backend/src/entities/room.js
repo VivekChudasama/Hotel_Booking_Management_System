@@ -5,7 +5,7 @@ const roomSchema = new mongoose.Schema({
     hotel_id: { type: mongoose.Schema.Types.ObjectId, ref: 'Hotels', required: true, index: true },
     room_type: {
         type: String,
-        enum: ['Standard room', 'Deluxe Room', 'Suite', 'Executive room', 'Family room'],
+        enum: ['Standard Room', 'Deluxe Room', 'Suite', 'Executive Room', 'Family Room'],
         required: true
     },
     room_description: { type: String, required: true },

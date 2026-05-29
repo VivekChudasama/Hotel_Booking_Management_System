@@ -5,8 +5,9 @@ import { ResponseMessages } from '../config/response_messages.js';
 const getRoomList = async (req, res) => {
     try {
         const hotel_id = req.params.hotel_id;
-        const role = req.user && req.user.role ? req.user.role.toLowerCase() : null;
-        const roomList = await roomService.getroomListService(hotel_id, role);
+        const role = req.user.role;
+        const query = req.query;
+        const roomList = await roomService.getroomListService(hotel_id, role, query);
         res.status(Constants.RESPONSE_STATUS_CODE.SUCCESS_CODE).json(roomList);
     } catch (error) {
         res.status(Constants.RESPONSE_STATUS_CODE.FAIL_CODE).json({ message: error.message });
@@ -40,7 +41,6 @@ const deleteRoom = async (req, res) => {
     try {
         const room_id = req.params.room_id;
         const room = await roomService.deleteRoomService(room_id);
-        if (!room) return res.status(Constants.RESPONSE_STATUS_CODE.NOT_FOUND_CODE).json({ message: ResponseMessages.room.HOTEL_ROOM_NOT_FOUND })
         res.status(Constants.RESPONSE_STATUS_CODE.SUCCESS_CODE).json({ message: ResponseMessages.room.HOTEL_ROOM_DELETED_SUCCESSFULLY })
     } catch (error) {
         res.status(Constants.RESPONSE_STATUS_CODE.FAIL_CODE).json({ message: error.message });

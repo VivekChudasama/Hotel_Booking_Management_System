@@ -5,7 +5,8 @@ import mongoose from 'mongoose';
 
 const getHotelList = async (req, res) => {
     try {
-        const hotelList = await hotelService.getHotelListService();
+        const query = req.query;
+        const hotelList = await hotelService.getHotelListService(query);
         res.status(Constants.RESPONSE_STATUS_CODE.SUCCESS_CODE).json(hotelList);
     } catch (error) {
         res.status(Constants.RESPONSE_STATUS_CODE.FAIL_CODE).json({ message: error.message });
@@ -25,7 +26,6 @@ const getHotelDetails = async (req, res) => {
     try {
         const hotel_id = req.params.hotel_id;
         const hotel = await hotelService.getHotelDetailsService(hotel_id);
-        if (!hotel) return res.status(Constants.RESPONSE_STATUS_CODE.NOT_FOUND_CODE).json({ message: ResponseMessages.hotel.HOTEL_NOT_FOUND })
         res.status(Constants.RESPONSE_STATUS_CODE.SUCCESS_CODE).json(hotel);
     } catch (error) {
         res.status(Constants.RESPONSE_STATUS_CODE.FAIL_CODE).json({ message: error.message });
@@ -37,7 +37,6 @@ const updateHotel = async (req, res) => {
         const hotel_id = req.params.hotel_id;
         const updateHotelData = req.body
         const hotel = await hotelService.updateHotelService(hotel_id, updateHotelData);
-        if (!hotel) return res.status(Constants.RESPONSE_STATUS_CODE.NOT_FOUND_CODE).json({ message: ResponseMessages.hotel.HOTEL_NOT_FOUND })
         res.status(Constants.RESPONSE_STATUS_CODE.SUCCESS_CODE).json(hotel);
     } catch (error) {
         res.status(Constants.RESPONSE_STATUS_CODE.FAIL_CODE).json({ message: error.message });
@@ -48,7 +47,6 @@ const deleteHotel = async (req, res) => {
     try {
         const hotel_id = req.params.hotel_id;
         const hotel = await hotelService.deleteHotelService(hotel_id);
-        if (!hotel) return res.status(Constants.RESPONSE_STATUS_CODE.NOT_FOUND_CODE).json({ message: ResponseMessages.hotel.HOTEL_NOT_FOUND })
         res.status(Constants.RESPONSE_STATUS_CODE.SUCCESS_CODE).json({ message: ResponseMessages.hotel.HOTEL_DELETED_SUCCESSFULLY })
     } catch (error) {
         res.status(Constants.RESPONSE_STATUS_CODE.FAIL_CODE).json({ message: error.message });

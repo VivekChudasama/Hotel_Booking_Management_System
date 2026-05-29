@@ -1,4 +1,4 @@
-import { body, param } from "express-validator";
+import { body, param, query } from "express-validator";
 import { ResponseMessages } from "../config/response_messages.js";
 import { Constants } from "../config/Constants.js";
 import { validateImageURL } from "../util/imageValidator.js";
@@ -31,7 +31,7 @@ const validateCreateRoom = [
         .bail()
         .isInt({ min: 1, max: 1000000 }).withMessage(ResponseMessages.room.VALID_PRICE_PER_NIGHT_RANGE),
 
-    body('room_capacity.adult_count').notEmpty().withMessage(ResponseMessages.booking.ADULT_COUNT_MIN)
+    body('room_capacity.adult_count').notEmpty().withMessage(ResponseMessages.booking.ADULT_COUNT_REQUIRED)
         .bail()
         .isInt({ min: 1, max: 10 }).withMessage(ResponseMessages.room.VALID_ADULT_COUNT_RANGE),
 
@@ -52,7 +52,7 @@ const validateCreateRoom = [
 
     body('room_inventories.*.room_number').notEmpty().withMessage(ResponseMessages.room_inventory.ROOM_NUMBER_REQUIRED)
         .bail()
-        .isInt({ min: 1 }).withMessage(ResponseMessages.room_inventory.VALID_ROOM_NUMBER_RANGE),
+        .isInt({ min: 1, max: 10000 }).withMessage(ResponseMessages.room_inventory.VALID_ROOM_NUMBER_RANGE),
 
     body('room_inventories.*.status').optional().isString().withMessage(ResponseMessages.room.VALID_ROOM_STATUS)
 ]
@@ -112,7 +112,7 @@ const validateUpdateRoom = [
 
     body('room_inventories.*.room_number').optional().notEmpty().withMessage(ResponseMessages.room_inventory.ROOM_NUMBER_REQUIRED)
         .bail()
-        .isInt({ min: 1 }).withMessage(ResponseMessages.room_inventory.VALID_ROOM_NUMBER_RANGE),
+        .isInt({ min: 1, max: 10000 }).withMessage(ResponseMessages.room_inventory.VALID_ROOM_NUMBER_RANGE),
 
     body('room_inventories.*.status').optional().isString().withMessage(ResponseMessages.room.VALID_ROOM_STATUS)
 ]
@@ -123,8 +123,37 @@ const validateRoomIdParam = [
         .isMongoId().withMessage(ResponseMessages.common.MUST_BE_MONGO_ID)
 ]
 
+const validateGetRoomList = [
+    param('hotel_id').notEmpty().withMessage(ResponseMessages.room.HOTEL_ID_REQUIRED)
+        .bail()
+        .isMongoId().withMessage(ResponseMessages.common.MUST_BE_MONGO_ID),
+        
+    query('min_price').optional().isFloat({ min: 0 }).withMessage(ResponseMessages.room.MIN_PRICE_POSITIVE),
+    
+    query('max_price').optional().isFloat({ min: 0 }).withMessage(ResponseMessages.room.MAX_PRICE_POSITIVE)
+        .custom((value, { req }) => {
+            if (req.query.min_price && parseFloat(value) < parseFloat(req.query.min_price)) {
+                throw new Error(ResponseMessages.room.MAX_PRICE_GREATER);
+            }
+            return true;
+        }),
+        
+    query('sort_price').optional().isIn(['asc', 'desc']).withMessage(ResponseMessages.room.SORT_PRICE_INVALID),
+    
+    query('from').optional().isISO8601().withMessage(ResponseMessages.common.MUST_BE_DATE),
+    
+    query('to').optional().isISO8601().withMessage(ResponseMessages.common.MUST_BE_DATE)
+        .custom((value, { req }) => {
+            if (req.query.from && new Date(value) <= new Date(req.query.from)) {
+                throw new Error(ResponseMessages.room.TO_DATE_AFTER_FROM);
+            }
+            return true;
+        })
+]
+
 export default {
     validateCreateRoom,
     validateUpdateRoom,
-    validateRoomIdParam
+    validateRoomIdParam,
+    validateGetRoomList
 }

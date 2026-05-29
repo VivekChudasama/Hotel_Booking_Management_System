@@ -2,9 +2,11 @@ import hotelRepository from '../repositories/hotelRepository.js';
 import { ResponseMessages } from '../config/response_messages.js'
 import { Booking } from '../entities/booking.js';
 import roomRepository from '../repositories/roomRepository.js';
+import { RoomInventory } from '../entities/room_inventory.js';
+import { Room } from '../entities/room.js';
 
-const getHotelListService = async () => {
-    return await hotelRepository.getHotelList();
+const getHotelListService = async (query = {}) => {
+    return await hotelRepository.getHotelList(query);
 };
 
 const createHotelService = async (hotelData) => {
@@ -12,7 +14,13 @@ const createHotelService = async (hotelData) => {
 };
 
 const getHotelDetailsService = async (id) => {
-    return await hotelRepository.getHotelById(id);
+    const hotel = await hotelRepository.getHotelById(id)
+
+    if (!hotel) {
+        throw new Error(ResponseMessages.hotel.HOTEL_NOT_FOUND)
+
+    }
+    return hotel;
 };
 
 const updateHotelService = async (id, updateHotelData) => {
@@ -26,18 +34,18 @@ const updateHotelService = async (id, updateHotelData) => {
     if (updateHotelData.email) {
         const hotelWihSameEmail = await hotelRepository.getHotelByEmail(updateHotelData.email);
         if (hotelWihSameEmail && hotelWihSameEmail._id.toString() !== id.toString()) {
-                throw new Error(ResponseMessages.hotel.EMAIL_ALREADY_EXISTS);
-            }
+            throw new Error(ResponseMessages.hotel.EMAIL_ALREADY_EXISTS);
+        }
     }
- 
+
     //check updated phone_number is used by any other hotel while updating 
     if (updateHotelData.phone_number) {
         const hotelWihSamePhone = await hotelRepository.getHotelByPhone(updateHotelData.phone_number);
         if (hotelWihSamePhone && hotelWihSamePhone._id.toString() !== id.toString()) {
-                throw new Error(ResponseMessages.hotel.PHONE_NUMBER_EXISTS);
+            throw new Error(ResponseMessages.hotel.PHONE_NUMBER_EXISTS);
         }
     }
- 
+
     return await hotelRepository.updateHotelById(id, updateHotelData);
 };
 
@@ -47,25 +55,26 @@ const deleteHotelService = async (id) => {
         throw new Error(ResponseMessages.hotel.HOTEL_NOT_FOUND);
     }
 
-    // Find all rooms for the specific hotel
-    const rooms = await roomRepository.getHotelSpecificRoomsList(id);
-    const roomIds = rooms?.map(room => room._id) || [];
+    // Check if there are active bookings for the hotel's rooms
+    const inventories = await RoomInventory.find({ hotel_id: id }).select('_id');
+    const inventoryIds = inventories.map(inv => inv._id);
 
-    // Check if there are active bookings for the rooms
-    if (roomIds.length > 0) {
-        const activeBookings = await Booking.find({
-            room_id: { $in: roomIds },
+    if (inventoryIds.length > 0) {
+        const hasActiveBookings = await Booking.exists({
+            room_inventory_ids: { $in: inventoryIds },
             booking_status: { $in: ['pending', 'confirmed', 'checked in'] }
         });
 
-        if (activeBookings.length > 0) {
+        if (hasActiveBookings) {
             throw new Error(ResponseMessages.hotel.ACTIVE_BOOKINGS_EXIST);
         }
     }
 
+    await Room.deleteMany({ hotel_id: id });
+    await RoomInventory.deleteMany({ hotel_id: id });
     return await hotelRepository.deleteHotelById(id);
 };
- 
+
 export default {
     getHotelListService,
     createHotelService,

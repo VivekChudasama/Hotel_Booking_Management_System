@@ -2,11 +2,13 @@ import bookingRepository from '../repositories/bookingRepository.js';
 import roomInventoryRepositories from '../repositories/roomInventoryRepositories.js';
 import roomRepository from '../repositories/roomRepository.js';
 import paymentRepositories from '../repositories/paymentRepositories.js';
+import userRepository from '../repositories/userRepository.js';
+import hotelRepository from '../repositories/hotelRepository.js';
 import { ResponseMessages } from '../config/response_messages.js';
 
 //Create booking
 const createBookingService = async (bookingData) => {
-    const { room_id, hotel_id, from, to, user_id, room_inventory_id } = bookingData;
+    const { hotel_id, from, to, user_id, rooms } = bookingData;
 
     const fromDate = new Date(from);
     const toDate = new Date(to);
@@ -22,62 +24,129 @@ const createBookingService = async (bookingData) => {
 
     const diffDays = (toDate - fromDate) / (1000 * 60 * 60 * 24);
     if (diffDays > 60) {
-        throw new Error("Cannot book a room for more than 60 days.");
+        throw new Error(ResponseMessages.booking.MAX_BOOKING_DURATION);
     }
 
     const sixMonthsLater = new Date();
     sixMonthsLater.setMonth(sixMonthsLater.getMonth() + 6);
     if (fromDate > sixMonthsLater) {
-        throw new Error("Cannot book a room more than 6 months in advance.");
+        throw new Error(ResponseMessages.booking.MAX_BOOKING_DATE);
     }
 
     // Convert dates to UTC
     bookingData.from = fromDate.toUTCString();
     bookingData.to = toDate.toUTCString();
 
-    // fetching room_id and hotel_id from inventory if not provided
-    let finalRoomId = room_id;
-    let finalHotelId = hotel_id;
+    const user = await userRepository.getUserById(user_id);
+    if (!user) {
+        throw new Error("Invalid user ID. User not found in database.");
+    }
 
-    if (!finalRoomId || !finalHotelId) {
-        const inventory = await roomInventoryRepositories.getRoomInventoryRoomById(room_inventory_id);
-        if (!inventory) {
-            throw new Error(ResponseMessages.room_inventory.ROOM_INVENTORY_NOT_FOUND);
+    let finalRooms = rooms;
+    if (!finalRooms || finalRooms.length === 0) {
+        if (bookingData.room_id) {
+            finalRooms = [{ room_id: bookingData.room_id, count: 1 }];
+        } else if (bookingData.room_inventory_id) {
+            const inventory = await roomInventoryRepositories.getRoomInventoryRoomById(bookingData.room_inventory_id);
+            if (!inventory) throw new Error(ResponseMessages.room_inventory.ROOM_INVENTORY_NOT_FOUND);
+            finalRooms = [{ room_id: inventory.room_id, count: 1 }];
+            if (!bookingData.hotel_id) bookingData.hotel_id = inventory.hotel_id;
+        } else {
+            throw new Error("No rooms specified.");
         }
-        finalRoomId = inventory.room_id;
-        finalHotelId = inventory.hotel_id;
-        bookingData.room_id = finalRoomId;
-        bookingData.hotel_id = finalHotelId;
     }
 
-    // Check if the user already has an active booking for this room type for specific dates
-    const activeBooking = await bookingRepository.findActiveBookingByUserAndRoom(user_id, finalRoomId, bookingData.from, bookingData.to);
-    if (activeBooking) {
-        throw new Error("You already have an active booking for this room for the selected dates.");
+    const hotelIdToUse = hotel_id || bookingData.hotel_id;
+    const hotel = await hotelRepository.getHotelById(hotelIdToUse);
+    if (!hotel) {
+        throw new Error(ResponseMessages.hotel.HOTEL_NOT_FOUND);
     }
 
-    const room = await roomRepository.getRoomById(finalRoomId);
-    if (!room) {
-        throw new Error(ResponseMessages.room.HOTEL_ROOM_NOT_FOUND);
+    let totalAdultCapacity = 0;
+    let totalChildCapacity = 0;
+    let calculatedTotalAmount = 0;
+    const nights = Math.max(1, Math.round(diffDays));
+
+    const processedRooms = [];
+
+    // Fetch all requested room in a single query
+    const finalRoomIds = finalRooms.map(r => r.room_id);
+    const roomsList = await roomRepository.getRoomsByIds(finalRoomIds);
+    const roomsMap = new Map(roomsList.map(room => [room._id.toString(), room]));
+
+    for (const r of finalRooms) {
+        const room = roomsMap.get(r.room_id.toString());
+        if (!room) {
+            throw new Error(`Room not found: ${r.room_id}`);
+        }
+        if (room.hotel_id.toString() !== hotelIdToUse.toString()) {
+            throw new Error(`Room ${r.room_id} does not belong to the specified hotel.`);
+        }
+
+        const count = r.count || 1;
+
+        totalAdultCapacity += (room.room_capacity.adult_count * count);
+        totalChildCapacity += (room.room_capacity.children_count * count);
+        calculatedTotalAmount += (room.price_per_night * count * nights);
+
+        processedRooms.push({ room_id: r.room_id, count: count });
     }
+
+    const requestedAdults = bookingData.guests?.adult_count || 0;
+    const requestedChildren = bookingData.guests?.child_count || 0;
+
+    if (requestedAdults > totalAdultCapacity || requestedChildren > totalChildCapacity) {
+        throw new Error("Guest count exceeds total combined room capacity.");
+    }
+
+    // Active Bookings Check
+    const roomIdsToCheck = processedRooms.map(pr => pr.room_id);
+    const { bookings, inventories } = await bookingRepository.findActiveBookingsByUserAndRooms(
+        user_id,
+        roomIdsToCheck,
+        bookingData.from,
+        bookingData.to
+    );
+
+    if (bookings.length > 0) {
+        const inventoryToRoomMap = new Map(
+            inventories.map(inv => [inv._id.toString(), inv.room_id.toString()])
+        );
+
+        for (const booking of bookings) {
+            for (const invId of booking.room_inventory_ids) {
+                const roomId = inventoryToRoomMap.get(invId.toString());
+                if (roomId && roomIdsToCheck.includes(roomId)) {
+                    throw new Error(`You already have an active booking for room type ${roomId.room_type} for the selected dates.`);
+                }
+            }
+        }
+    }
+
+    bookingData.total_amount = calculatedTotalAmount;
 
     const session = await bookingRepository.startSession();
     session.startTransaction();
 
     try {
-        const bookedInventoryIds = await bookingRepository.getBookedInventoryIdsForDates(finalRoomId, bookingData.from, bookingData.to, session);
+        const finalInventoryIds = [];
 
-        const availableRoomInventory = await roomInventoryRepositories.findAvailableRoomForDates(finalRoomId, finalHotelId, bookedInventoryIds, session);
-        if (!availableRoomInventory) {
-            throw new Error(ResponseMessages.booking.NO_AVAILABLE_ROOMS);
+        for (const pr of processedRooms) {
+            const bookedInventoryIds = await bookingRepository.getBookedInventoryIdsForDates(pr.room_id, bookingData.from, bookingData.to, session);
+
+            const availableInventories = await roomInventoryRepositories.findAvailableRoomsForDates(pr.room_id, hotelIdToUse, bookedInventoryIds, pr.count, session);
+
+            if (availableInventories.length < pr.count) {
+                throw new Error(`Not enough available rooms of type Requested: ${pr.count}, Available: ${availableInventories.length}`);
+            }
+
+            finalInventoryIds.push(...availableInventories.map(inv => inv._id));
         }
 
-        // Override the room_inventory_id with the is available room
-        bookingData.room_inventory_id = availableRoomInventory._id;
+        bookingData.room_inventory_ids = finalInventoryIds;
+        delete bookingData.room_inventory_id; // Clean up just in case
 
         const [booking] = await bookingRepository.createBookingWithSession([bookingData], { session });
-
-        await roomInventoryRepositories.addBookingToInventory(availableRoomInventory._id, booking._id, bookingData.from, bookingData.to, session);
 
         // Create Payment
         const paymentData = {
@@ -101,7 +170,12 @@ const createBookingService = async (bookingData) => {
 
 //get details of booking by booking id
 const getBookingDetailsService = async (id) => {
-    return await bookingRepository.getBookingById(id);
+    const booking = await bookingRepository.getBookingById(id);
+    if (!booking) {
+        throw new Error(ResponseMessages.booking.BOOKING_NOT_FOUND)
+    }
+
+    return booking;
 }
 
 //update booking service to confirm user booking and add checking and checkout date 
@@ -128,7 +202,6 @@ const cancelBookingService = async (id) => {
 
     booking.booking_status = 'cancelled';
     await booking.save();
-    await roomInventoryRepositories.removeBookingFromInventory(booking._id);
 
     return booking;
 }

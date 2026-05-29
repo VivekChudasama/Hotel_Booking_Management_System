@@ -2,7 +2,6 @@ export class Constants {
     static RESPONSE_STATUS_CODE = {
         SUCCESS_CODE: 200,
         CREATED_SUCCESS_CODE: 201,
-        UPDATE_SUCCESS_CODE: 204,
         FAIL_CODE: 400,
         NOT_FOUND_CODE: 404,
         UNAUTHORIZED_CODE: 401,
@@ -16,6 +15,5 @@ export class Constants {
         HOTEL_NAME_VALIDATION_REGEX: /^[a-zA-Z0-9\s.,'&-]+$/,
         ADDRESS_VALIDATION_REGEX: /^[a-zA-Z0-9 .-]+$/,
         CITY_NAME_VALIDATION_REGEX: /^[a-zA-Z]+$/,
-        ROOM_TYPE_NAME_VALIDATION_REGEX: /^[a-zA-Z0-9\s\-_\(\)]+$/,
     }
 }

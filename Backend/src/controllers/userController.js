@@ -17,7 +17,6 @@ const updateUserDetails = async (req, res) => {
         const user_id = req.params.user_id;
         const updateUserData = req.body;
         const user = await userService.updateUserService(user_id, updateUserData);
-        if (!user) return res.status(Constants.RESPONSE_STATUS_CODE.NOT_FOUND_CODE).json({ message: ResponseMessages.user.USER_NOT_FOUND })
         res.status(Constants.RESPONSE_STATUS_CODE.SUCCESS_CODE).json(user);
     } catch (error) {
         res.status(Constants.RESPONSE_STATUS_CODE.FAIL_CODE).json({ message: error.message });

@@ -9,13 +9,13 @@ import roomInventoryValidation from '../schema/roomInventorValidation.js';
 const router = express.Router();
 
 // get room list
-router.get('/:hotel_id/rooms', verifyToken,  roomController.getRoomList);
+router.get('/:hotel_id', verifyToken, roomValidation.validateGetRoomList, handleValidationErrors, roomController.getRoomList);
 
 // add new room(admin only)
 router.post('/:hotel_id/room', verifyToken, isAdmin, roomValidation.validateCreateRoom , handleValidationErrors, roomController.createRoom);
 
 // update room by id(admin only)
-router.put('/:hotel_id/room/:room_id', verifyToken, isAdmin, roomValidation.validateUpdateRoom, handleValidationErrors, roomController.updateRoom);
+router.put('/:room_id', verifyToken, isAdmin, roomValidation.validateUpdateRoom, handleValidationErrors, roomController.updateRoom);
 
 // delete room by id(admin only)
 router.delete('/:room_id', verifyToken, isAdmin, roomValidation.validateRoomIdParam, handleValidationErrors, roomController.deleteRoom);
