@@ -2,7 +2,7 @@ import app from './routes.js';
 import { connectDB } from './util/database.js';
 
 const PORT = process.env.PORT;
-// Connect to 
+// Connect to database
 connectDB().then(() => {
     console.log('Connected to database');
     app.listen(PORT, () => {

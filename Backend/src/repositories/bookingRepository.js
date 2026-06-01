@@ -23,14 +23,29 @@ const getBookingById = async (id) => {
 };
 
 //get bookings by user_id  
-const getBookingsByUserId = async (userId) => {
-    return await Booking.find({ user_id: userId }).populate({
+const getBookingsByUserId = async (userId, query = {}) => {
+    const match = { user_id: userId };
+    if (query.from) match.from = { $gte: new Date(query.from) };
+    if (query.to) match.to = { $lte: new Date(query.to) };
+
+    const hotelMatch = {};
+    if (query.hotel_name) hotelMatch.name = { $regex: query.hotel_name, $options: 'i' };
+    if (query.city_name) hotelMatch.city = { $regex: query.city_name, $options: 'i' };
+
+    let bookings = await Booking.find(match).populate({
         path: 'room_inventory_ids',
         populate: [
             { path: 'room_id' },
-            { path: 'hotel_id' },
+            { path: 'hotel_id', match: Object.keys(hotelMatch).length > 0 ? hotelMatch : undefined },
         ]
-    });
+    }).sort({ createdAt: -1 });
+
+    if (Object.keys(hotelMatch).length > 0) {
+        bookings = bookings.filter(b => 
+            b.room_inventory_ids && b.room_inventory_ids.some(inv => inv.hotel_id !== null)
+        );
+    }
+    return bookings;
 };
 
 const getBookedInventoryIdsForDates = async (roomId, fromDate, toDate, session) => {
@@ -85,17 +100,38 @@ const getBookedInventoryIdsForHotelDates = async (hotelId, fromDate, toDate) => 
 };
 
 //get all user's bookings
-const getAllUserBookings = async () => {
-    return await Booking.find()
-        .populate('user_id', 'name email phone_number')
+const getAllUserBookings = async (query = {}) => {
+    const match = {};
+    if (query.from) match.from = { $gte: new Date(query.from) };
+    if (query.to) match.to = { $lte: new Date(query.to) };
+
+    const userMatch = {};
+    if (query.user_name) userMatch.name = { $regex: query.user_name, $options: 'i' };
+
+    const hotelMatch = {};
+    if (query.hotel_name) hotelMatch.name = { $regex: query.hotel_name, $options: 'i' };
+    if (query.city_name) hotelMatch.city = { $regex: query.city_name, $options: 'i' };
+
+    let bookings = await Booking.find(match)
+        .populate({ path: 'user_id', select: 'name email phone_number', match: Object.keys(userMatch).length > 0 ? userMatch : undefined })
         .populate({
             path: 'room_inventory_ids',
             populate: [
                 { path: 'room_id' },
-                { path: 'hotel_id', select: 'name city' }
+                { path: 'hotel_id', select: 'name city', match: Object.keys(hotelMatch).length > 0 ? hotelMatch : undefined }
             ]
         })
         .sort({ createdAt: -1 });
+
+    if (Object.keys(userMatch).length > 0) {
+        bookings = bookings.filter(b => b.user_id !== null);
+    }
+    if (Object.keys(hotelMatch).length > 0) {
+        bookings = bookings.filter(b => 
+            b.room_inventory_ids && b.room_inventory_ids.some(inv => inv.hotel_id !== null)
+        );
+    }
+    return bookings;
 }
 
 

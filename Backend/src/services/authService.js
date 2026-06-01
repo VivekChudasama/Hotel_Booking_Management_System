@@ -5,6 +5,7 @@ import dotenv from 'dotenv'
 import { ResponseMessages } from '../config/response_messages.js';
 
 dotenv.config();
+
 const JWT_SECRET = process.env.JWT_SECRET;
 const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN;
 
@@ -25,7 +26,7 @@ const registerUserService = async (userData) => {
         }
     }
 
-    //hash the password using bycrypt
+    //hash the password using bcrypt
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(userData.password, salt);
 
@@ -34,6 +35,7 @@ const registerUserService = async (userData) => {
         password: hashedPassword
     });
 
+    // generate JWT token for the registered user
     const token = jwt.sign(
         { userId: newUser._id, role: newUser.role },
         JWT_SECRET,

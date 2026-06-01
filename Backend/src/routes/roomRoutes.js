@@ -20,7 +20,7 @@ router.put('/:room_id', verifyToken, isAdmin, roomValidation.validateUpdateRoom,
 // delete room by id(admin only)
 router.delete('/:room_id', verifyToken, isAdmin, roomValidation.validateRoomIdParam, handleValidationErrors, roomController.deleteRoom);
 
-// Get hotel inventory (supports filters by status or room_id to get all room numbers)
-router.get('/hotel/:hotel_id/inventory', verifyToken, roomInventoryValidation.validateGetHotelInventory, handleValidationErrors, roomInventoryController.getHotelInventory);
+// Get hotel inventory room numbers by room_id (admin only)
+router.get('/inventory/:room_id', verifyToken, isAdmin, roomInventoryValidation.validateGetHotelInventory, handleValidationErrors, roomInventoryController.getHotelInventory);
 
 export default router;

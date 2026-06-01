@@ -40,7 +40,8 @@ const cancelBooking = async (req, res) => {
 
 const getBookingHistory = async (req, res) => {
     try {
-        const bookings = await bookingService.getBookingHistoryService(req.params.user_id);
+        const query = req.query || {};
+        const bookings = await bookingService.getBookingHistoryService(req.params.user_id, query);
         res.status(Constants.RESPONSE_STATUS_CODE.SUCCESS_CODE).json(bookings);
     } catch (error) {
         res.status(Constants.RESPONSE_STATUS_CODE.FAIL_CODE).json({ message: error.message });
@@ -49,7 +50,8 @@ const getBookingHistory = async (req, res) => {
 
 const getAllUsersBooking = async (req, res) => {
     try {
-        const bookings = await bookingService.getAllUserBookingService();
+        const query = req.query || {};
+        const bookings = await bookingService.getAllUserBookingService(query);
         res.status(Constants.RESPONSE_STATUS_CODE.SUCCESS_CODE).json(bookings);
     } catch (error) {
         res.status(Constants.RESPONSE_STATUS_CODE.FAIL_CODE).json({ message: error.message });

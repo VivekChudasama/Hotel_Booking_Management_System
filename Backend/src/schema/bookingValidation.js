@@ -5,14 +5,14 @@ const validateCreateBooking = [
     body('user_id').isMongoId().withMessage(ResponseMessages.common.MUST_BE_MONGO_ID)
         .notEmpty().withMessage(ResponseMessages.booking.USER_ID_REQUIRED),
 
-    body('rooms').isArray({ min: 1 }).withMessage(ResponseMessages.room.HOTEL_ROOM_FORMATE),
+    body('rooms').isArray({ min: 1 }).withMessage(ResponseMessages.room.HOTEL_ROOM_FORMAT),
 
     body('rooms.*.room_id').isMongoId().withMessage(ResponseMessages.common.MUST_BE_MONGO_ID)
         .notEmpty().withMessage(ResponseMessages.room_inventory.ROOM_ID_REQUIRED),
 
-    body('rooms.*.count').optional().isInt({ min: 1 }).withMessage(ResponseMessages.room.min),
+    body('rooms.*.count').optional().isInt({ min: 1 }).withMessage(ResponseMessages.room.VALID_ROOM_COUNT_RANGE),
 
-    body('guests.adult_count').notEmpty().withMessage(ResponseMessages.booking.ADULT_COUNT_MIN)
+    body('guests.adult_count').notEmpty().withMessage(ResponseMessages.booking.ADULT_COUNT_REQUIRED)
         .bail()
         .isInt({ min: 1, max: 10 }).withMessage(ResponseMessages.booking.VALID_ADULT_COUNT_RANGE),
 
@@ -63,7 +63,8 @@ const validateCreateBooking = [
         .notEmpty().withMessage(ResponseMessages.booking.CHECK_OUT_DATE)
         .isISO8601().withMessage(ResponseMessages.common.MUST_BE_DATE),
 
-    body('total_amount').optional().notEmpty(ResponseMessages.payment.PAYMENT_AMOUNT_REQUIRED)
+    body('total_amount').optional().notEmpty().withMessage(ResponseMessages.payment.PAYMENT_AMOUNT_REQUIRED)
+        .bail()
         .isFloat({ min: 1 }).withMessage(ResponseMessages.booking.VALID_TOTAL_AMOUNT_RANGE),
 
     body('booking_status').optional().isIn(['pending', 'confirmed', 'cancelled', 'checked in', 'checked out'])
@@ -71,11 +72,11 @@ const validateCreateBooking = [
 
     body('payment_method').notEmpty().withMessage(ResponseMessages.payment.PAYMENT_METHOD_REQUIRED)
         .bail()
-        .isString().withMessage(ResponseMessages.payment.VALID_PAYMENT_STATUS_FORMATE)
-        .isIn(['Card Payment', 'Digital Payment', 'Cash Payment']).withMessage(ResponseMessages.payment.ACCEPETED_PAYMENT_METHODS),
+        .isString().withMessage(ResponseMessages.payment.VALID_PAYMENT_METHOD_FORMAT)
+        .isIn(['Card Payment', 'Digital Payment', 'Cash Payment']).withMessage(ResponseMessages.payment.ACCEPTED_PAYMENT_METHODS),
 
     body('payment_status').optional().notEmpty().withMessage(ResponseMessages.payment.PAYMENT_STATUS_REQUIRED)
-        .isIn(['pending', 'confirmed', 'cancelled']).withMessage(ResponseMessages.payment.INVALIDE_PAYMENT_STATUS)
+        .isIn(['pending', 'confirmed', 'cancelled']).withMessage(ResponseMessages.payment.INVALID_PAYMENT_STATUS)
 ]
 
 const validateBookingId = [

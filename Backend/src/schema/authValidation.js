@@ -8,11 +8,11 @@ const validateRegister = [
         .bail()
         .isLength({ min: 3, max: 70 }).withMessage(ResponseMessages.auth.VALID_NAME_LENGTH)
         .bail()
-        .matches(Constants.REGEX.USER_NAME_VALIDATION_REGEX).withMessage(ResponseMessages.auth.VALID_NAME_FORMATE),
+        .matches(Constants.REGEX.USER_NAME_VALIDATION_REGEX).withMessage(ResponseMessages.auth.VALID_NAME_FORMAT),
 
     body('email').trim().notEmpty().withMessage(ResponseMessages.auth.EMAIL_REQUIRED)
         .bail()
-        .isEmail().withMessage(ResponseMessages.auth.INVALID_EMAIL_FORMATE)
+        .isEmail().withMessage(ResponseMessages.auth.INVALID_EMAIL_FORMAT)
         .bail()
         .isLength({ max: 254 }).withMessage(ResponseMessages.auth.MAX_EMAIL_LENGTH)
         .normalizeEmail(),
@@ -38,7 +38,7 @@ const validateRegister = [
 const validateLogin = [
     body('email').trim().notEmpty().withMessage(ResponseMessages.auth.EMAIL_REQUIRED)
         .bail()
-        .isEmail().withMessage(ResponseMessages.auth.INVALID_EMAIL_FORMATE)
+        .isEmail().withMessage(ResponseMessages.auth.INVALID_EMAIL_FORMAT)
         .bail()
         .isLength({ max: 254 }).withMessage(ResponseMessages.auth.MAX_EMAIL_LENGTH)
         .normalizeEmail(),

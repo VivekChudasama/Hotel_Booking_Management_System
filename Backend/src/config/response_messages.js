@@ -4,13 +4,13 @@ export class ResponseMessages {
         MUST_BE_ARRAY: 'This field must be an array',
         MUST_BE_MONGO_ID: 'Invalid ID format. Must be a valid MongoId',
         MUST_BE_URL: 'This field must be a valid URL',
-        MUST_BE_DATE: 'This field must be a valid ISO8601 date',
+        MUST_BE_DATE: 'This field must be a valid ISO8601 formate date',
     }
     static auth = {
         ACCESS_DENIED: 'Access denied. Admin role required',
         EMAIL_REQUIRED: 'Email is required',
         INVALID_CREDENTIALS: 'Invalid username or password. Please try again.',
-        INVALID_EMAIL_FORMATE: 'Invalid email format',
+        INVALID_EMAIL_FORMAT: 'Invalid email format',
         INVALID_TOKEN: 'Invalid or expired token',
         MAX_EMAIL_LENGTH: 'Email must be less than 254 characters',
         NAME_REQUIRED: 'Name is required',
@@ -22,7 +22,7 @@ export class ResponseMessages {
         USER_PHONE_NUMBER_LENGTH: 'Phone number must be of 10 characters',
         USER_PHONE_NUMBER_REQUIRED: 'Phone number is required',
         USER_REGISTERED_SUCCESS: 'User registered successfully',
-        VALID_NAME_FORMATE: 'Name can only contain letters, spaces, and dots',
+        VALID_NAME_FORMAT: 'Name can only contain letters, spaces, and dots',
         VALID_NAME_LENGTH: 'Name must be between 3 and 70 characters',
         VALID_PASSWORD_REQUIRED: 'Password must be at least 8 characters long and include at least 3 of the following 4 conditions: one uppercase letter, one lowercase letter, one digit, and one special character'
     }
@@ -59,12 +59,12 @@ export class ResponseMessages {
         HOTEL_NOT_FOUND: 'Hotel not found',
         PHONE_NUMBER_EXISTS: 'Hotel with this phone number already exists',
         PHONE_NUMBER_REQUIRED: 'Phone number is required',
-        VALID_ADDRESS_FORMATE: 'Address can only contain letters, numbers, spaces, hyphens, and dots',
+        VALID_ADDRESS_FORMAT: 'Address can only contain letters, numbers, spaces, hyphens, and dots',
         VALID_ADDRESS_LENGTH: 'Address must be less than 256 characters',
-        VALID_CITY_NAME_FORMATE: 'City Name can only contain letters',
+        VALID_CITY_NAME_FORMAT: 'City Name can only contain letters',
         VALID_CITY_NAME_LENGTH: 'City Name must be less than 30 characters',
         VALID_DESCRIPTION_LENGTH: 'Description must be less than 1024 characters',
-        VALID_HOTEL_NAME_FORMATE: 'Hotel name can only contain letters, numbers, spaces, dots, commas, apostrophes, and hyphens'
+        VALID_HOTEL_NAME_FORMAT: 'Hotel name can only contain letters, numbers, spaces, dots, commas, apostrophes, and hyphens'
     }
 
     static room = {
@@ -73,7 +73,7 @@ export class ResponseMessages {
         VALID_ROOM_STATUS: 'Status must be either available or Out of Service',
         HOTEL_ID_REQUIRED: 'Hotel ID is required',
         HOTEL_ROOM_AMENITIES_REQUIRED: 'Room amenities are required',
-        VALID_ROOM_AMENIRIES_ARRAY: 'Each amenity cannot be empty',
+        VALID_ROOM_AMENITIES_ARRAY: 'Each amenity cannot be empty',
         HOTEL_ROOM_COUNT_REQUIRED: 'Room count is required',
         HOTEL_ROOM_DELETED_SUCCESSFULLY: 'Hotel room Deleted Successfully',
         HOTEL_ROOM_DESCRIPTION_REQUIRED: 'Room description is required',
@@ -93,7 +93,7 @@ export class ResponseMessages {
         MAX_PRICE_GREATER: 'max_price must be greater than min_price',
         SORT_PRICE_INVALID: "sort_price must be either 'asc' or 'desc'",
         TO_DATE_AFTER_FROM: 'to date must be after from date',
-        HOTEL_ROOM_FORMATE: 'Rooms must be an array with at least one item.'
+        HOTEL_ROOM_FORMAT: 'Rooms must be an array with at least one item.'
     }
 
     static room_inventory = {
@@ -124,8 +124,9 @@ export class ResponseMessages {
         PAYMENT_AMOUNT_REQUIRED: 'Total payment amount is required',
         PAYMENT_METHOD_REQUIRED: 'Payment method is required',
         PAYMENT_STATUS_REQUIRED: 'Payment status is required',
-        ACCEPETED_PAYMENT_METHODS: 'Payment method must be one of the following: Card Payment, Digital Payment, or Cash Payment.',
-        INVALIDE_PAYMENT_STATUS: 'Invalid payment status. Payment status must be one of the following: pending, confirmed, or cancelled.',
-        VALID_PAYMENT_STATUS_FORMATE: 'Payment method must be a string'
+        ACCEPTED_PAYMENT_METHODS: 'Payment method must be one of the following: Card Payment, Digital Payment, or Cash Payment.',
+        INVALID_PAYMENT_STATUS: 'Invalid payment status. Payment status must be one of the following: pending, confirmed, or cancelled.',
+        VALID_PAYMENT_METHOD_FORMAT: 'Payment method must be a string',
+        VALID_PAYMENT_STATUS_FORMAT: 'Payment status must be a string'
     }
 }

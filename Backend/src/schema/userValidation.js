@@ -8,11 +8,11 @@ const validateUpdateUser = [
         .bail()
         .isLength({ min: 3, max: 70 }).withMessage(ResponseMessages.auth.VALID_NAME_LENGTH)
         .bail()
-        .matches(Constants.REGEX.USER_NAME_VALIDATION_REGEX).withMessage(ResponseMessages.auth.VALID_NAME_FORMATE),
+        .matches(Constants.REGEX.USER_NAME_VALIDATION_REGEX).withMessage(ResponseMessages.auth.VALID_NAME_FORMAT),
 
     body('email').optional({ checkFalsy: true }).trim().notEmpty().withMessage(ResponseMessages.auth.EMAIL_REQUIRED)
         .bail()
-        .isEmail().withMessage(ResponseMessages.auth.INVALID_EMAIL_FORMATE).bail()
+        .isEmail().withMessage(ResponseMessages.auth.INVALID_EMAIL_FORMAT).bail()
         .isLength({ max: 254 }).withMessage(ResponseMessages.auth.MAX_EMAIL_LENGTH),
 
     body('phone_number').optional().isMobilePhone().trim().notEmpty().withMessage(ResponseMessages.auth.USER_PHONE_NUMBER_REQUIRED)

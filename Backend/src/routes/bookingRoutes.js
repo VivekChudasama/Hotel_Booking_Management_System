@@ -12,7 +12,7 @@ router.post('/', verifyToken, bookingValidation.validateCreateBooking, handleVal
 //get booking details by booking_id
 router.get('/:booking_id', verifyToken, bookingValidation.validateBookingId, handleValidationErrors, bookingController.getBookingDetails);
 
-//cancle booking by booking_id
+//cancel booking by booking_id
 router.put('/:booking_id/cancel', verifyToken, bookingValidation.validateBookingId, handleValidationErrors, bookingController.cancelBooking);
 
 //update booking by booking_id(admin only)

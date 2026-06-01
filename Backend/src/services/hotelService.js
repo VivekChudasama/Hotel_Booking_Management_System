@@ -18,7 +18,6 @@ const getHotelDetailsService = async (id) => {
 
     if (!hotel) {
         throw new Error(ResponseMessages.hotel.HOTEL_NOT_FOUND)
-
     }
     return hotel;
 };
@@ -30,18 +29,18 @@ const updateHotelService = async (id, updateHotelData) => {
         throw new Error(ResponseMessages.hotel.HOTEL_NOT_FOUND)
     }
 
-    //check updated email is used by any other user while updaing 
+    //check updated email is used by any other hotel while updating
     if (updateHotelData.email) {
-        const hotelWihSameEmail = await hotelRepository.getHotelByEmail(updateHotelData.email);
-        if (hotelWihSameEmail && hotelWihSameEmail._id.toString() !== id.toString()) {
+        const hotelWithSameEmail = await hotelRepository.getHotelByEmail(updateHotelData.email);
+        if (hotelWithSameEmail && hotelWithSameEmail._id.toString() !== id.toString()) {
             throw new Error(ResponseMessages.hotel.EMAIL_ALREADY_EXISTS);
         }
     }
 
-    //check updated phone_number is used by any other hotel while updating 
+    //check updated phone_number is used by any other hotel while updating
     if (updateHotelData.phone_number) {
-        const hotelWihSamePhone = await hotelRepository.getHotelByPhone(updateHotelData.phone_number);
-        if (hotelWihSamePhone && hotelWihSamePhone._id.toString() !== id.toString()) {
+        const hotelWithSamePhone = await hotelRepository.getHotelByPhone(updateHotelData.phone_number);
+        if (hotelWithSamePhone && hotelWithSamePhone._id.toString() !== id.toString()) {
             throw new Error(ResponseMessages.hotel.PHONE_NUMBER_EXISTS);
         }
     }

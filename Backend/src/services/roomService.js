@@ -5,9 +5,8 @@ import { Room } from '../entities/room.js';
 import { Booking } from '../entities/booking.js';
 import { RoomInventory } from '../entities/room_inventory.js';
 import { ResponseMessages } from '../config/response_messages.js';
-import hotelRepository from '../repositories/hotelRepository.js';
 
-const getroomListService = async (id, role, query = {}) => {
+const getRoomListService = async (id, role, query = {}) => {
     let bookedInventoryIds = [];
     if (query.from && query.to) {
         bookedInventoryIds = await bookingRepository.getBookedInventoryIdsForHotelDates(id, query.from, query.to);
@@ -21,10 +20,6 @@ const createRoomService = async (roomData) => {
 
     // Validate inventories before initiating DB transactions
     if (room_inventories && room_inventories.length > 0) {
-        if (roomData.room_count && room_inventories.length > roomData.room_count) {
-            throw new Error(`Cannot create more than ${roomData.room_count} rooms in room inventories.`);
-        }
-
         const roomNumbers = room_inventories.map(inv => inv.room_number);
         const uniqueNumbers = new Set(roomNumbers);
         if (uniqueNumbers.size !== roomNumbers.length) {
@@ -46,30 +41,56 @@ const createRoomService = async (roomData) => {
     session.startTransaction();
 
     try {
-        // Find existing room or create a new one
+        // Check if this room type already exists in the hotel
         let room = await Room.findOne({ hotel_id, room_type }).session(session);
 
         if (room) {
-            // Update existing room's capacity if needed
-            if (roomData.room_count && roomData.room_count > room.room_count) {
-                room.room_count = roomData.room_count;
-                await room.save({ session });
+            // if Room type already exists then update room_count and append new inventories
+            const currentInventoryCount = await RoomInventory.countDocuments({ room_id: room._id }).session(session);
+            const newInventoryCount = (room_inventories && room_inventories.length) || 0;
+            const updatedRoomCount = room.room_count + (roomData.room_count || 0);
+
+            // Ensure total inventories won't exceed updated room_count
+            if (currentInventoryCount + newInventoryCount > updatedRoomCount) {
+                throw new Error(`Total room inventories (${currentInventoryCount + newInventoryCount}) cannot exceed room count (${updatedRoomCount}).`);
+            }
+
+            // Update room_count on the existing room
+            await Room.updateOne(
+                { _id: room._id },
+                { $set: { room_count: updatedRoomCount } }
+            ).session(session);
+
+            // Insert the new room inventories
+            if (room_inventories && room_inventories.length > 0) {
+                const inventoryData = room_inventories.map(inv => ({
+                    ...inv,
+                    hotel_id: room.hotel_id,
+                    room_id: room._id
+                }));
+                await RoomInventory.insertMany(inventoryData, { session });
             }
         } else {
-            // Create a new room
+            // Room type does not exist so create a new room
+            if (room_inventories && room_inventories.length > 0) {
+                if (roomData.room_count && room_inventories.length > roomData.room_count) {
+                    throw new Error(`Cannot create more than ${roomData.room_count} rooms in room inventories.`);
+                }
+            }
+
             const newRoomData = { hotel_id, room_type, ...roomFields, room_count: roomData.room_count };
             const [savedRoom] = await Room.create([newRoomData], { session });
             room = savedRoom;
-        }
 
-        // Insert the room inventories
-        if (room_inventories && room_inventories.length > 0) {
-            const inventoryData = room_inventories.map(inv => ({
-                ...inv,
-                hotel_id: room.hotel_id,
-                room_id: room._id
-            }));
-            await RoomInventory.insertMany(inventoryData, { session });
+            // Insert the room inventories
+            if (room_inventories && room_inventories.length > 0) {
+                const inventoryData = room_inventories.map(inv => ({
+                    ...inv,
+                    hotel_id: room.hotel_id,
+                    room_id: room._id
+                }));
+                await RoomInventory.insertMany(inventoryData, { session });
+            }
         }
 
         await session.commitTransaction();
@@ -110,7 +131,7 @@ const updateRoomService = async (id, updateRoomData) => {
         const inventoryUpdateOperations = [];
         const newInventories = [];
 
-        // Fetch existing inventories in bulk 
+        // Fetch existing inventories
         const newRoomNumbers = room_inventories
             .filter(inv => !inv.room_inventory_id && inv.room_number)
             .map(inv => inv.room_number);
@@ -120,7 +141,7 @@ const updateRoomService = async (id, updateRoomData) => {
             : [];
 
         for (const inv of room_inventories) {
-            // Find the inventory ID from possible aliases
+            // Find the inventory ID for update operations
             const inventoryId = inv.room_inventory_id;
 
             if (inventoryId) {
@@ -192,7 +213,7 @@ const deleteRoomService = async (id) => {
 }
 
 export default {
-    getroomListService,
+    getRoomListService,
     createRoomService,
     updateRoomService,
     deleteRoomService

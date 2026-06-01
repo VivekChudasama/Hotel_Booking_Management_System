@@ -1,13 +1,13 @@
 import roomInventoryRepositories from '../repositories/roomInventoryRepositories.js';
-import roomRepository from '../repositories/roomRepository.js';
+import hotelRepository from '../repositories/hotelRepository.js';
 import { Booking } from '../entities/booking.js';
 import { ResponseMessages } from '../config/response_messages.js';
 
 const deleteRoomInventoryService = async (inventoryId) => {
 
-    const exisitingRoomInRoomInventory = await roomInventoryRepositories.getRoomInventoryRoomById(inventoryId)
+    const existingRoomInRoomInventory = await roomInventoryRepositories.getRoomInventoryRoomById(inventoryId)
 
-    if (!exisitingRoomInRoomInventory) {
+    if (!existingRoomInRoomInventory) {
         throw new Error(ResponseMessages.room_inventory.ROOM_INVENTORY_NOT_FOUND);
     }
 
@@ -27,21 +27,11 @@ const deleteRoomInventoryService = async (inventoryId) => {
     return deletedInventory;
 };
 
-const getAvailableRoomsByHotelService = async (hotelId) => {
-    const hotel = await hotelRepository.getHotelById(hotelId)
-    if (!hotel) {
-        throw new Error(ResponseMessages.hotel.HOTEL_NOT_FOUND)
-    }
-
-    return await roomInventoryRepositories.getAvailableRoomsByHotel(hotelId);
-};
-
 const getAllRoomNumbersService = async (hotelId, roomId) => {
     return await roomInventoryRepositories.getAllRoomNumbers(hotelId, roomId);
 };
 
 export default {
     deleteRoomInventoryService,
-    getAvailableRoomsByHotelService,
     getAllRoomNumbersService
 };

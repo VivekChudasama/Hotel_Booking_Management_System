@@ -1,7 +1,6 @@
 import hotelService from '../services/hotelService.js';
 import { Constants } from '../config/Constants.js';
 import { ResponseMessages } from '../config/response_messages.js';
-import mongoose from 'mongoose';
 
 const getHotelList = async (req, res) => {
     try {

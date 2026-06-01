@@ -1,14 +1,10 @@
-import { param, query } from 'express-validator';
+import { param } from 'express-validator';
 import { ResponseMessages } from '../config/response_messages.js';
 
 const validateGetHotelInventory = [
-    param('hotel_id').notEmpty().withMessage(ResponseMessages.hotel.HOTEL_ID_REQUIRED)
+    param('room_id').notEmpty().withMessage(ResponseMessages.room.HOTEL_ROOM_ID_REQUIRED)
         .bail()
-        .isMongoId().withMessage(ResponseMessages.hotel.VALID_HOTEL_ID),
-
-    query('room_id').optional().isMongoId().withMessage(ResponseMessages.room.VALID_ROOM_ID),
-
-    query('status').optional().isIn(['available', 'Out of Service']).withMessage(ResponseMessages.room.VALID_ROOM_STATUS)
+        .isMongoId().withMessage(ResponseMessages.room.VALID_ROOM_ID),
 ];
 
 const validateDeleteRoomfromRoomInventory = [

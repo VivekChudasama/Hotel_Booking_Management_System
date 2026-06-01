@@ -13,17 +13,8 @@ const findAvailableRoomsForDates = async (roomId, hotelId, bookedInventoryIds, l
     }).limit(limit).session(session);
 };
 
-
-const getAvailableRoomsByHotel = async (hotelId) => {
+const getAllRoomNumbers = async (roomId) => {
     return await RoomInventory.find({
-        hotel_id: hotelId,
-        status: 'available'
-    }).populate('room_id');
-};
-
-const getAllRoomNumbers = async (hotelId, roomId) => {
-    return await RoomInventory.find({
-        hotel_id: hotelId,
         room_id: roomId
     }).select('room_number -_id');
 };
@@ -37,7 +28,6 @@ const deleteRoomInventoryById = async (id) => {
 export default {
     getRoomInventoryRoomById,
     findAvailableRoomsForDates,
-    getAvailableRoomsByHotel,
     getAllRoomNumbers,
     deleteRoomInventoryById
 };

@@ -7,11 +7,11 @@ const validateCreateHotel = [
     body('name').trim().notEmpty().withMessage(ResponseMessages.auth.NAME_REQUIRED)
         .bail()
         .isLength({ min: 3, max: 70 }).withMessage(ResponseMessages.auth.VALID_NAME_LENGTH)
-        .matches(Constants.REGEX.HOTEL_NAME_VALIDATION_REGEX).withMessage(ResponseMessages.hotel.VALID_HOTEL_NAME_FORMATE),
+        .matches(Constants.REGEX.HOTEL_NAME_VALIDATION_REGEX).withMessage(ResponseMessages.hotel.VALID_HOTEL_NAME_FORMAT),
 
     body('email').trim().notEmpty().withMessage(ResponseMessages.hotel.EMAIL_REQUIRED)
         .bail()
-        .isEmail().withMessage(ResponseMessages.auth.INVALID_EMAIL_FORMATE)
+        .isEmail().withMessage(ResponseMessages.auth.INVALID_EMAIL_FORMAT)
         .isLength({ max: 254 }).withMessage(ResponseMessages.auth.MAX_EMAIL_LENGTH)
         .normalizeEmail(),
 
@@ -32,12 +32,12 @@ const validateCreateHotel = [
     body('address').trim().notEmpty().withMessage(ResponseMessages.hotel.ADDRESS_REQUIRED)
         .bail()
         .isLength({ max: 256 }).withMessage(ResponseMessages.hotel.VALID_ADDRESS_LENGTH)
-        .matches(Constants.REGEX.ADDRESS_VALIDATION_REGEX).withMessage(ResponseMessages.hotel.VALID_ADDRESS_FORMATE),
+        .matches(Constants.REGEX.ADDRESS_VALIDATION_REGEX).withMessage(ResponseMessages.hotel.VALID_ADDRESS_FORMAT),
 
     body('city').trim().notEmpty().withMessage(ResponseMessages.hotel.CITY_NAME_REQUIRED)
         .bail()
         .isLength({ max: 30 }).withMessage(ResponseMessages.hotel.VALID_CITY_NAME_LENGTH)
-        .matches(Constants.REGEX.CITY_NAME_VALIDATION_REGEX).withMessage(ResponseMessages.hotel.VALID_CITY_NAME_FORMATE)
+        .matches(Constants.REGEX.CITY_NAME_VALIDATION_REGEX).withMessage(ResponseMessages.hotel.VALID_CITY_NAME_FORMAT)
 ];
 
 const validateUpdateHotel = [
@@ -46,11 +46,11 @@ const validateUpdateHotel = [
     body('name').optional().trim().notEmpty().withMessage(ResponseMessages.auth.NAME_REQUIRED)
         .bail()
         .isLength({ min: 3, max: 70 }).withMessage(ResponseMessages.auth.VALID_NAME_LENGTH)
-        .matches(Constants.REGEX.HOTEL_NAME_VALIDATION_REGEX).withMessage(ResponseMessages.hotel.VALID_HOTEL_NAME_FORMATE),
+        .matches(Constants.REGEX.HOTEL_NAME_VALIDATION_REGEX).withMessage(ResponseMessages.hotel.VALID_HOTEL_NAME_FORMAT),
 
     body('email').optional().trim().notEmpty().withMessage(ResponseMessages.auth.EMAIL_REQUIRED)
         .bail()
-        .isEmail().withMessage(ResponseMessages.auth.INVALID_EMAIL_FORMATE)
+        .isEmail().withMessage(ResponseMessages.auth.INVALID_EMAIL_FORMAT)
         .isLength({ max: 254 }).withMessage(ResponseMessages.auth.MAX_EMAIL_LENGTH)
         .normalizeEmail(),
 
@@ -70,12 +70,12 @@ const validateUpdateHotel = [
     body('address').optional().trim().notEmpty().withMessage(ResponseMessages.hotel.ADDRESS_REQUIRED)
         .bail()
         .isLength({ max: 256 }).withMessage(ResponseMessages.hotel.VALID_ADDRESS_LENGTH)
-        .matches(Constants.REGEX.ADDRESS_VALIDATION_REGEX).withMessage(ResponseMessages.hotel.VALID_ADDRESS_FORMATE),
+        .matches(Constants.REGEX.ADDRESS_VALIDATION_REGEX).withMessage(ResponseMessages.hotel.VALID_ADDRESS_FORMAT),
 
     body('city').optional().trim().notEmpty().withMessage(ResponseMessages.hotel.CITY_NAME_REQUIRED)
         .bail()
         .isLength({ max: 30 }).withMessage(ResponseMessages.hotel.VALID_CITY_NAME_LENGTH)
-        .matches(Constants.REGEX.CITY_NAME_VALIDATION_REGEX).withMessage(ResponseMessages.hotel.VALID_CITY_NAME_FORMATE)
+        .matches(Constants.REGEX.CITY_NAME_VALIDATION_REGEX).withMessage(ResponseMessages.hotel.VALID_CITY_NAME_FORMAT)
 ];
 
 const validateHotelIdParam = [

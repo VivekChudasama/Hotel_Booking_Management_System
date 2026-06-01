@@ -22,12 +22,12 @@ const getHotelById = async (id) => {
     return await Hotel.findById(id);
 };
 
-//get hotel by email to validate email is already user by other hotel or not
+//get hotel by email to validate email is already used by other hotel or not
 const getHotelByEmail = async (email) => {
     return await Hotel.findOne({ email });
 };
 
-//get hotel by phone_number to validate phone_number is already user by other hotel or not
+//get hotel by phone_number to validate phone_number is already used by other hotel or not
 const getHotelByPhone = async (phone_number) => {
     return await Hotel.findOne({ phone_number });
 };

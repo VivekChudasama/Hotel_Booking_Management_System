@@ -23,7 +23,7 @@ const validateCreateRoom = [
         .bail()
         .isArray({ min: 1 }).withMessage(ResponseMessages.common.MUST_BE_ARRAY),
 
-    body('amenities.*').trim().notEmpty().withMessage(ResponseMessages.room.VALID_ROOM_AMENIRIES_ARRAY)
+    body('amenities.*').trim().notEmpty().withMessage(ResponseMessages.room.VALID_ROOM_AMENITIES_ARRAY)
         .bail()
         .isString().withMessage(ResponseMessages.common.MUST_BE_STRING),
 
@@ -81,7 +81,7 @@ const validateUpdateRoom = [
         .bail()
         .isArray({ min: 1 }).withMessage(ResponseMessages.common.MUST_BE_ARRAY),
 
-    body('amenities.*').optional().trim().notEmpty().withMessage(ResponseMessages.room.VALID_ROOM_AMENIRIES_ARRAY)
+    body('amenities.*').optional().trim().notEmpty().withMessage(ResponseMessages.room.VALID_ROOM_AMENITIES_ARRAY)
         .bail()
         .isString().withMessage(ResponseMessages.common.MUST_BE_STRING),
 
@@ -89,7 +89,7 @@ const validateUpdateRoom = [
         .bail()
         .isInt({ min: 1, max: 1000000 }).withMessage(ResponseMessages.room.VALID_PRICE_PER_NIGHT_RANGE),
 
-    body('room_capacity.adult_count').optional().notEmpty().withMessage(ResponseMessages.booking.ADULT_COUNT_MIN)
+    body('room_capacity.adult_count').optional().notEmpty().withMessage(ResponseMessages.booking.ADULT_COUNT_REQUIRED)
         .bail()
         .isInt({ min: 1, max: 10 }).withMessage(ResponseMessages.room.VALID_ADULT_COUNT_RANGE),
 

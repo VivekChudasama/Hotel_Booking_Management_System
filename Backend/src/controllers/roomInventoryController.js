@@ -1,23 +1,13 @@
 import roomInventoryService from '../services/roomInventoryServices.js';
 import { Constants } from '../config/Constants.js';
 import { ResponseMessages } from '../config/response_messages.js';
-import hotelRepository from '../repositories/hotelRepository.js';
-import roomRepository from '../repositories/roomRepository.js';
 
 const getHotelInventory = async (req, res) => {
     try {
-        const hotel_id = req.params.hotel_id;
-        const { status, room_id } = req.query;
+        const room_id = req.params.room_id;
 
-        if (status === 'available') {
-            const availableRooms = await roomInventoryService.getAvailableRoomsByHotelService(hotel_id);
-            return res.status(Constants.RESPONSE_STATUS_CODE.SUCCESS_CODE).json(availableRooms);
-        }
-
-        if (room_id) {
-            const roomNumbers = await roomInventoryService.getAllRoomNumbersService(hotel_id, room_id);
-            return res.status(Constants.RESPONSE_STATUS_CODE.SUCCESS_CODE).json(roomNumbers);
-        }
+        const roomNumbers = await roomInventoryService.getAllRoomNumbersService(room_id);
+        res.status(Constants.RESPONSE_STATUS_CODE.SUCCESS_CODE).json(roomNumbers);
 
     } catch (error) {
         res.status(Constants.RESPONSE_STATUS_CODE.FAIL_CODE).json({ message: error.message });

@@ -18,6 +18,7 @@ const createBookingService = async (bookingData) => {
     if (fromDate < today) {
         throw new Error("Booking from date cannot be in the past.");
     }
+
     if (toDate <= fromDate) {
         throw new Error("Booking to date must be after from date.");
     }
@@ -80,10 +81,10 @@ const createBookingService = async (bookingData) => {
             throw new Error(`Room not found: ${r.room_id}`);
         }
         if (room.hotel_id.toString() !== hotelIdToUse.toString()) {
-            throw new Error(`Room ${r.room_id} does not belong to the specified hotel.`);
+            throw new Error(`Room does not belong to the specified hotel.`);
         }
 
-        const count = r.count || 1;
+        const count = r.count;
 
         totalAdultCapacity += (room.room_capacity.adult_count * count);
         totalChildCapacity += (room.room_capacity.children_count * count);
@@ -92,36 +93,13 @@ const createBookingService = async (bookingData) => {
         processedRooms.push({ room_id: r.room_id, count: count });
     }
 
-    const requestedAdults = bookingData.guests?.adult_count || 0;
-    const requestedChildren = bookingData.guests?.child_count || 0;
+    const requestedAdults = bookingData.guests?.adult_count;
+    const requestedChildren = bookingData.guests?.child_count;
 
     if (requestedAdults > totalAdultCapacity || requestedChildren > totalChildCapacity) {
         throw new Error("Guest count exceeds total combined room capacity.");
     }
 
-    // Active Bookings Check
-    const roomIdsToCheck = processedRooms.map(pr => pr.room_id);
-    const { bookings, inventories } = await bookingRepository.findActiveBookingsByUserAndRooms(
-        user_id,
-        roomIdsToCheck,
-        bookingData.from,
-        bookingData.to
-    );
-
-    if (bookings.length > 0) {
-        const inventoryToRoomMap = new Map(
-            inventories.map(inv => [inv._id.toString(), inv.room_id.toString()])
-        );
-
-        for (const booking of bookings) {
-            for (const invId of booking.room_inventory_ids) {
-                const roomId = inventoryToRoomMap.get(invId.toString());
-                if (roomId && roomIdsToCheck.includes(roomId)) {
-                    throw new Error(`You already have an active booking for room type ${roomId.room_type} for the selected dates.`);
-                }
-            }
-        }
-    }
 
     bookingData.total_amount = calculatedTotalAmount;
 
@@ -144,7 +122,7 @@ const createBookingService = async (bookingData) => {
         }
 
         bookingData.room_inventory_ids = finalInventoryIds;
-        delete bookingData.room_inventory_id; // Clean up just in case
+        delete bookingData.room_inventory_id;
 
         const [booking] = await bookingRepository.createBookingWithSession([bookingData], { session });
 
@@ -193,7 +171,7 @@ const updateBookingService = async (id, updateData) => {
     return booking;
 }
 
-//cancle booking 
+// cancel booking by booking id
 const cancelBookingService = async (id) => {
     const booking = await bookingRepository.getBookingById(id);
     if (!booking) {
@@ -207,13 +185,13 @@ const cancelBookingService = async (id) => {
 }
 
 // get booking history by user id for specific user
-const getBookingHistoryService = async (userId) => {
-    return await bookingRepository.getBookingsByUserId(userId)
+const getBookingHistoryService = async (userId, query = {}) => {
+    return await bookingRepository.getBookingsByUserId(userId, query)
 }
 
 // get all user booking for admin
-const getAllUserBookingService = async () => {
-    return await bookingRepository.getAllUserBookings()
+const getAllUserBookingService = async (query = {}) => {
+    return await bookingRepository.getAllUserBookings(query)
 }
 
 export default {
