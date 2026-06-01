@@ -5,7 +5,6 @@ import { ResponseMessages } from '../config/response_messages.js';
 const getHotelInventory = async (req, res) => {
     try {
         const room_id = req.params.room_id;
-
         const roomNumbers = await roomInventoryService.getAllRoomNumbersService(room_id);
         res.status(Constants.RESPONSE_STATUS_CODE.SUCCESS_CODE).json(roomNumbers);
 

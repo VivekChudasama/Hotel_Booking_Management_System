@@ -27,8 +27,13 @@ const deleteRoomInventoryService = async (inventoryId) => {
     return deletedInventory;
 };
 
-const getAllRoomNumbersService = async (hotelId, roomId) => {
-    return await roomInventoryRepositories.getAllRoomNumbers(hotelId, roomId);
+const getAllRoomNumbersService = async (roomId) => {
+    const room = await roomInventoryRepositories.getAllRoomNumbers(roomId);
+
+    if (!room) {
+        throw new Error(ResponseMessages.room.HOTEL_ROOM_NOT_FOUND);
+    }
+    return room;
 };
 
 export default {
