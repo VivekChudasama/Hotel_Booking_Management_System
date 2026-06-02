@@ -10,6 +10,13 @@ const getHotelListService = async (query = {}) => {
 };
 
 const createHotelService = async (hotelData) => {
+    
+    //check hotel with same name, city and address already exists or not to avoid duplicate hotel entry
+    const existingHotel = await hotelRepository.findHotelByNameCityAddress(hotelData.name, hotelData.city, hotelData.address);
+    
+    if (existingHotel) {
+        throw new Error(ResponseMessages.hotel.HOTEL_ALREADY_EXISTS);
+    }
     return await hotelRepository.createHotel(hotelData);
 };
 
@@ -31,7 +38,7 @@ const updateHotelService = async (id, updateHotelData) => {
 
     //check updated email is used by any other hotel while updating
     if (updateHotelData.email) {
-        const hotelWithSameEmail = await hotelRepository.getHotelByEmail(updateHotelData.email);
+        const hotelWithSameEmail = await hotelRepository.findHotelByEmail(updateHotelData.email);
         if (hotelWithSameEmail && hotelWithSameEmail._id.toString() !== id.toString()) {
             throw new Error(ResponseMessages.hotel.EMAIL_ALREADY_EXISTS);
         }
@@ -39,7 +46,7 @@ const updateHotelService = async (id, updateHotelData) => {
 
     //check updated phone_number is used by any other hotel while updating
     if (updateHotelData.phone_number) {
-        const hotelWithSamePhone = await hotelRepository.getHotelByPhone(updateHotelData.phone_number);
+        const hotelWithSamePhone = await hotelRepository.findHotelByPhone(updateHotelData.phone_number);
         if (hotelWithSamePhone && hotelWithSamePhone._id.toString() !== id.toString()) {
             throw new Error(ResponseMessages.hotel.PHONE_NUMBER_EXISTS);
         }

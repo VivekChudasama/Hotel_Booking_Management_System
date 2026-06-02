@@ -22,13 +22,22 @@ const getHotelById = async (id) => {
     return await Hotel.findById(id);
 };
 
-//get hotel by email to validate email is already used by other hotel or not
-const getHotelByEmail = async (email) => {
+//find hotel by name , city , address
+const findHotelByNameCityAddress = async (name, city, address) => {
+    return await Hotel.findOne({
+        name: { $regex: name, $options: 'i' },
+        city: { $regex: city, $options: 'i' },
+        address: { $regex: address, $options: 'i' }
+    });
+};
+
+//find hotel by email to validate email is already used by other hotel or not
+const findHotelByEmail = async (email) => {
     return await Hotel.findOne({ email });
 };
 
-//get hotel by phone_number to validate phone_number is already used by other hotel or not
-const getHotelByPhone = async (phone_number) => {
+//find hotel by phone_number to validate phone_number is already used by other hotel or not
+const findHotelByPhone = async (phone_number) => {
     return await Hotel.findOne({ phone_number });
 };
 
@@ -46,8 +55,9 @@ export default {
     getHotelList,
     createHotel,
     getHotelById,
-    getHotelByEmail,
-    getHotelByPhone,
+    findHotelByNameCityAddress,
+    findHotelByEmail,
+    findHotelByPhone,
     updateHotelById,
     deleteHotelById
 }

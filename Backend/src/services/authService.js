@@ -1,4 +1,4 @@
-import authRepository from '../repositories/authRepository.js';
+import userRepository from '../repositories/userRepository.js';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv'
@@ -12,7 +12,7 @@ const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN;
 const registerUserService = async (userData) => {
     //verify email is already exist or not
     if (userData.email) {
-        const existingUserByEmail = await authRepository.findUserByEmail(userData.email);
+        const existingUserByEmail = await userRepository.findUserByEmail(userData.email);
         if (existingUserByEmail) {
             throw new Error(ResponseMessages.auth.USER_EMAIL_ALREADY_EXISTS);
         }
@@ -20,7 +20,7 @@ const registerUserService = async (userData) => {
 
     //verify phone_number is already exist or not
     if (userData.phone_number) {
-        const existingUserByPhone = await authRepository.findUserByPhone(userData.phone_number);
+        const existingUserByPhone = await userRepository.findUserByPhoneNumber(userData.phone_number);
         if (existingUserByPhone) {
             throw new Error(ResponseMessages.auth.USER_PHONE_NUMBER_EXISTS);
         }
@@ -30,7 +30,7 @@ const registerUserService = async (userData) => {
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(userData.password, salt);
 
-    const newUser = await authRepository.createUser({
+    const newUser = await userRepository.createUser({
         ...userData,
         password: hashedPassword
     });
@@ -47,7 +47,7 @@ const registerUserService = async (userData) => {
 
 const loginUserService = async (email, password) => {
     //validate email is valid or not
-    const user = await authRepository.findUserByEmail(email);
+    const user = await userRepository.findUserByEmail(email);
     if (!user) {
         throw new Error(ResponseMessages.auth.INVALID_CREDENTIALS);
     }

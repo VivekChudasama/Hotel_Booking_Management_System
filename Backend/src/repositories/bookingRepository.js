@@ -80,6 +80,7 @@ const getBookedInventoryIdsForHotelDates = async (hotelId, fromDate, toDate) => 
     const inventoryIds = inventories.map(inv => inv._id);
     const inventoryIdStrings = new Set(inventoryIds.map(id => id.toString()));
     
+    // Find overlapping bookings for inventories
     const bookings = await Booking.find({
         room_inventory_ids: { $in: inventoryIds },
         booking_status: { $in: ['pending', 'confirmed', 'checked in'] },

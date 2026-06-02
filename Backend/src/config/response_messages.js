@@ -8,6 +8,7 @@ export class ResponseMessages {
     }
     static auth = {
         ACCESS_DENIED: 'Access denied. Admin role required',
+        JWT_NOT_PROVIDED: 'JWT token is required',
         EMAIL_REQUIRED: 'Email is required',
         INVALID_CREDENTIALS: 'Invalid username or password. Please try again.',
         INVALID_EMAIL_FORMAT: 'Invalid email format',
@@ -52,6 +53,7 @@ export class ResponseMessages {
         ADDRESS_REQUIRED: 'Address is required',
         CITY_NAME_REQUIRED: 'City Name is required',
         DESCRIPTION_REQUIRED: 'Description is required',
+        HOTEL_ALREADY_EXISTS: 'Hotel with same name, city and address already exists',
         EMAIL_ALREADY_EXISTS: 'Hotel with this email already exists',
         EMAIL_REQUIRED: 'Email is required',
         HOTEL_DELETED_SUCCESSFULLY: 'Hotel deleted successfully',

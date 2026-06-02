@@ -20,14 +20,14 @@ const updateUserService = async (id, updateUserData) => {
     }
 
     if (updateUserData.email) {
-        const userWithSameEmail = await userRepository.getUserEmail(updateUserData.email);
+        const userWithSameEmail = await userRepository.findUserByEmail(updateUserData.email);
         if (userWithSameEmail && userWithSameEmail._id.toString() !== id.toString()) {
             throw new Error(ResponseMessages.auth.USER_EMAIL_ALREADY_EXISTS);
         }
     }
 
     if (updateUserData.phone_number) {
-        const userWithSamePhone_Number = await userRepository.getUserPhoneNumber(updateUserData.phone_number);
+        const userWithSamePhone_Number = await userRepository.findUserByPhoneNumber(updateUserData.phone_number);
         if (userWithSamePhone_Number && userWithSamePhone_Number._id.toString() !== id.toString()) {
             throw new Error(ResponseMessages.auth.USER_PHONE_NUMBER_EXISTS);
         }

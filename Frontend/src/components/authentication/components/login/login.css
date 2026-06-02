@@ -1,0 +1,100 @@
+.login-form-container {
+    flex: 1;
+    background-color: var(--secondary-white);
+    padding: 32px;
+}
+
+.login-form-container .login-form {
+    background-color: var(--primary-white);
+    border-radius: 8px;
+    padding: 24px;
+    width: 100%;
+    max-width: 450px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    gap: 24px;
+}
+
+.login-form-container .login-form .form-title {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--primary-dark-blue);
+    text-align: center;
+    margin-bottom: 8px;
+}
+
+.login-form-container .login-form .input-group-custom {
+    gap: 8px;
+}
+
+.login-form-container .login-form .input-group-custom .form-label {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--secondary-dark-blue);
+}
+
+.login-form-container .login-form .input-group-custom .input-container {
+    border: 1px solid var(--secondary-border-grey);
+    border-radius: 4px;
+}
+
+.login-form-container .login-form .input-group-custom .input-container .input-field {
+    width: 100%;
+    padding: 14px 16px;
+    font-size: 14px;
+}
+
+.login-form-container .login-form .input-group-custom .input-container .input-field:focus {
+    border-color: var(--primary-dark-blue);
+    outline: none;
+}
+
+.login-form-container .login-form .input-group-custom .input-container .input-field.is-invalid {
+    border-color: var(--primary-red);
+}
+
+.login-form-container .login-form .input-group-custom .error-text {
+    color: var(--primary-red);
+    font-size: 14px;
+    margin-top: 4px;
+}
+
+.login-form-container .login-form .submit {
+    background-color: var(--secondary-dark-blue);
+    color: var(--primary-white);
+    padding: 14px;
+    border-radius: 4px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-top: 8px;
+}
+
+
+.login-form-container .login-form .signup-link {
+    text-align: center;
+    font-size: 14px;
+    color: var(--primary-gray);
+    margin-top: 16px;
+}
+
+.login-form-container .login-form .signup-link .link {
+    color: var(--secondary-darkest-blue);
+    font-weight: 600;
+    margin-left: 8px;
+}
+
+.login-form-container .login-form .signup-link .link:hover {
+    text-decoration: underline;
+}
+
+/* Responsiveness */
+@media (max-width: 576px) {
+    .login-form-container {
+        padding: 16px;
+    }
+
+    .login-form-container .login-form {
+        padding: 24px;
+    }
+}

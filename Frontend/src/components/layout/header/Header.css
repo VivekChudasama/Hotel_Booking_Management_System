@@ -1,0 +1,119 @@
+.header-container {
+    background-color: #1A1E43;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 3rem;
+    color: white;
+    font-family: 'Inter', sans-serif;
+}
+
+.header-logo {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1.5rem;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.logo-icon {
+    width: 24px;
+    height: 24px;
+    background-color: white;
+    border-radius: 4px;
+    display: inline-block;
+}
+
+.header-nav {
+    display: flex;
+    gap: 2rem;
+}
+
+.nav-link {
+    color: #a0a3bd;
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    transition: color 0.3s ease;
+    text-transform: uppercase;
+}
+
+.nav-link:hover, .nav-link.active {
+    color: white;
+}
+
+.header-actions {
+    display: flex;
+    gap: 1rem;
+}
+
+.btn-header {
+    background-color: transparent;
+    color: white;
+    border: 1px solid #4a4d6d;
+    padding: 0.5rem 1.5rem;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.btn-header:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.btn-primary-header {
+    background-color: #23284C;
+    border: 1px solid #23284C;
+}
+
+.btn-primary-header:hover {
+    background-color: #2c3361;
+    border: 1px solid #2c3361;
+}
+
+.profile-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    object-fit: cover;
+    background-color: #ccc;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #333;
+    font-weight: bold;
+    font-size: 1rem;
+    border: 2px solid white;
+}
+
+.btn-logout {
+    border-color: #dc3545;
+    color: #dc3545;
+}
+
+.btn-logout:hover {
+    background-color: rgba(220, 53, 69, 0.1);
+}
+
+/* Responsiveness */
+@media (max-width: 992px) {
+    .header-nav {
+        display: none; /* Hide nav links on tablet/mobile for now */
+    }
+}
+
+@media (max-width: 576px) {
+    .header-container {
+        padding: 1rem;
+    }
+    
+    .btn-header {
+        padding: 0.4rem 1rem;
+        font-size: 0.8rem;
+    }
+}
