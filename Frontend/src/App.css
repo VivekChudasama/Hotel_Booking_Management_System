@@ -4,5 +4,5 @@
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  font-family: Inter, Public Sans, Figtree, Roboto, Inter Tight, sans-serif;
+  font-family: 'Inter', 'Public Sans', 'Figtree', 'Roboto', 'Inter Tight', sans-serif;
 }

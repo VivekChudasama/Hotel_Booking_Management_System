@@ -1,12 +1,15 @@
 import { Hotel } from '../entities/hotel.js';
 
-const getHotelList = async (query = {}) => {
+const getHotelList = async (query = {}, availableHotelIds = null) => {
     const filter = {};
     if (query.city) {
         filter.city = { $regex: query.city, $options: 'i' };
     }
     if (query.name) {
         filter.name = { $regex: query.name, $options: 'i' };
+    }
+    if (availableHotelIds !== null) {
+        filter._id = { $in: availableHotelIds };
     }
     return await Hotel.find(filter);
 };

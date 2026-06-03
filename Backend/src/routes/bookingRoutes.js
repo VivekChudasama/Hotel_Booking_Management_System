@@ -18,10 +18,10 @@ router.put('/:booking_id/cancel', verifyToken, bookingValidation.validateBooking
 //update booking by booking_id(admin only)
 router.put('/:booking_id', verifyToken, isAdmin, bookingValidation.validateUpdateBooking, handleValidationErrors, bookingController.updateBooking);
 
-//user booking history by user_id
+//get user booking history by user_id
 router.get('/:user_id/booking_history', verifyToken, bookingValidation.validateUserIdParam, handleValidationErrors, bookingController.getBookingHistory);
 
-//all user's booking(admin only)
+//get all user's booking (admin only)
 router.get('/', verifyToken, isAdmin, bookingController.getAllUsersBooking)
 
 export default router;

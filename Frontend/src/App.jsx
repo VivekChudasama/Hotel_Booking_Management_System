@@ -1,5 +1,5 @@
 import { Routes, Route } from 'react-router-dom';
-import Header from './components/layout/Header/Header.jsx';
+// import Header from './components/layout/Header/Header.jsx';
 import LoginForm from './components/authentication/components/login/login.jsx';
 import RegisterForm from './components/authentication/components/register/register.jsx';
 import './App.css';

@@ -135,8 +135,6 @@ const getAllUserBookings = async (query = {}) => {
     return bookings;
 }
 
-
-
 const findActiveBookingsByUserAndRooms = async (userId, roomIds, fromDate, toDate) => {
     // Find all inventory items for these rooms
     const inventories = await RoomInventory.find({ room_id: { $in: roomIds } }).select('_id room_id');
@@ -153,6 +151,28 @@ const findActiveBookingsByUserAndRooms = async (userId, roomIds, fromDate, toDat
     return { bookings, inventories };
 };
 
+const getHotelsWithAvailableRooms = async (fromDate, toDate) => {
+    const bookings = await Booking.find({
+        booking_status: { $in: ['pending', 'confirmed', 'checked in'] },
+        from: { $lt: new Date(toDate) },
+        to: { $gt: new Date(fromDate) }
+    }).select('room_inventory_ids');
+    
+    const bookedIds = [];
+    bookings.forEach(b => {
+        b.room_inventory_ids.forEach(id => {
+            bookedIds.push(id.toString());
+        });
+    });
+    
+    const availableInventories = await RoomInventory.find({
+        _id: { $nin: bookedIds },
+        status: 'available'
+    }).select('hotel_id');
+    
+    return [...new Set(availableInventories.map(inv => inv.hotel_id.toString()))];
+};
+
 export default {
     createBookingWithSession,
     startSession,
@@ -161,5 +181,6 @@ export default {
     getBookedInventoryIdsForDates,
     getAllUserBookings,
     getBookedInventoryIdsForHotelDates,
-    findActiveBookingsByUserAndRooms
+    findActiveBookingsByUserAndRooms,
+    getHotelsWithAvailableRooms
 }

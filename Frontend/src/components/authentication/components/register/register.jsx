@@ -17,7 +17,7 @@ const RegisterForm = () => {
         setApiError('');
         try {
             const { confirmPassword, ...userData } = data;
-            
+
             const response = await registerUser(userData);
             console.log('Registration successful', response);
             navigate('/login');
@@ -30,17 +30,17 @@ const RegisterForm = () => {
         <div className="register-form-conatiner d-flex justify-content-center align-items-center">
             <form className="register-form d-flex flex-column" onSubmit={handleSubmit(onSubmit)}>
                 <p className="form-title">Register</p>
-                
+
                 {apiError && <div className="alert alert-danger">{apiError}</div>}
 
                 <div className="form-row d-flex">
                     <div className="input-group-custom d-flex flex-column">
                         <label className='form-label'>Full Name <span className="text-danger">*</span></label>
                         <div className="input-container position-relative d-flex align-items-center">
-                            <input 
-                                className={`input-field ${errors.name ? 'is-invalid' : ''}`} 
-                                placeholder="Enter full name" 
-                                type="text" 
+                            <input
+                                className={`input-field ${errors.name ? 'is-invalid' : ''}`}
+                                placeholder="Enter full name"
+                                type="text"
                                 {...register("name", {
                                     required: Messages.register.ERR_NAME_REQUIRED,
                                     minLength: { value: 3, message: Messages.register.VALID_NAME_LENGTH },
@@ -58,18 +58,18 @@ const RegisterForm = () => {
                     <div className="input-group-custom d-flex flex-column">
                         <label className='form-label'>Email <span className="text-danger">*</span></label>
                         <div className="input-container position-relative d-flex align-items-center">
-                            <input 
-                                className={`input-field ${errors.email ? 'is-invalid' : ''}`} 
-                                placeholder="Enter email" 
-                                type="email" 
-                                {...register("email", { 
+                            <input
+                                className={`input-field ${errors.email ? 'is-invalid' : ''}`}
+                                placeholder="Enter email"
+                                type="email"
+                                {...register("email", {
                                     required: Messages.auth.ERR_EMAIL_REQUIRED,
                                     maxLength: { value: 254, message: Messages.auth.ERR_EMAIL_MAXLENGTH },
                                     pattern: {
-                                        value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                                        value: Validation.REGEX.EMAIL_VALIDATION_REGEX,
                                         message: Messages.auth.ERR_EMAIL_INVALID
                                     }
-                                })} 
+                                })}
                             />
                         </div>
                         {errors.email && <span className="error-text">{errors.email.message}</span>}
@@ -80,14 +80,14 @@ const RegisterForm = () => {
                     <div className="input-group-custom d-flex flex-column">
                         <label className='form-label'>Phone Number <span className="text-danger">*</span></label>
                         <div className="input-container position-relative d-flex align-items-center">
-                            <input 
-                                className={`input-field ${errors.phone_number ? 'is-invalid' : ''}`} 
-                                placeholder="Enter phone number" 
-                                type="number" 
+                            <input
+                                className={`input-field ${errors.phone_number ? 'is-invalid' : ''}`}
+                                placeholder="Enter phone number"
+                                type="number"
                                 {...register("phone_number", {
                                     required: Messages.register.ERR_MOBILE_NUMBER_REQUIRED,
-                                    pattern: {
-                                        value: /^\d{10}$/,
+                                    maxLength: {
+                                        value: 10,
                                         message: Messages.register.ERR_USER_PHONE_NUMBER_LENGTH
                                     }
                                 })}
@@ -99,9 +99,9 @@ const RegisterForm = () => {
                     <div className="input-group-custom d-flex flex-column">
                         <label className='form-label'>Password <span className="text-danger">*</span></label>
                         <div className="input-container position-relative d-flex align-items-center">
-                            <input 
-                                className={`input-field ${errors.password ? 'is-invalid' : ''}`} 
-                                placeholder="Enter password" 
+                            <input
+                                className={`input-field ${errors.password ? 'is-invalid' : ''}`}
+                                placeholder="Enter password"
                                 type="password"
                                 {...register("password", {
                                     required: Messages.register.ERR_PASSWORD_REQUIRED,
@@ -120,9 +120,9 @@ const RegisterForm = () => {
                     <div className="input-group-custom d-flex flex-column">
                         <label className='form-label'>Confirm Password <span className="text-danger">*</span></label>
                         <div className="input-container position-relative d-flex align-items-center">
-                            <input 
-                                className={`input-field ${errors.confirmPassword ? 'is-invalid' : ''}`} 
-                                placeholder="Confirm password" 
+                            <input
+                                className={`input-field ${errors.confirmPassword ? 'is-invalid' : ''}`}
+                                placeholder="Confirm password"
                                 type="password"
                                 {...register("confirmPassword", {
                                     required: Messages.auth.ERR_CONFIRM_PASSWORD_REQUIRED,
@@ -136,9 +136,9 @@ const RegisterForm = () => {
                     <div className="input-group-custom d-flex flex-column">
                         <label className='form-label'>Profile Image URL (Optional)</label>
                         <div className="input-container position-relative d-flex align-items-center">
-                            <input 
-                                className={`input-field ${errors.profile_image ? 'is-invalid' : ''}`} 
-                                placeholder="Add profile image url" 
+                            <input
+                                className={`input-field ${errors.profile_image ? 'is-invalid' : ''}`}
+                                placeholder="Add profile image url"
                                 type="url"
                                 {...register("profile_image", {
                                     pattern: {
@@ -151,7 +151,7 @@ const RegisterForm = () => {
                         {errors.profile_image && <span className="error-text">{errors.profile_image.message}</span>}
                     </div>
                 </div>
-                
+
                 <input type="hidden" value="customer" {...register("role")} />
 
                 <button className="submit border-0" type="submit">

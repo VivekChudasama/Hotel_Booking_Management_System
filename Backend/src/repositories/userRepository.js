@@ -1,9 +1,11 @@
 import { User } from '../entities/user.js'
 
+// get user by user_id
 const getUserById = async (id) => {
     return await User.findById(id).select("-password");
 }
 
+// update user by user_id
 const updateUserById = async (id, updateUserData) => {
     return await User.findByIdAndUpdate(id, updateUserData , {new : true}).select("-password");
 }

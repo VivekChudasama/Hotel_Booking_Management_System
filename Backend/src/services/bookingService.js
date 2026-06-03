@@ -163,9 +163,16 @@ const updateBookingService = async (id, updateData) => {
         throw new Error(ResponseMessages.booking.BOOKING_NOT_FOUND)
     };
 
-    if (updateData.booking_status) booking.booking_status = updateData.booking_status;
-    if (updateData.check_in_date) booking.check_in_date = updateData.check_in_date;
-    if (updateData.check_out_date) booking.check_out_date = updateData.check_out_date;
+    if (updateData.check_out_date <= updateData.check_in_date) {
+        throw new Error(ResponseMessages.booking.MIN_CHECK_OUT_DATE);
+    };
+
+    const Updates = ['booking_status', 'check_in_date', 'check_out_date'];
+    Updates.forEach(key => {
+        if (updateData[key] !== undefined) {
+            booking[key] = updateData[key];
+        }
+    });
 
     await booking.save();
     return booking;
@@ -174,8 +181,13 @@ const updateBookingService = async (id, updateData) => {
 // cancel booking by booking id
 const cancelBookingService = async (id) => {
     const booking = await bookingRepository.getBookingById(id);
+
     if (!booking) {
         throw new Error(ResponseMessages.booking.BOOKING_NOT_FOUND)
+    }
+
+    if (booking.booking_status = 'checked out') {
+        throw new Error(ResponseMessages.booking.INVALID_CANCEL_REQUEST)
     }
 
     booking.booking_status = 'cancelled';
@@ -184,7 +196,7 @@ const cancelBookingService = async (id) => {
     return booking;
 }
 
-// get booking history by user id for specific user
+// get booking history by user id for specific user 
 const getBookingHistoryService = async (userId, query = {}) => {
     return await bookingRepository.getBookingsByUserId(userId, query)
 }

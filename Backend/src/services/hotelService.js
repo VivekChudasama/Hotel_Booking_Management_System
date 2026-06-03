@@ -1,12 +1,21 @@
 import hotelRepository from '../repositories/hotelRepository.js';
 import { ResponseMessages } from '../config/response_messages.js'
 import { Booking } from '../entities/booking.js';
-import roomRepository from '../repositories/roomRepository.js';
 import { RoomInventory } from '../entities/room_inventory.js';
 import { Room } from '../entities/room.js';
+import bookingRepository from '../repositories/bookingRepository.js';
 
 const getHotelListService = async (query = {}) => {
-    return await hotelRepository.getHotelList(query);
+    let availableHotelIds = null;
+
+    if(query.to <= query.from){
+        throw new Error(ResponseMessages.hotel.INVALID_DATE_RANGE);
+    }
+
+    if (query.from && query.to) {
+        availableHotelIds = await bookingRepository.getHotelsWithAvailableRooms(query.from, query.to);
+    }
+    return await hotelRepository.getHotelList(query, availableHotelIds);
 };
 
 const createHotelService = async (hotelData) => {

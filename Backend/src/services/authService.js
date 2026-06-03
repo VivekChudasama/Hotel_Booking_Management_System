@@ -26,7 +26,7 @@ const registerUserService = async (userData) => {
         }
     }
 
-    //hash the password using bcrypt
+    // hash the password using bcrypt
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(userData.password, salt);
 
@@ -46,13 +46,13 @@ const registerUserService = async (userData) => {
 };
 
 const loginUserService = async (email, password) => {
-    //validate email is valid or not
+    // validate email is valid or not
     const user = await userRepository.findUserByEmail(email);
     if (!user) {
         throw new Error(ResponseMessages.auth.INVALID_CREDENTIALS);
     }
 
-    //validate password is valid or not
+    // validate password is valid or not
     const isValidPassword = await bcrypt.compare(password, user.password);
     if (!isValidPassword) {
         throw new Error(ResponseMessages.auth.INVALID_CREDENTIALS);

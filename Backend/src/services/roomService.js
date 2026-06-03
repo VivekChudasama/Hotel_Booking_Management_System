@@ -14,7 +14,7 @@ const getRoomListService = async (id, role, query = {}) => {
     return await roomRepository.getHotelSpecificRoomsList(id, role, query, bookedInventoryIds);
 };
 
-// Creates a new room or updates the room count if the room type already exists.
+// Creates a new room or update room if the room type already exists.
 const createRoomService = async (roomData) => {
     const { room_inventories, hotel_id, room_type, ...roomFields } = roomData;
 

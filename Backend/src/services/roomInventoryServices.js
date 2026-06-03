@@ -1,5 +1,4 @@
 import roomInventoryRepositories from '../repositories/roomInventoryRepositories.js';
-import hotelRepository from '../repositories/hotelRepository.js';
 import { Booking } from '../entities/booking.js';
 import { ResponseMessages } from '../config/response_messages.js';
 

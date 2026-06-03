@@ -6,6 +6,7 @@ export class ResponseMessages {
         MUST_BE_URL: 'This field must be a valid URL',
         MUST_BE_DATE: 'This field must be a valid ISO8601 formate date',
     }
+    
     static auth = {
         ACCESS_DENIED: 'Access denied. Admin role required',
         JWT_NOT_PROVIDED: 'JWT token is required',
@@ -37,6 +38,7 @@ export class ResponseMessages {
         CHECK_OUT_DATE: 'Check-out date is required',
         INVALID_BOOKING_STATUS: 'Invalid booking status',
         MIN_CHECK_OUT_DATE: 'Check-out date should be greater than the check-in date',
+        INVALID_CANCEL_REQUEST: 'Booking cannot get cancel after check-out date',
         PAST_DATE_BOOKING: 'Check-in date cannot be in the past',
         USER_ID_REQUIRED: 'User ID is required',
         MAX_BOOKING_DATE: 'Cannot book a room more than 6 months in advance.',
@@ -66,7 +68,8 @@ export class ResponseMessages {
         VALID_CITY_NAME_FORMAT: 'City Name can only contain letters',
         VALID_CITY_NAME_LENGTH: 'City Name must be less than 30 characters',
         VALID_DESCRIPTION_LENGTH: 'Description must be less than 1024 characters',
-        VALID_HOTEL_NAME_FORMAT: 'Hotel name can only contain letters, numbers, spaces, dots, commas, apostrophes, and hyphens'
+        VALID_HOTEL_NAME_FORMAT: 'Hotel name can only contain letters, numbers, spaces, dots, commas, apostrophes, and hyphens',
+        INVALID_DATE_RANGE: 'Invalid date range."to" date must be after"from" date.'
     }
 
     static room = {

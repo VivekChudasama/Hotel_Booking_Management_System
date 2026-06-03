@@ -1,11 +1,13 @@
 {
   "compilerOptions": {
+    "useUnknownInCatchVariables": false,
     "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"]
     },
     "jsx": "react-jsx",
-    "checkJs": true
+    "checkJs": true,
+    "types": ["vite/client"]
   },
   "include": ["src"]
 }

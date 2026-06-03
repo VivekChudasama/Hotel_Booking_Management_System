@@ -3,6 +3,7 @@ import { useForm } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
 import { loginUser } from '../../../services/authenticationApi';
 import { Messages } from '../../../shared/configs/messages';
+import { Validation } from '../../../shared/configs/validation';
 import "./login.css";
 
 const LoginForm = () => {
@@ -47,7 +48,7 @@ const LoginForm = () => {
                                 required: Messages.auth.ERR_EMAIL_REQUIRED,
                                 maxLength: { value: 254, message: Messages.auth.ERR_EMAIL_MAXLENGTH },
                                 pattern: {
-                                    value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                                    value: Validation.REGEX.EMAIL_VALIDATION_REGEX,
                                     message: Messages.auth.ERR_EMAIL_INVALID
                                 }
                             })} 
