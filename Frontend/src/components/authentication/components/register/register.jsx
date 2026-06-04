@@ -4,6 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { registerUser } from '../../../services/authenticationApi';
 import { Messages } from '../../../shared/configs/messages';
 import { Validation } from '../../../shared/configs/validation';
+// import { validateImageURL } from '@/helpers/imageUrlValidation';
 import "./register.css";
 
 const RegisterForm = () => {
@@ -76,7 +77,7 @@ const RegisterForm = () => {
                     </div>
                 </div>
 
-                <div className="form-row">
+                <div className="form-row d-flex">
                     <div className="input-group-custom d-flex flex-column">
                         <label className='form-label'>Phone Number <span className="text-danger">*</span></label>
                         <div className="input-container position-relative d-flex align-items-center">
@@ -86,6 +87,10 @@ const RegisterForm = () => {
                                 type="number"
                                 {...register("phone_number", {
                                     required: Messages.register.ERR_MOBILE_NUMBER_REQUIRED,
+                                    minLength: {
+                                        value: 10,
+                                        message: Messages.register.ERR_USER_PHONE_NUMBER_LENGTH
+                                    },
                                     maxLength: {
                                         value: 10,
                                         message: Messages.register.ERR_USER_PHONE_NUMBER_LENGTH
@@ -116,8 +121,8 @@ const RegisterForm = () => {
                     </div>
                 </div>
 
-                <div className="form-row">
-                    <div className="input-group-custom d-flex flex-column">
+                <div className="form-row d-flex">
+                    {/* <div className="input-group-custom d-flex flex-column">
                         <label className='form-label'>Confirm Password <span className="text-danger">*</span></label>
                         <div className="input-container position-relative d-flex align-items-center">
                             <input
@@ -131,7 +136,7 @@ const RegisterForm = () => {
                             />
                         </div>
                         {errors.confirmPassword && <span className="error-text">{errors.confirmPassword.message}</span>}
-                    </div>
+                    </div> */}
 
                     <div className="input-group-custom d-flex flex-column">
                         <label className='form-label'>Profile Image URL (Optional)</label>

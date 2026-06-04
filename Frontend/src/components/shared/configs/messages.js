@@ -7,7 +7,7 @@ export class Messages {
         ERR_CONFIRM_PASSWORD_REQUIRED: 'Confirm password is required!',
         ERR_PASSWORD_INVALID: 'Please input valid password',
         ERR_EMAIL_ALREADY_EXIST: 'Email already exists',
-        ERR_MOBILE_NUMBER: 'Mobile number already exists'
+        ERR_MOBILE_NUMBER: 'Mobile number already exists',
     };
 
     static register = {

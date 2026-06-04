@@ -163,7 +163,7 @@ const updateBookingService = async (id, updateData) => {
         throw new Error(ResponseMessages.booking.BOOKING_NOT_FOUND)
     };
 
-    if (updateData.check_out_date <= updateData.check_in_date) {
+    if (updateData.check_out_date && updateData.check_in_date && updateData.check_out_date <= updateData.check_in_date) {
         throw new Error(ResponseMessages.booking.MIN_CHECK_OUT_DATE);
     };
 
