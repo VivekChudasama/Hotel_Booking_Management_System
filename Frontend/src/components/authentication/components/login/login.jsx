@@ -4,11 +4,13 @@ import { Link, useNavigate } from 'react-router-dom';
 import { loginUser } from '../../../services/authenticationApi';
 import { Messages } from '../../../shared/configs/messages';
 import { Validation } from '../../../shared/configs/validation';
+import { Toast, ToastContainer } from 'react-bootstrap';
 import "./login.css";
 
 const LoginForm = () => {
     const { register, handleSubmit, formState: { errors } } = useForm();
     const [apiError, setApiError] = useState('');
+    const [toast, setToast] = useState({ show: false, message: '', type: 'success' });
     const navigate = useNavigate();
 
     const onSubmit = async (data) => {
@@ -22,16 +24,26 @@ const LoginForm = () => {
             }
             
             console.log('Login successful', response);
+            setToast({ show: true, message: 'Login successful!', type: 'success' });
             
             window.dispatchEvent(new Event('authChange'));
-            navigate('/');
+            setTimeout(() => navigate('/'), 1500);
         } catch (error) {
-            setApiError(error.message || 'Login failed. Please try again.');
+            const errorMsg = error.message || 'Login failed. Please try again.';
+            setApiError(errorMsg);
+            setToast({ show: true, message: errorMsg, type: 'danger' });
         }
     };
 
     return (
         <div className="login-form-container d-flex justify-content-center align-items-center">
+            <ToastContainer position="top-end" className="p-3" style={{ zIndex: 1050 }}>
+                <Toast show={toast.show} onClose={() => setToast({ ...toast, show: false })} delay={3000} autohide bg={toast.type}>
+                    <Toast.Body className={toast.type === 'success' || toast.type === 'danger' ? 'text-white' : ''}>
+                        {toast.message}
+                    </Toast.Body>
+                </Toast>
+            </ToastContainer>
             <form className="container-fluid login-form d-flex flex-column" onSubmit={handleSubmit(onSubmit)}>
                 <p className="form-title">Sign in to your account</p>
                 
@@ -72,7 +84,7 @@ const LoginForm = () => {
                     {errors.password && <span className="error-text">{errors.password.message}</span>}
                 </div>
 
-                <button className="submit border-0" type="submit">
+                <button className="submit text-white border-0" type="submit">
                     Sign in
                 </button>
                 <p className="signup-link">

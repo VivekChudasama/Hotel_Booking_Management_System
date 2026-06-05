@@ -1,5 +1,6 @@
 import { Routes, Route, useLocation } from 'react-router-dom';
 import Header from './components/layout/header/Header.jsx';
+import Footer from './components/layout/footer/footer.jsx';
 import LoginForm from './components/authentication/components/login/login.jsx';
 import RegisterForm from './components/authentication/components/register/register.jsx';
 import './App.css';
@@ -16,6 +17,7 @@ function App() {
         <Route path="/login" element={<LoginForm />} />
         <Route path="/register" element={<RegisterForm />} />
       </Routes>
+      {!hideHeaderRoutes.includes(location.pathname) && <Footer/>}
     </>
   )
 }

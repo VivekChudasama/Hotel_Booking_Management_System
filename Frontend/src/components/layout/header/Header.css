@@ -1,54 +1,67 @@
 .header-container {
+    padding: 20px 120px;
+}
+
+.header-container,
+#responsive-navbar-nav {
     background-color: var(--primary-dark-blue);
-    padding: 30px 150px;
     color: var(--primary-white);
 }
 
-.header-container .header-logo {
-    gap: 8px;
-    cursor: pointer;
-    max-width: 220px;
-    max-height: 37px;
+#responsive-navbar-nav .header-nav .nav-link {
+    display: flex;
+    flex-direction: row;
+    align-items: start;
+    margin-left: 10px;
 }
 
-.header-container .header-nav {
-    gap: 28px;
-    margin-right: 48.5px ;
+.header-container .header-logo .logo-image {
+    cursor: pointer;
+    max-width: 220px;
+    max-height: 35px;
 }
 
 .header-container .header-nav .nav-link {
     color: var(--primary-white);
     text-decoration: none;
-    font-size: 14px;
-    font-weight: 400;
+    font-size: 12px;
+    font-weight: 200;
     letter-spacing: 0.5px;
     transition: color 0.3s ease;
     text-transform: uppercase;
 }
 
-.header-container .header-actions {
-    gap: 19px;
-}
-
-.header-container .header-actions .btn-header {
+.header-container .header-actions .btn-header,
+#responsive-navbar-nav .header-actions .btn-header {
     background-color: transparent;
     color: var(--primary-white);
-    border: 1px solid #4a4d6d;
-    padding: 8px 24px;
+    border: 0.5px solid var(--primary-white);
+    padding: 7px 35px;
+}
+
+.header-container .header-actions .btn-header,
+#responsive-navbar-nav .header-actions .btn-header,
+.header-container .header-actions .btn-primary-header,
+#responsive-navbar-nav .header-actions .btn-primary-header {
+    font-size: 13px;
     border-radius: 4px;
-    font-size: 15px;
     font-weight: 700;
     cursor: pointer;
     text-decoration: none;
-    transition: all 0.3s ease;
 }
 
-.header-container .header-actions .btn-primary-header {
+.header-container .header-actions .btn-primary-header,
+#responsive-navbar-nav .header-actions .btn-primary-header {
     background-color: var(--primary-white);
     border: 1px solid var(--secondary-dark-blue);
-    font-size: 15px;
+    padding: 8px 40px;
     color: var(--white-btn-font-color);
-    font-weight: 700;
+}
+
+#responsive-navbar-nav .header-actions .btn-header,
+#responsive-navbar-nav .header-actions .btn-primary-header {
+    display: flex;
+    margin-left: 15px;
 }
 
 .header-container .header-actions .profile-img {
@@ -61,19 +74,73 @@
 }
 
 /* Responsiveness */
-@media (max-width: 992px) {
-    .header-nav {
-        display: none;
+@media (min-width: 992px) and (max-width: 1350px) {
+    .header-container {
+        padding: 20px 70px;
+    }
+
+    .header-container .header-logo .logo-image {
+        max-width: 180px !important;
+        max-height: 34px !important;
+    }
+
+    .header-container .header-nav {
+        gap: 0px !important;
+        margin-left: 48px !important;
+    }
+
+    .header-container .header-actions {
+        gap: 0px !important;
+    }
+
+    .header-container .header-nav {
+        gap: 28px;
+        margin-right: 0px !important;
+    }
+
+    #responsive-navbar-nav .header-nav .nav-link {
+        margin-left: 0px !important;
+    }
+
+    .header-container .header-actions .btn-header {
+        padding: 7px 10px !important;
+    }
+
+    .header-container .header-actions .btn-primary-header {
+        padding: 8px 15px !important;
+    }
+}
+
+@media (max-width: 991px) {
+    .header-container {
+        padding: 20px 50px;
+    }
+
+    .header-container .header-logo .logo-image {
+        max-width: 180px !important;
+        max-height: 34px !important;
+    }
+
+    .header-container .header-nav {
+        margin-right: 0;
+        gap: 15px;
+        margin-top: 15px;
+        margin-bottom: 15px;
     }
 }
 
 @media (max-width: 576px) {
     .header-container {
-        padding: 16px;
+        padding: 20px 5px;
     }
 
-    .header-container .header-actions .btn-header {
-        padding: 7px 16px;
-        font-size: 14px;
+    .header-container .header-logo .logo-image {
+        max-width: 180px !important;
+        max-height: 29px !important;
+    }
+
+    .user-profile-header {
+        width: 100%;
+        justify-content: center;
     }
 }

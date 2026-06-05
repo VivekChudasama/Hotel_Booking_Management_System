@@ -1,0 +1,26 @@
+.footer-container {
+    background-color: var(--primary-dark-blue);
+    color: var(--primary-white);
+    padding: 48px 120px;
+}
+
+.footer-container .footer-logo {
+    cursor: pointer;
+    max-width: 220px;
+    max-height: 35px;
+}
+
+.footer-title {
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.footer-link , .footer-description {
+    line-height: 30px;
+    font-size: 14px;
+    font-weight: 400;
+}
+
+.footer-line-break{
+    border-bottom: 0.5px solid var(--primary-white);
+}

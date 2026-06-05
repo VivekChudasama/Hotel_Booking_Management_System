@@ -4,31 +4,41 @@ import { Link, useNavigate } from 'react-router-dom';
 import { registerUser } from '../../../services/authenticationApi';
 import { Messages } from '../../../shared/configs/messages';
 import { Validation } from '../../../shared/configs/validation';
-// import { validateImageURL } from '@/helpers/imageUrlValidation';
+import { validateImageURL } from '../../../../helpers/imageUrlValidation';
+import { Toast, ToastContainer } from 'react-bootstrap';
 import "./register.css";
 
 const RegisterForm = () => {
-    const { register, handleSubmit, watch, formState: { errors } } = useForm();
+    const { register, handleSubmit, formState: { errors } } = useForm();
     const [apiError, setApiError] = useState('');
+    const [toast, setToast] = useState({ show: false, message: '', type: 'success' });
     const navigate = useNavigate();
-
-    const password = watch("password");
 
     const onSubmit = async (data) => {
         setApiError('');
         try {
-            const { confirmPassword, ...userData } = data;
+            const { ...userData } = data;
 
             const response = await registerUser(userData);
             console.log('Registration successful', response);
-            navigate('/login');
+            setToast({ show: true, message: 'Registration successful!', type: 'success' });
+            setTimeout(() => navigate('/login'), 1500);
         } catch (error) {
-            setApiError(error.message || 'Registration failed. Please try again.');
+            const errorMsg = error.message || 'Registration failed. Please try again.';
+            setApiError(errorMsg);
+            setToast({ show: true, message: errorMsg, type: 'danger' });
         }
     };
 
     return (
         <div className="register-form-conatiner d-flex justify-content-center align-items-center">
+            <ToastContainer position="top-end" className="p-3" style={{ zIndex: 1050 }}>
+                <Toast show={toast.show} onClose={() => setToast({ ...toast, show: false })} delay={3000} autohide bg={toast.type}>
+                    <Toast.Body className={toast.type === 'success' || toast.type === 'danger' ? 'text-white' : ''}>
+                        {toast.message}
+                    </Toast.Body>
+                </Toast>
+            </ToastContainer>
             <form className="register-form d-flex flex-column" onSubmit={handleSubmit(onSubmit)}>
                 <p className="form-title">Register</p>
 
@@ -122,22 +132,6 @@ const RegisterForm = () => {
                 </div>
 
                 <div className="form-row d-flex">
-                    {/* <div className="input-group-custom d-flex flex-column">
-                        <label className='form-label'>Confirm Password <span className="text-danger">*</span></label>
-                        <div className="input-container position-relative d-flex align-items-center">
-                            <input
-                                className={`input-field ${errors.confirmPassword ? 'is-invalid' : ''}`}
-                                placeholder="Confirm password"
-                                type="password"
-                                {...register("confirmPassword", {
-                                    required: Messages.auth.ERR_CONFIRM_PASSWORD_REQUIRED,
-                                    validate: value => value === password || "Passwords do not match"
-                                })}
-                            />
-                        </div>
-                        {errors.confirmPassword && <span className="error-text">{errors.confirmPassword.message}</span>}
-                    </div> */}
-
                     <div className="input-group-custom d-flex flex-column">
                         <label className='form-label'>Profile Image URL (Optional)</label>
                         <div className="input-container position-relative d-flex align-items-center">
@@ -146,9 +140,13 @@ const RegisterForm = () => {
                                 placeholder="Add profile image url"
                                 type="url"
                                 {...register("profile_image", {
-                                    pattern: {
-                                        value: /^(https?:\/\/.*\.(?:png|jpg|jpeg|gif|svg|webp))$/i,
-                                        message: Messages.register.ERR_IMAGE_URL
+                                    validate: async (value) => {
+                                        if (!value) return true;
+                                        try {
+                                            return await validateImageURL(value);
+                                        } catch (e) {
+                                            return e.message;
+                                        }
                                     }
                                 })}
                             />
