@@ -30,7 +30,7 @@ const HomePage = () => {
     return (
         <main>
             <div>
-                <img className='image  w-100' src={homeImage} height='500px' width='1921px' loading='eager' alt='home page image'></img>
+                <img className='image  w-100' src={homeImage} height={500} width={1921} loading='eager' alt='home page image'></img>
             </div>
             <div className='text position-absolute'>
                 <p className='text-line-1 text-white'>Chase elegance. Reserve your </p>
@@ -42,7 +42,7 @@ const HomePage = () => {
                     <Col lg={3}>
                         <div className="d-flex">
                             <div>
-                                <img src={location} height='17px' width='14px' className='filter-bar-icon' alt='location icon'></img>
+                                <img src={location} height={17} width={14} className='filter-bar-icon' alt='location icon'></img>
                             </div>
                             <div className='filter-bar-title'>Where are you headed?</div>
                         </div>
@@ -51,7 +51,7 @@ const HomePage = () => {
                     <Col lg={2}>
                         <div className="d-flex">
                             <div>
-                                <img src={calender} height='17px' width='14px' className='filter-bar-icon' alt='calender icon'></img>
+                                <img src={calender} height={17} width={14} className='filter-bar-icon' alt='calender icon'></img>
                             </div>
                             <div className='filter-bar-title'>Check in</div>
                         </div>
@@ -61,7 +61,7 @@ const HomePage = () => {
                     <Col lg={2}>
                         <div className="d-flex">
                             <div>
-                                <img src={calender} height='17px' width='14px' className='filter-bar-icon' alt='calender icon'></img>
+                                <img src={calender} height={17} width={14} className='filter-bar-icon' alt='calender icon'></img>
                             </div>
                             <div className='filter-bar-title'>Check out</div>
                         </div>
@@ -70,7 +70,7 @@ const HomePage = () => {
                     <Col lg={3}>
                         <div className="d-flex">
                             <div>
-                                <img src={person} height='17px' width='14px' className='filter-bar-icon' alt='person icon'></img>
+                                <img src={person} height={17} width={14} className='filter-bar-icon' alt='person icon'></img>
                             </div>
                             <div className='filter-bar-title' >Rooms | Adults, Children</div>
                         </div>

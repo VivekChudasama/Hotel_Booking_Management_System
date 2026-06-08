@@ -13,7 +13,7 @@ const Footer = () => {
             <Row className="w-100 m-0">
                 <Col lg={3} md={12} className="mb-4 mb-lg-0">
                     <Stack>
-                        <img className='footer-logo' src={logo} alt='logo' loading="lazy" height='40px' width='220px' />
+                        <img className='footer-logo' src={logo} alt='logo' loading="lazy" height={40} width={220} />
                     </Stack>
                 </Col>
 

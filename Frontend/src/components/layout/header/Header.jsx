@@ -58,7 +58,7 @@ const Header = () => {
         <Navbar collapseOnSelect expand="lg" className="header-container d-flex align-items-center position-sticky">
             <Container fluid>
                 <NavbarBrand className="header-logo d-flex align-items-center text-decoration-none">
-                    <Link to="/"><img src={logo} alt="Logo" className="logo-image" loading="eager" height='40px' width='220px' /></Link>
+                    <Link to="/"><img src={logo} alt="Logo" className="logo-image" loading="eager" height={40} width={220} /></Link>
                 </NavbarBrand>
                 <Navbar.Toggle aria-controls="responsive-navbar-nav" className="border-white" />
                 <Navbar.Offcanvas
