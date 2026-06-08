@@ -3,6 +3,7 @@ import Header from './components/layout/header/Header.jsx';
 import Footer from './components/layout/footer/footer.jsx';
 import LoginForm from './components/authentication/components/login/login.jsx';
 import RegisterForm from './components/authentication/components/register/register.jsx';
+import HomePage from './components/pages/homePage/homePage.jsx';
 import './App.css';
 import './assets/css/variables.css';
 
@@ -14,12 +15,13 @@ function App() {
     <>
       {!hideHeaderRoutes.includes(location.pathname) && <Header />}
       <Routes>
+        <Route path="/" element={<HomePage />} />
         <Route path="/login" element={<LoginForm />} />
         <Route path="/register" element={<RegisterForm />} />
       </Routes>
       {!hideHeaderRoutes.includes(location.pathname) && <Footer/>}
     </>
   )
-}
+} 
 
 export default App

@@ -8,6 +8,12 @@
     color: var(--primary-white);
 }
 
+.header-container .header-logo .logo-image {
+    cursor: pointer;
+    max-width: 220px;
+    max-height: 35px;
+}
+
 #responsive-navbar-nav .header-nav .nav-link {
     display: flex;
     flex-direction: row;
@@ -15,13 +21,8 @@
     margin-left: 10px;
 }
 
-.header-container .header-logo .logo-image {
-    cursor: pointer;
-    max-width: 220px;
-    max-height: 35px;
-}
-
-.header-container .header-nav .nav-link {
+.header-container .header-nav .nav-link,
+#responsive-navbar-nav .header-nav .nav-link {
     color: var(--primary-white);
     text-decoration: none;
     font-size: 12px;
@@ -29,7 +30,27 @@
     letter-spacing: 0.5px;
     transition: color 0.3s ease;
     text-transform: uppercase;
+    position: relative;
+    width: fit-content;
 }
+
+.header-container .header-nav .nav-link::after,
+#responsive-navbar-nav .header-nav .nav-link::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: 7px;
+    left: 0;
+    background-color: var(--primary-white);
+    transition: width 0.3s ease;
+}
+
+#responsive-navbar-nav .header-nav .nav-link:hover::after,
+#responsive-navbar-nav .header-nav .nav-link.active::after {
+    width: 100%;
+}
+
 
 .header-container .header-actions .btn-header,
 #responsive-navbar-nav .header-actions .btn-header {
@@ -60,7 +81,6 @@
 
 #responsive-navbar-nav .header-actions .btn-header,
 #responsive-navbar-nav .header-actions .btn-primary-header {
-    display: flex;
     margin-left: 15px;
 }
 
@@ -121,11 +141,34 @@
         max-height: 34px !important;
     }
 
+    .bg-dark-blue-offcanvas {
+        background-color: var(--primary-dark-blue) !important;
+    }
+
     .header-container .header-nav {
         margin-right: 0;
         gap: 15px;
         margin-top: 15px;
         margin-bottom: 15px;
+        align-items: flex-start;
+    }
+
+    .header-container .header-nav .nav-link {
+        width: 100%;
+        padding: 10px 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .header-container .header-nav .nav-link::after {
+        display: none;
+        /* Hide hover line on mobile */
+    }
+
+    .header-container .header-actions {
+        width: 100%;
+        justify-content: flex-start;
+        margin-left: 0 !important;
+        margin-top: 15px !important;
     }
 }
 

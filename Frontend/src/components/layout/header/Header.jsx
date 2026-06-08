@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Nav, Navbar, Container, NavbarBrand } from 'react-bootstrap';
+import { Nav, Navbar, Container, NavbarBrand, Offcanvas } from 'react-bootstrap';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import './Header.css';
 import logo from '../../../assets/images/Logo.svg';
@@ -58,11 +58,21 @@ const Header = () => {
         <Navbar collapseOnSelect expand="lg" className="header-container d-flex align-items-center position-sticky">
             <Container fluid>
                 <NavbarBrand className="header-logo d-flex align-items-center text-decoration-none">
-                    <Link to="/"><img src={logo} alt="Logo" className="logo-image" loading="eager" /></Link>
+                    <Link to="/"><img src={logo} alt="Logo" className="logo-image" loading="eager" height='40px' width='220px' /></Link>
                 </NavbarBrand>
                 <Navbar.Toggle aria-controls="responsive-navbar-nav" className="border-white" />
-                <Navbar.Offcanvas placement="end">
-                    <Navbar.Collapse id="responsive-navbar-nav" className="btn-close-white">
+                <Navbar.Offcanvas
+                    id="responsive-navbar-nav"
+                    aria-labelledby="offcanvasNavbarLabel-expand-lg"
+                    placement="end"
+                    className="bg-dark-blue-offcanvas"
+                >
+                    <Offcanvas.Header closeButton closeVariant="white">
+                        <Offcanvas.Title id="offcanvasNavbarLabel-expand-lg" className="text-white">
+                            Menu
+                        </Offcanvas.Title>
+                    </Offcanvas.Header>
+                    <Offcanvas.Body>
                         <Nav className="ms-auto d-flex align-items-lg-center">
                             <div className="header-nav d-flex flex-column flex-lg-row">
                                 <NavLink to="/" className={({ isActive }) => (isActive ? 'nav-link active' : 'nav-link')}>HOME</NavLink>
@@ -87,7 +97,7 @@ const Header = () => {
                                 )}
                             </div>
                         </Nav>
-                    </Navbar.Collapse>
+                    </Offcanvas.Body>
                 </Navbar.Offcanvas>
 
             </Container>

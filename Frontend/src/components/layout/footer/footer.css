@@ -1,26 +1,115 @@
 .footer-container {
     background-color: var(--primary-dark-blue);
-    color: var(--primary-white);
-    padding: 48px 120px;
+    padding: 48px 120px 48px 130px;
 }
 
 .footer-container .footer-logo {
     cursor: pointer;
     max-width: 220px;
     max-height: 35px;
+    margin-bottom: 20px;
+    margin-left: -11px;
 }
 
-.footer-title {
-    font-size: 18px;
-    font-weight: 600;
+.footer-container .footer-col {
+    padding: 0;
 }
 
-.footer-link , .footer-description {
-    line-height: 30px;
-    font-size: 14px;
-    font-weight: 400;
+.footer-container .footer-menu {
+    margin: 0 35px 0 0;
 }
 
-.footer-line-break{
-    border-bottom: 0.5px solid var(--primary-white);
+.footer-container .footer-title {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 20px;
+}
+
+.footer-container .footer-link {
+    margin-bottom: 12px;
+    transition: color 0.3s ease;
+    text-decoration: none;
+    font-weight: 300;
+}
+
+.footer-container .footer-link,
+.footer-container .footer-description {
+    font-size: 13px;
+}
+
+.footer-container .footer-line-break {
+    border: 1px solid var(--primary-white);
+    margin: 15px 0 32px 0;
+    width: 100%;
+}
+
+.footer-container .footer-icon {
+    width: 40px;
+    height: 40px;
+    margin-left: 15px;
+    cursor: pointer;
+    transition: opacity 0.3s ease;
+}
+
+.footer-container .footer-icon:hover {
+    opacity: 0.8;
+}
+
+/* Responsiveness */
+@media(min-width: 1351px) {
+    .footer-container .footer-col {
+        margin: 0 0 0 calc(10% + -72px);
+    }
+}
+
+@media (min-width: 992px) and (max-width: 1350px) {
+    .footer-container {
+        padding: 20px 82px !important;
+    }
+
+    .footer-container .footer-logo {
+        max-width: 180px !important;
+        max-height: 34px !important;
+    }
+
+    .footer-container .footer-col {
+        margin: 0 0 0 20px !important;
+    }
+}
+
+@media (max-width: 991px) {
+    .footer-container {
+        padding: 40px 50px 20px 61px;
+    }
+
+    .footer-container .footer-logo {
+        max-width: 180px !important;
+        max-height: 34px !important;
+    }
+}
+
+@media (max-width: 576px) {
+    .footer-container {
+        padding: 20px 15px !important;
+    }
+
+    .footer-container .footer-logo {
+        max-width: 180px !important;
+        max-height: 29px !important;
+    }
+
+    .footer-container .footer-col {
+        padding: 0 0 0 10px !important;
+    }
+
+    .footer-container .footer-col-2,
+    .footer-container .footer-col-4 {
+        padding: 0 0 0 22px;
+    }
+
+    .footer-container .footer-icon {
+        margin-left: 10px;
+        margin-right: 10px;
+        max-width: 32px !important;
+    }
 }

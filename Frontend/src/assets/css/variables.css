@@ -6,6 +6,7 @@
     --secondary-dark-blue: #23284C;
     --secondary-darkest-blue: #1A1A1A;
     --white-btn-font-color: #222243;
+    --filter-bar-font-icon-color: #23274A;
 
     --primary-black: #000000;
 
@@ -25,6 +26,4 @@
     --primary-yellow: #FEBB02;
 
     --primary-red: #ff0000;
-
-    --primary-description-color: #000000d9;
 }
