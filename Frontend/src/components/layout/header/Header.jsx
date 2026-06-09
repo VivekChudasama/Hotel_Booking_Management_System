@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Nav, Navbar, Container, NavbarBrand, Offcanvas } from 'react-bootstrap';
-import { Link, NavLink, useNavigate } from 'react-router-dom';
+import { Link, NavLink, useNavigate, useLocation } from 'react-router-dom';
 import './Header.css';
 import logo from '../../../assets/images/Logo.svg';
 
@@ -54,13 +54,17 @@ const Header = () => {
         navigate('/login');
     };
 
+    const { pathname } = useLocation();
+
     return (
-        <Navbar collapseOnSelect expand="lg" className="header-container d-flex align-items-center position-sticky">
+        <Navbar collapseOnSelect expand="lg" variant="dark" className="header-container d-flex align-items-center top-0 w-100" style={{opacity: pathname === '/' ? 0.9 : 1}}>
             <Container fluid>
                 <NavbarBrand className="header-logo d-flex align-items-center text-decoration-none">
                     <Link to="/"><img src={logo} alt="Logo" className="logo-image" loading="eager" height={40} width={220} /></Link>
                 </NavbarBrand>
-                <Navbar.Toggle aria-controls="responsive-navbar-nav" className="border-white" />
+                <Navbar.Toggle aria-controls="responsive-navbar-nav" className="border-white">
+                    <span className="navbar-toggler-icon"></span>
+                </Navbar.Toggle>
                 <Navbar.Offcanvas
                     id="responsive-navbar-nav"
                     aria-labelledby="offcanvasNavbarLabel-expand-lg"

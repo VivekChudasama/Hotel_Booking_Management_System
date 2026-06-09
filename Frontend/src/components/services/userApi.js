@@ -1,22 +1,19 @@
-import axios from 'axios';
+import apiClient from './apiClient';
 
-const API_BASE_URL = 'http://localhost:3000/users';
-
-export const getUserData = async (userData) => {
+export const getUserData = async (userId) => {
     try {
-        const response = await axios.get(`${API_BASE_URL}/:user_id`, userData);
+        const response = await apiClient.get(`/users/${userId}`);
         return response.data;
     } catch (error) {
         throw error.response ? error.response.data : new Error('Network Error');
     }   
 };
 
-export const updateUserData = async (updatedUserData) => {
+export const updateUserData = async (userId, updatedUserData) => {
     try {
-        const response = await axios.put(`${API_BASE_URL}/:user_id`, updatedUserData);
+        const response = await apiClient.put(`/users/${userId}`, updatedUserData);
         return response.data;
     } catch (error) {
         throw error.response ? error.response.data : new Error('Network Error');
     }
 };
-

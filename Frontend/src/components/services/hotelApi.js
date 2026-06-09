@@ -1,28 +1,46 @@
-import axios from 'axios';
+import apiClient from './apiClient';
 
-const API_BASE_URL = 'http://localhost:3000/hotels';
-
-export const getHotelsList = async () => {
+export const getHotelsList = async (params = {}) => {
     try {
-        const response = await axios.get(API_BASE_URL);
+        const response = await apiClient.get('/hotels', { params });
         return response.data;
     } catch (error) {
         throw error.response ? error.response.data : new Error('Network Error');
     }
 };
 
-export const getHotelsDetails = async () => {
+export const getHotelDetails = async (hotelId) => {
+    try {
+        const response = await apiClient.get(`/hotels/${hotelId}`);
+        return response.data;
+    } catch (error) {
+        throw error.response ? error.response.data : new Error('Network Error');
+    }
+};
 
-}
+export const createHotel = async (hotelData) => {
+    try {
+        const response = await apiClient.post('/hotels', hotelData);
+        return response.data;
+    } catch (error) {
+        throw error.response ? error.response.data : new Error('Network Error');
+    }
+};
 
-export const addNewHotel = async () => {
+export const updateHotel = async (hotelId, hotelData) => {
+    try {
+        const response = await apiClient.put(`/hotels/${hotelId}`, hotelData);
+        return response.data;
+    } catch (error) {
+        throw error.response ? error.response.data : new Error('Network Error');
+    }
+};
 
-}
-
-export const updateHotel = async () => {
-
-}
-
-export const deleteHotel = async () => {
-    
-}
+export const deleteHotel = async (hotelId) => {
+    try {
+        const response = await apiClient.delete(`/hotels/${hotelId}`);
+        return response.data;
+    } catch (error) {
+        throw error.response ? error.response.data : new Error('Network Error');
+    }
+};

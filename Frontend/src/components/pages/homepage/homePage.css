@@ -1,90 +1,173 @@
 .homepage-container {
-    padding: 20px 145px;
+    padding: 20px 130px;
 }
 
-.image {
-    margin-top: -86px;
+.hero-section {
+    width: 100%;
+}
+
+.hero-section::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.4);
+    pointer-events: none;
+    z-index: 1;
+}
+
+.hero-section .image {
     max-width: 100%;
     height: auto;
+    margin-top: -90px;
     min-height: 400px;
+    max-height: 600px;
+    z-index: -1;
 }
 
-.text .text-line-1,
-.text .text-line-2 {
-    font-size: 36px;
+.hero-section .hero-text-container {
+    top: 205px;
+    transform: translateY(-50%);
+    left: 130px;
+    max-width: 800px;
+    z-index: 99;
+}
+
+.hero-section .text .text-line-1,
+.hero-section .text .text-line-2 {
+    font-size: 35px;
     font-weight: 700;
+    line-height: 1.2;
 }
 
-.text .text-line-1 {
-    margin: -300px 0 0 130px;
-}
-
-.text .text-line-2 {
-    margin: -15px 0 0 128px;
-}
-
-.text .text-line-3 {
-    font-size: 23px;
+.hero-section .text .text-line-3 {
+    font-size: 24px;
     font-weight: 400;
-    margin: 0px 0 0 130px;
+    margin-top: 5px;
 }
 
 .filter-bar {
-    position: relative;
-    padding: 23px 55.72px 22px 53.86px;
+    padding: 20px 40px;
     background-color: var(--primary-white);
-    box-shadow: 0 10px 26px rgba(0, 0, 0, 0.2);
-    max-width: 1000px;
-    margin: -43px auto;
+    box-shadow: 0 1px 20px rgba(0, 0, 0, 0.7);
+    max-width: 1050px;
+    margin: -42px auto 10px auto;
+    border-radius: 4px;
+    z-index: 10;
+}
+
+.filter-bar .filter-bar-content .custom-filter-bar-icon{
+    margin: 0 0 0 10px !important;
 }
 
 .filter-bar .filter-bar-content .filter-bar-title {
     font-size: 12px;
-    font-weight: 500;
-    margin: 0 0 0 13px;
+    font-weight: 600;
+    margin: 0 0 0 8px;
     color: var(--filter-bar-font-icon-color);
 }
 
 .filter-bar .filter-bar-content .filter-bar-icon {
-    max-width: 14px;
-    max-height: 17px;
-    margin: -9px 0 0 0;
+    max-width: 15px;
+    max-height: 15px;
+    margin-right: 5px;
     color: var(--filter-bar-font-icon-color);
 }
 
+.filter-bar .filter-bar-content .filter-bar-input .form-select {
+    width: 100px;
+    background-color: transparent;
+    background-position: left 62px center !important;
+}
+
+.filter-bar .filter-bar-content .filter-bar-input .form-select,
+.filter-bar .filter-bar-content .custom-input-icon {
+    background-image: url('../../../assets/images/icons/downArrow.svg');
+    background-repeat: no-repeat;
+    background-size: 5px;
+    padding-right: 25px !important;
+}
+
+.filter-bar .filter-bar-content .custom-input-icon {
+    background-position: left 75px center !important;
+}
+
 .filter-bar .filter-bar-content .filter-bar-button {
-    align-items: center;
-    border-radius: 5px;
-    margin: 0 0 0 -35px;
-    padding: 10px 40px;
+    margin: 0 0 0 -26px;
+    border-radius: 4px;
+    padding: 15px 50px;
     background-color: var(--secondary-dark-blue);
     color: var(--primary-white);
+    font-weight: 400;
+    font-size: 13px;
+}
+
+.filter-bar .filter-bar-content .custom-input-icon {
+    appearance: none;
+    -moz-appearance: none;
+}
+
+input[type="date"]::-webkit-inner-spin-button,
+input[type="date"]::-webkit-calendar-picker-indicator {
+    background: transparent;
+    color: transparent;
+}
+
+.filter-bar .filter-bar-content .filter-bar-input .filter-input {
+    width: 20px;
+}
+
+.filter-bar .filter-bar-content .filter-input-text {
+    color: var(--secondary-light-gray);
+    font-weight: 500;
+    font-size: 11px !important;
+    cursor: pointer;
+}
+
+.custom-date-input::-webkit-calendar-picker-indicator {
+    opacity: 0.5;
+    cursor: pointer;
+}
+
+.filter-bar .filter-bar-content .filter-bar-input {
+    margin-left: 25px;
+}
+
+.filter-bar .filter-bar-content .filter-people-input {
+    margin-left: 21px !important;
 }
 
 .homepage-container .hotel-title {
     color: var(--primary-dark-blue);
     font-weight: 700;
-    font-size: 24px;
-    margin-bottom: 30px !important;
+    font-size: 28px;
+    margin-bottom: 40px !important;
 }
 
 .homepage-container .hotel-title::after {
     content: '';
     position: absolute;
     width: 100%;
-    height: 3px;
-    bottom: -10px;
+    height: 4px;
+    bottom: -25px;
     left: 0;
     background-color: var(--primary-yellow);
 }
 
 .homepage-container .hotel-container {
-    padding-bottom: 20px;
+    padding-bottom: 25px;
+}
+
+.homepage-container .hotel-container .hotel-card {
+    margin-top: 10px;
+    cursor: pointer;
 }
 
 .homepage-container .hotel-container .hotel-card .hotel-image-container {
-    height: 220px;
-    width: 295px;
+    height: 200px;
+    width: 250px;
     border-radius: 12px;
     overflow: hidden;
 }
@@ -102,30 +185,78 @@
 }
 
 .homepage-container .hotel-container .hotel-card .hotel-info {
-    padding-top: 10px;
+    padding-top: 15px;
 }
 
 .homepage-container .hotel-container .hotel-card .hotel-info .hotel-name {
-    color: var(--primary-dark-blue);
+    color: var(--secondary-dark-blue);
     font-weight: 700;
-    font-size: 16px;
-    margin-bottom: 4px;
+    font-size: 20px;
+    margin-bottom: 6px;
+    cursor: pointer;
 }
 
 .homepage-container .hotel-container .hotel-card .hotel-info .hotel-address {
-    font-size: 12px;
+    font-size: 13px;
     color: var(--secondary-dark-blue);
 }
 
 /* Responsiveness */
+@media(min-width: 992px) and (max-width: 1350px) {
+    .homepage-container {
+        padding: 0px 80px !important;
+    }
+
+    .hero-section .text .text-line-1,
+    .hero-section .text .text-line-2 {
+        margin-top: -135px !important;
+    }
+}
+
 @media (max-width: 991px) {
     .homepage-container {
-        padding: 20px 50px;
+        padding: 0px 50px;
+    }
+
+    .hero-section .hero-text-container {
+        left: 60px;
+    }
+
+    .hero-section .text .text-line-1,
+    .hero-section .text .text-line-2 {
+        margin-top: -140px !important;
+        font-size: 40px;
+    }
+
+    .hero-section .text .text-line-3 {
+        font-size: 18px;
+    }
+
+    .homepage-container .hotel-title {
+        margin-top: 20px !important;
     }
 }
 
 @media (max-width: 576px) {
     .homepage-container {
-        padding: 20px 20px;
+        padding: 0px 20px;
+    }
+
+    .hero-section .hero-text-container {
+        left: 27px;
+    }
+
+    .hero-section .text .text-line-1,
+    .hero-section .text .text-line-2 {
+        margin-top: -130px !important;
+        font-size: 36px;
+    }
+
+    .hero-section .text .text-line-3 {
+        font-size: 15px;
+    }
+
+    .homepage-container .hotel-title {
+        margin-top: 20px !important;
     }
 }

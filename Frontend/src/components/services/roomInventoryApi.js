@@ -1,8 +1,10 @@
-import axios from 'axios';
+import apiClient from './apiClient';
 
-const API_BASE_URL = 'http://localhost:3000//room_inventory';
-
-export const deleteRoomOfRoomInventory = async () => {
-    
+export const deleteRoomOfRoomInventory = async (roomInventoryId) => {
+    try {
+        const response = await apiClient.delete(`/room_inventory/${roomInventoryId}`);
+        return response.data;
+    } catch (error) {
+        throw error.response ? error.response.data : new Error('Network Error');
+    }
 }
-

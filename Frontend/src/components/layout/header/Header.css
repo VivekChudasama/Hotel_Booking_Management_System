@@ -1,5 +1,6 @@
 .header-container {
-    padding: 20px 120px;
+    padding: 20px 105px;
+    z-index: 1;
 }
 
 .header-container,
@@ -26,7 +27,7 @@
     color: var(--primary-white);
     text-decoration: none;
     font-size: 12px;
-    font-weight: 200;
+    font-weight: 400;
     letter-spacing: 0.5px;
     transition: color 0.3s ease;
     text-transform: uppercase;
@@ -51,6 +52,9 @@
     width: 100%;
 }
 
+#responsive-navbar-nav .navbar-toggler-icon{
+    filter: brightness(0) invert(1);
+}
 
 .header-container .header-actions .btn-header,
 #responsive-navbar-nav .header-actions .btn-header {

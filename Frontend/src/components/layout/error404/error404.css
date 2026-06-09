@@ -1,0 +1,15 @@
+.PageNotFound {
+  margin: auto;
+  text-align: center;
+  padding: 10px;
+  height: 50px;
+}
+
+.PageNotFound .pageNotFound-button {
+  border-radius: 4px;
+  padding: 15px 50px;
+  background-color: var(--secondary-dark-blue);
+  color: var(--primary-white);
+  font-weight: 400;
+  font-size: 14px;
+}
