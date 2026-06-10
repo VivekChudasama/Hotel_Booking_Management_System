@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 import { Booking } from '../entities/booking.js';
 import { RoomInventory } from '../entities/room_inventory.js';
+import { Room } from '../entities/room.js';
 
 //create booking with session
 const createBookingWithSession = async (bookingDataArray, options) => {
@@ -151,25 +152,54 @@ const findActiveBookingsByUserAndRooms = async (userId, roomIds, fromDate, toDat
     return { bookings, inventories };
 };
 
-const getHotelsWithAvailableRooms = async (fromDate, toDate) => {
-    const bookings = await Booking.find({
-        booking_status: { $in: ['pending', 'confirmed', 'checked in'] },
-        from: { $lt: new Date(toDate) },
-        to: { $gt: new Date(fromDate) }
-    }).select('room_inventory_ids');
-    
+const getHotelsWithAvailableRooms = async (fromDate, toDate, reqRooms, reqAdults, reqChildren) => {
     const bookedIds = [];
-    bookings.forEach(b => {
-        b.room_inventory_ids.forEach(id => {
-            bookedIds.push(id.toString());
+    if (fromDate && toDate) {
+        const bookings = await Booking.find({
+            booking_status: { $in: ['pending', 'confirmed', 'checked in'] },
+            from: { $lt: new Date(toDate) },
+            to: { $gt: new Date(fromDate) }
+        }).select('room_inventory_ids');
+        
+        bookings.forEach(b => {
+            b.room_inventory_ids.forEach(id => {
+                bookedIds.push(id.toString());
+            });
         });
-    });
+    }
     
-    const availableInventories = await RoomInventory.find({
-        _id: { $nin: bookedIds },
-        status: 'available'
-    }).select('hotel_id');
+    // Find rooms that meet capacity
+    let validRoomIds = null;
+    if (reqRooms && reqAdults !== undefined && reqChildren !== undefined) {
+        const adultsPerRoom = Math.ceil(Number(reqAdults) / Number(reqRooms));
+        const childrenPerRoom = Math.ceil(Number(reqChildren) / Number(reqRooms));
+        const roomsMatchingCapacity = await Room.find({
+            'room_capacity.adult_count': { $gte: adultsPerRoom },
+            'room_capacity.children_count': { $gte: childrenPerRoom }
+        }).select('_id');
+        validRoomIds = roomsMatchingCapacity.map(r => r._id);
+    }
     
+    const inventoryQuery = { status: 'available' };
+    if (bookedIds.length > 0) {
+        inventoryQuery._id = { $nin: bookedIds };
+    }
+    if (validRoomIds) {
+        inventoryQuery.room_id = { $in: validRoomIds };
+    }
+    
+    const availableInventories = await RoomInventory.find(inventoryQuery).select('hotel_id');
+    
+    if (reqRooms && Number(reqRooms) > 1) {
+        const hotelCounts = {};
+        availableInventories.forEach(inv => {
+            const hId = inv.hotel_id.toString();
+            hotelCounts[hId] = (hotelCounts[hId] || 0) + 1;
+        });
+        const reqRoomsNum = Number(reqRooms);
+        return Object.keys(hotelCounts).filter(hId => hotelCounts[hId] >= reqRoomsNum);
+    }
+
     return [...new Set(availableInventories.map(inv => inv.hotel_id.toString()))];
 };
 

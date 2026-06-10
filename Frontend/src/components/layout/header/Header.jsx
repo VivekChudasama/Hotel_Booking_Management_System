@@ -55,9 +55,9 @@ const Header = () => {
     };
 
     const { pathname } = useLocation();
-
+    
     return (
-        <Navbar collapseOnSelect expand="lg" variant="dark" className="header-container d-flex align-items-center top-0 w-100" style={{opacity: pathname === '/' ? 0.9 : 1}}>
+        <Navbar collapseOnSelect expand="lg" variant="dark" className={`header-container d-flex align-items-center top-0 w-100 ${pathname === '/' ? 'header-home-opacity' : ''} ${pathname === '/hotels' ? 'header-search-padding' : ''}`}>
             <Container fluid>
                 <NavbarBrand className="header-logo d-flex align-items-center text-decoration-none">
                     <Link to="/"><img src={logo} alt="Logo" className="logo-image" loading="eager" height={40} width={220} /></Link>
@@ -69,7 +69,7 @@ const Header = () => {
                     id="responsive-navbar-nav"
                     aria-labelledby="offcanvasNavbarLabel-expand-lg"
                     placement="end"
-                    className="bg-dark-blue-offcanvas"
+                    className="bg-dark-blue-offcanvas custom-offcanvas-width"
                 >
                     <Offcanvas.Header closeButton closeVariant="white">
                         <Offcanvas.Title id="offcanvasNavbarLabel-expand-lg" className="text-white">
@@ -80,7 +80,7 @@ const Header = () => {
                         <Nav className="ms-auto d-flex align-items-lg-center">
                             <div className="header-nav d-flex flex-column flex-lg-row">
                                 <NavLink to="/" className={({ isActive }) => (isActive ? 'nav-link active' : 'nav-link')}>HOME</NavLink>
-                                <NavLink to="/Hotels" className={({ isActive }) => (isActive ? 'nav-link active' : 'nav-link')}>SERVICES</NavLink>
+                                <NavLink to="/hotels" className={({ isActive }) => (isActive ? 'nav-link active' : 'nav-link')}>SERVICES</NavLink>
                                 <NavLink to="/bookings" className={({ isActive }) => (isActive ? 'nav-link active' : 'nav-link')}>BOOKINGS</NavLink>
                                 <NavLink to="/EXPLORE" className={({ isActive }) => (isActive ? 'nav-link active' : 'nav-link')}>EXPLORE</NavLink>
                                 <NavLink to="/MEMBERSHIP" className={({ isActive }) => (isActive ? 'nav-link active' : 'nav-link')}>MEMBERSHIP</NavLink>

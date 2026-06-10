@@ -3,6 +3,11 @@
     z-index: 1;
 }
 
+.header-home-opacity {
+    opacity: 0.9;
+}
+
+
 .header-container,
 #responsive-navbar-nav {
     background-color: var(--primary-dark-blue);
@@ -52,7 +57,7 @@
     width: 100%;
 }
 
-#responsive-navbar-nav .navbar-toggler-icon{
+#responsive-navbar-nav .navbar-toggler-icon {
     filter: brightness(0) invert(1);
 }
 
@@ -88,7 +93,8 @@
     margin-left: 15px;
 }
 
-.header-container .header-actions .profile-img {
+.header-container .header-actions .profile-img,
+.offcanvas .header-actions .profile-img {
     width: 36px;
     height: 36px;
     border-radius: 50%;
@@ -149,6 +155,10 @@
         background-color: var(--primary-dark-blue) !important;
     }
 
+    .custom-offcanvas-width {
+        width: 70% !important;
+    }
+
     .header-container .header-nav {
         margin-right: 0;
         gap: 15px;
@@ -165,7 +175,6 @@
 
     .header-container .header-nav .nav-link::after {
         display: none;
-        /* Hide hover line on mobile */
     }
 
     .header-container .header-actions {
@@ -189,5 +198,14 @@
     .user-profile-header {
         width: 100%;
         justify-content: center;
+    }
+
+    .custom-offcanvas-width {
+        width: 80% !important;
+    }
+
+    .header-container .header-actions .btn-header,
+    #responsive-navbar-nav .header-actions .btn-header {
+        padding: 7px 22px;
     }
 }

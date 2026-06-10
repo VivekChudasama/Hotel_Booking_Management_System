@@ -19,11 +19,10 @@
 }
 
 .hero-section .image {
-    max-width: 100%;
-    height: auto;
+    width: 100%;
+    object-fit: cover;
     margin-top: -90px;
     min-height: 400px;
-    max-height: 600px;
     z-index: -1;
 }
 
@@ -51,14 +50,14 @@
 .filter-bar {
     padding: 20px 40px;
     background-color: var(--primary-white);
-    box-shadow: 0 1px 20px rgba(0, 0, 0, 0.7);
-    max-width: 1050px;
-    margin: -42px auto 10px auto;
+    box-shadow: 0 1px 20px rgba(0, 0, 0, 0.7) !important;
+    max-width: 1030px !important;
+    margin: -42px auto 10px auto !important;
     border-radius: 4px;
     z-index: 10;
 }
 
-.filter-bar .filter-bar-content .custom-filter-bar-icon{
+.filter-bar .filter-bar-content .custom-filter-bar-icon {
     margin: 0 0 0 10px !important;
 }
 
@@ -79,7 +78,8 @@
 .filter-bar .filter-bar-content .filter-bar-input .form-select {
     width: 100px;
     background-color: transparent;
-    background-position: left 62px center !important;
+    background-position: left 60px center !important;
+    font-size: 10px !important;
 }
 
 .filter-bar .filter-bar-content .filter-bar-input .form-select,
@@ -91,13 +91,13 @@
 }
 
 .filter-bar .filter-bar-content .custom-input-icon {
-    background-position: left 75px center !important;
+    background-position: left 72px center !important;
 }
 
 .filter-bar .filter-bar-content .filter-bar-button {
     margin: 0 0 0 -26px;
     border-radius: 4px;
-    padding: 15px 50px;
+    padding: 15px 46px !important;
     background-color: var(--secondary-dark-blue);
     color: var(--primary-white);
     font-weight: 400;
@@ -109,10 +109,21 @@
     -moz-appearance: none;
 }
 
-input[type="date"]::-webkit-inner-spin-button,
+input[type="date"]::-webkit-inner-spin-button {
+    display: none;
+}
+
 input[type="date"]::-webkit-calendar-picker-indicator {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: auto;
+    height: auto;
     background: transparent;
     color: transparent;
+    cursor: pointer;
 }
 
 .filter-bar .filter-bar-content .filter-bar-input .filter-input {
@@ -122,8 +133,12 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 .filter-bar .filter-bar-content .filter-input-text {
     color: var(--secondary-light-gray);
     font-weight: 500;
-    font-size: 11px !important;
+    font-size: 10px !important;
     cursor: pointer;
+}
+
+.custom-date-input {
+    position: relative;
 }
 
 .custom-date-input::-webkit-calendar-picker-indicator {
@@ -158,6 +173,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 
 .homepage-container .hotel-container {
     padding-bottom: 25px;
+    gap: 14px;
 }
 
 .homepage-container .hotel-container .hotel-card {
@@ -201,6 +217,10 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     color: var(--secondary-dark-blue);
 }
 
+.loading-spinner-container {
+    min-height: 300px;
+}
+
 /* Responsiveness */
 @media(min-width: 992px) and (max-width: 1350px) {
     .homepage-container {
@@ -211,11 +231,21 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     .hero-section .text .text-line-2 {
         margin-top: -135px !important;
     }
+
+    .homepage-container .hotel-container {
+        gap: 14px;
+    }
+
+    .homepage-container .hotel-container {
+        gap: 0px !important;
+    }
+
+
 }
 
 @media (max-width: 991px) {
     .homepage-container {
-        padding: 0px 50px;
+        padding: 0 62px !important;
     }
 
     .hero-section .hero-text-container {
@@ -235,11 +265,69 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     .homepage-container .hotel-title {
         margin-top: 20px !important;
     }
+
+    .homepage-container .hotel-container {
+        gap: 14px;
+    }
+
+    .homepage-container .hotel-container {
+        gap: 0px !important;
+        margin-right: -33px !important;
+    }
+
+    .homepage-container .hotel-container .hotel-card .hotel-image-container {
+        width: calc(100% + -19px) !important;
+    }
+}
+
+@media (max-width: 768px) {
+    .homepage-container {
+        padding: 0 62px !important;
+    }
+
+    .filter-bar .filter-bar-content>.col {
+        border-right: none !important;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        padding-bottom: 15px;
+        margin-bottom: 15px !important;
+    }
+
+    .filter-bar .filter-bar-content>.col:last-child {
+        border-bottom: none;
+        padding-bottom: 0;
+        margin-bottom: 0 !important;
+    }
+
+    .filter-bar .filter-bar-content .filter-bar-button {
+        width: 100%;
+        margin-left: 0;
+    }
+
+    .homepage-container .hotel-container {
+        gap: 0px !important;
+        margin-right: -33px !important;
+    }
+
+    .homepage-container .hotel-container .hotel-card .hotel-image-container {
+        width: 192px;
+    }
+}
+
+@media (min-width: 577px) and (max-width: 767px) {
+
+    .homepage-container .hotel-container {
+        gap: 0px !important;
+        margin-right: -33px !important;
+    }
+
+    .homepage-container .hotel-container .hotel-card .hotel-image-container {
+        width: 308px !important;
+    }
 }
 
 @media (max-width: 576px) {
     .homepage-container {
-        padding: 0px 20px;
+        padding: 0 27px !important;
     }
 
     .hero-section .hero-text-container {
@@ -258,5 +346,10 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 
     .homepage-container .hotel-title {
         margin-top: 20px !important;
+    }
+
+    .homepage-container .hotel-container .hotel-card .hotel-image-container {
+        height: 220px !important;
+        width: calc(100% + -10px) !important;
     }
 }

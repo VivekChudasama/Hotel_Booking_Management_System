@@ -8,13 +8,19 @@ import bookingRepository from '../repositories/bookingRepository.js';
 const getHotelListService = async (query = {}) => {
     let availableHotelIds = null;
 
-    if(query.to <= query.from){
-        throw new Error(ResponseMessages.hotel.INVALID_DATE_RANGE);
+    const fromDate = query.from || query.checkIn;
+    const toDate = query.to || query.checkOut;
+
+    if (fromDate && toDate) {
+        if(new Date(toDate) <= new Date(fromDate)){
+            throw new Error(ResponseMessages.hotel.INVALID_DATE_RANGE);
+        }
     }
 
-    if (query.from && query.to) {
-        availableHotelIds = await bookingRepository.getHotelsWithAvailableRooms(query.from, query.to);
+    if ((fromDate && toDate) || query.rooms || query.adults || query.children) {
+        availableHotelIds = await bookingRepository.getHotelsWithAvailableRooms(fromDate, toDate, query.rooms, query.adults, query.children);
     }
+
     return await hotelRepository.getHotelList(query, availableHotelIds);
 };
 

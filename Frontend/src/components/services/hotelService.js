@@ -1,46 +1,46 @@
 import apiClient from './apiClient';
 
-export const getRoomList = async (hotelId) => {
+export const getHotelList = async (params = {}) => {
     try {
-        const response = await apiClient.get(`/rooms/${hotelId}`);
+        const response = await apiClient.get('/hotels', { params });
         return response.data;
     } catch (error) {
         throw error.response ? error.response.data : new Error('Network Error');
     }
 };
 
-export const addNewRoom = async (hotelId, roomData) => {
+export const getHotelDetails = async (hotelId) => {
     try {
-        const response = await apiClient.post(`/rooms/${hotelId}/room`, roomData);
+        const response = await apiClient.get(`/hotels/${hotelId}`);
         return response.data;
     } catch (error) {
         throw error.response ? error.response.data : new Error('Network Error');
     }
-}
+};
 
-export const updateRoom = async (roomId, roomData) => {
+export const createHotel = async (hotelData) => {
     try {
-        const response = await apiClient.put(`/rooms/${roomId}`, roomData);
+        const response = await apiClient.post('/hotels', hotelData);
         return response.data;
     } catch (error) {
         throw error.response ? error.response.data : new Error('Network Error');
     }
-}
+};
 
-export const deleteRoom = async (roomId) => {
+export const updateHotel = async (hotelId, hotelData) => {
     try {
-        const response = await apiClient.delete(`/rooms/${roomId}`);
+        const response = await apiClient.put(`/hotels/${hotelId}`, hotelData);
         return response.data;
     } catch (error) {
         throw error.response ? error.response.data : new Error('Network Error');
     }
-}
+};
 
-export const getHotelInventory = async (roomId) => {
+export const deleteHotel = async (hotelId) => {
     try {
-        const response = await apiClient.get(`/rooms/inventory/${roomId}`);
+        const response = await apiClient.delete(`/hotels/${hotelId}`);
         return response.data;
     } catch (error) {
         throw error.response ? error.response.data : new Error('Network Error');
     }
-}
+};

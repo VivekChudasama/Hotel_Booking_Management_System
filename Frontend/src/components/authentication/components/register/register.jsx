@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
-import { registerUser } from '../../../services/authenticationApi';
+import { registerUser } from '../../../services/authService';
 import { Messages } from '../../../shared/configs/messages';
 import { Validation } from '../../../shared/configs/validation';
 import { validateImageURL } from '../../../../helpers/imageUrlValidation';

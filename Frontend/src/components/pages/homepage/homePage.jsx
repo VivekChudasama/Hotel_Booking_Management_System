@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
 import { Container, Row, Col } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
+import { useForm } from 'react-hook-form';
 import Spinner from 'react-bootstrap/Spinner';
-import { getHotelsList } from '../../services/hotelApi';
+import { getHotelList } from '../../services/hotelService';
 import homeImage from '../../../assets/images/home/homeImage.png';
 import calender from '../../../assets/images/icons/calendar.svg';
 import person from '../../../assets/images/icons/person.svg';
@@ -16,21 +17,36 @@ const HomePage = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
-    // Filter states
-    const [city, setCity] = useState('');
-    const [checkIn, setCheckIn] = useState('');
-    const [checkOut, setCheckOut] = useState('');
-    const [rooms, setRooms] = useState(1);
-    const [adults, setAdults] = useState(1);
-    const [children, setChildren] = useState(0);
+    const { register, handleSubmit, formState: { errors }, watch } = useForm({
+        defaultValues: {
+            city: '',
+            checkIn: '',
+            checkOut: '',
+            rooms: 1,
+            adults: 1,
+            children: 0
+        }
+    });
 
-    // Validation error states
-    const [errors, setErrors] = useState({});
+    const checkInDate = watch('checkIn');
+
+    const onSubmit = (data) => {
+
+        const queryParams = new URLSearchParams();
+        if (data.city) queryParams.append('city', data.city);
+        if (data.checkIn) queryParams.append('checkIn', data.checkIn);
+        if (data.checkOut) queryParams.append('checkOut', data.checkOut);
+        if (data.rooms !== null && data.rooms !== '') queryParams.append('rooms', data.rooms);
+        if (data.adults !== null && data.adults !== '') queryParams.append('adults', data.adults);
+        if (data.children !== null && data.children !== '') queryParams.append('children', data.children);
+
+        navigate(`/hotels?${queryParams.toString()}`);
+    };
 
     useEffect(() => {
         const fetchHotels = async () => {
             try {
-                const data = await getHotelsList();
+                const data = await getHotelList();
                 setHotels(data);
             } catch (err) {
                 setError(err.message || 'Failed to fetch hotels');
@@ -42,43 +58,6 @@ const HomePage = () => {
         fetchHotels();
     }, []);
 
-    const handleBookNow = () => {
-        const newErrors = {};
-
-        // validation of the filter
-        if (checkIn && checkOut && new Date(checkIn) >= new Date(checkOut)) {
-            newErrors.checkOut = Messages.booking.MIN_CHECK_IN_DATE;
-        }
-        if (rooms < 1) {
-            newErrors.rooms = Messages.booking.ERR_ROOM_COUNT;
-        }
-
-        if (adults < 1) {
-            newErrors.adults = Messages.booking.ERR_ADULT_COUNT;
-        }
-        
-        if (children < 0) {
-            newErrors.children = Messages.booking.ERR_CHILD_COUNT;
-        }
-
-        if (Object.keys(newErrors).length > 0) {
-            setErrors(newErrors);
-            return;
-        }
-
-        setErrors({});
-
-        const queryParams = new URLSearchParams();
-        if (city) queryParams.append('city', city);
-        if (checkIn) queryParams.append('checkIn', checkIn);
-        if (checkOut) queryParams.append('checkOut', checkOut);
-        if (rooms !== null) queryParams.append('rooms', rooms);
-        if (adults !== null) queryParams.append('adults', adults);
-        if (children !== null) queryParams.append('children', children);
-
-        navigate(`/hotels?${queryParams.toString()}`);
-    };
-
     return (
         <main>
             <div className="hero-section position-relative">
@@ -89,14 +68,14 @@ const HomePage = () => {
                 </div>
             </div>
             <div className='filter-bar position-relative'>
-                <Row className='filter-bar-content align-items-center m-0'>
+                <form onSubmit={handleSubmit(onSubmit)}><Row className='filter-bar-content align-items-center m-0'>
                     <Col lg={3} md={6} className="mb-3 mb-lg-0 border-end border-light">
                         <div className="d-flex mb-1 align-items-center">
                             <img src={location} className='filter-bar-icon' alt='location icon'></img>
                             <div className='filter-bar-title'>Where are you headed?</div>
                         </div>
                         <div className="filter-bar-input">
-                            <select className="form-select border-0 bg-transparent shadow-none p-0 filter-input-text" value={city} onChange={(e) => { setCity(e.target.value); setErrors({ ...errors, city: null }); }}>
+                            <select className="form-select border-0 bg-transparent shadow-none p-0 filter-input-text" {...register('city', { required: Messages.booking.ERR_CITY_NAME_REQUIRED })}>
                                 <option className='form-option' value="">Select City</option>
                                 <option className='form-option' value="Rajkot">Rajkot</option>
                                 <option className='form-option' value="Surat">Surat</option>
@@ -105,7 +84,7 @@ const HomePage = () => {
                                 <option className='form-option' value="Delhi">Delhi</option>
                             </select>
                         </div>
-                        {errors.city && <div className="text-danger small mt-1">{errors.city}</div>}
+                        {errors.city && <div className="text-danger small mt-1">{errors.city.message}</div>}
                     </Col>
                     <Col lg={2} md={6} className="mb-3 mb-lg-0 border-end border-light">
                         <div className="d-flex mb-1 align-items-center">
@@ -113,9 +92,9 @@ const HomePage = () => {
                             <div className='filter-bar-title'>Check in</div>
                         </div>
                         <div className="filter-bar-input">
-                            <input type="date" className="form-control custom-input-icon border-0 bg-transparent shadow-none p-0 filter-input-text custom-date-input" value={checkIn} onChange={(e) => { setCheckIn(e.target.value); setErrors({ ...errors, checkIn: null }); }} min={new Date().toISOString().split('T')[0]} />
+                            <input type="date" className="form-control custom-input-icon border-0 bg-transparent shadow-none p-0 filter-input-text custom-date-input" {...register('checkIn', { validate: value => { if (!value) return true; const selectedDate = new Date(value); const maxDate = new Date(); maxDate.setMonth(maxDate.getMonth() + 6); if (selectedDate > maxDate) return Messages.booking.MAX_BOOKING_DATE || 'Cannot book a room more than 6 months in advance.'; return true; } })} min={new Date().toISOString().split('T')[0]} />
                         </div>
-                        {errors.checkIn && <div className="text-danger small mt-1">{errors.checkIn}</div>}
+                        {errors.checkIn && <div className="text-danger small mt-1">{errors.checkIn.message}</div>}
                     </Col>
                     <Col lg={2} md={6} className="mb-3 mb-lg-0 border-end border-light">
                         <div className="d-flex mb-1 align-items-center">
@@ -123,9 +102,20 @@ const HomePage = () => {
                             <div className='filter-bar-title'>Check out</div>
                         </div>
                         <div className="filter-bar-input">
-                            <input type="date" className="form-control custom-input-icon border-0 bg-transparent shadow-none p-0 filter-input-text custom-date-input" value={checkOut} onChange={(e) => { setCheckOut(e.target.value); setErrors({ ...errors, checkOut: null }); }} min={checkIn || new Date().toISOString().split('T')[0]} />
+                            <input type="date" className="form-control custom-input-icon border-0 bg-transparent shadow-none p-0 filter-input-text custom-date-input"
+                                {...register('checkOut',
+                                    {
+                                        validate: value => {
+                                            if (!value) return true;
+                                            if (checkInDate && new Date(checkInDate) >= new Date(value)) return Messages.booking.MIN_CHECK_IN_DATE;
+                                            if (checkInDate) {
+                                                const diffDays = Math.ceil(Math.abs(new Date(value) - new Date(checkInDate)) / (1000 * 60 * 60 * 24));
+                                                if (diffDays > 60) return Messages.booking.MAX_BOOKING_DURATION
+                                            } return true;
+                                        }
+                                    })} min={checkInDate || new Date().toISOString().split('T')[0]} />
                         </div>
-                        {errors.checkOut && <div className="text-danger small mt-1">{errors.checkOut}</div>}
+                        {errors.checkOut && <div className="text-danger small mt-1">{errors.checkOut.message}</div>}
                     </Col>
                     <Col lg={3} md={6} className="mb-3 mb-lg-0">
                         <div className="d-flex mb-1 align-items-center">
@@ -133,32 +123,35 @@ const HomePage = () => {
                             <div className='filter-bar-title' >Rooms | Adults, Children</div>
                         </div>
                         <div className="d-flex align-items-center filter-bar-input filter-people-input">
-                            <input type="number" className="form-control border-0 bg-transparent shadow-none p-0 filter-input-text text-center filter-input" placeholder="1" value={rooms} onChange={(e) => { setRooms(e.target.value); setErrors({ ...errors, rooms: null }); }} min="1" title="Rooms" />
+                            <input type="number" className="form-control border-0 bg-transparent shadow-none p-0 filter-input-text text-center filter-input" placeholder="1" {...register('rooms', { min: { value: 1, message: Messages.booking.ERR_ROOM_COUNT } })} min="1" title="Rooms" />
                             <span className="filter-input-text">|</span>
-                            <input type="number" className="form-control border-0 bg-transparent shadow-none p-0 filter-input-text text-center filter-input" placeholder="1" value={adults} onChange={(e) => { setAdults(e.target.value); setErrors({ ...errors, adults: null }); }} min="1" title="Adults" />
+                            <input type="number" className="form-control border-0 bg-transparent shadow-none p-0 filter-input-text text-center filter-input" placeholder="1" {...register('adults', { min: { value: 1, message: Messages.booking.ERR_ADULT_COUNT } })} min="1" title="Adults" />
                             <span className="filter-input-text">,</span>
-                            <input type="number" className="form-control border-0 bg-transparent shadow-none p-0 filter-input-text text-center filter-input" placeholder="0" value={children} onChange={(e) => { setChildren(e.target.value); setErrors({ ...errors, children: null }); }} min="0" title="Children" />
+                            <input type="number" className="form-control border-0 bg-transparent shadow-none p-0 filter-input-text text-center filter-input" placeholder="0" {...register('children', { min: { value: 0, message: Messages.booking.ERR_CHILD_COUNT } })} min="0" title="Children" />
                         </div>
                         {(errors.rooms || errors.adults || errors.children) && (
                             <div className="text-danger small mt-1">
-                                {errors.rooms && <div>{errors.rooms}</div>}
-                                {errors.adults && <div>{errors.adults}</div>}
-                                {errors.children && <div>{errors.children}</div>}
+                                {errors.rooms && <div>{errors.rooms.message}</div>}
+                                {errors.adults && <div>{errors.adults.message}</div>}
+                                {errors.children && <div>{errors.children.message}</div>}
                             </div>
                         )}
                     </Col>
                     <Col lg={2} className="mt-3 mt-lg-0">
-                        <button type="button" className='filter-bar-button border-0' onClick={handleBookNow}>
+                        <button type="submit" className='filter-bar-button border-0'>
                             Book Now
                         </button>
                     </Col>
-                </Row>
-            </div>
+                </Row></form></div>
             <Container fluid className="homepage-container">
-                <section className="mb-5">
+                <section className="mb-5 ">
                     <h2 className="hotel-title position-relative d-inline-block">Hotels</h2>
 
-                    {loading && <Spinner animation="border" variant="secondary" />}
+                    {loading && (
+                        <div className="d-flex justify-content-center align-items-center w-100 loading-spinner-container">
+                            <Spinner animation="border" variant="secondary" />
+                        </div>
+                    )}
 
                     {error && <p className="text-danger">{error}</p>}
 
@@ -166,10 +159,10 @@ const HomePage = () => {
                         <p>No hotels found.</p>
                     )}
                     {!loading && !error && hotels.length > 0 && (
-                        <Row className="d-flex flex-nowrap overflow-auto pb-3 hotel-container">
+                        <Row className="row-cols-1 row-cols-sm-auto row-cols-md-2 row-cols-lg-auto row-cols-xl-auto hotel-container">
                             {hotels.map((hotel) => (
-                                <Col key={`${hotel._id}`} xs={10} sm={6} md={4} lg={2} className="mb-4 me-5">
-                                    <div className="hotel-card border-0 bg-transparent d-flex flex-column h-100" onClick={() => navigate(`/hotel/${hotel._id}`)}>
+                                <Col key={`${hotel._id}`} className="mb-4">
+                                    <div className="hotel-card border-0 bg-transparent d-flex flex-column h-100 w-100" onClick={() => navigate(`/hotel/${hotel._id}`)}>
                                         <div className="hotel-image-container mb-3">
                                             {hotel.images && hotel.images.length > 0 ? (
                                                 <img src={hotel.images[0]} alt={hotel.name} className="hotel-card-image img-fluid" loading="lazy" />
