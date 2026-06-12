@@ -39,7 +39,7 @@ const RegisterForm = () => {
                     </Toast.Body>
                 </Toast>
             </ToastContainer>
-            <form className="register-form d-flex flex-column" onSubmit={handleSubmit(onSubmit)}>
+            <form className="register-form d-flex flex-column" onSubmit={handleSubmit(onSubmit)} noValidate>
                 <p className="form-title">Register</p>
 
                 {apiError && <div className="alert alert-danger">{apiError}</div>}

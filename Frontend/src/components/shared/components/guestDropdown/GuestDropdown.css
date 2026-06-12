@@ -1,0 +1,78 @@
+.guest-dropdown-container {
+    cursor: pointer;
+    text-align: left;
+    min-width: 120px;
+}
+
+.guest-dropdown-container .guest-dropdown-trigger {
+    padding: 0 10px;
+    text-align: left;
+    white-space: nowrap;
+}
+
+.guest-dropdown-container .guest-dropdown-trigger::after {
+    content: '';
+    display: inline-block;
+    width: 10px;
+    height: 6px;
+    margin-left: 8px;
+    background-image: url('../../../assets/images/icons/downArrow.svg');
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: center;
+    opacity: 0.5;
+}
+
+.guest-dropdown-container .guest-dropdown-trigger .text-truncate {
+    max-width: 100%;
+}
+
+.guest-dropdown-container .guest-dropdown-menu {
+    top: 100%;
+    left: 0;
+    margin-top: 10px;
+    border-radius: 8px;
+    padding: 10px;
+    min-width: 220px;
+    z-index: 1000;
+    border: 1px solid var(--secondary-border-grey);
+}
+
+.guest-dropdown-container .guest-dropdown-menu .guest-dropdown-item {
+    padding: 10px 0;
+    font-size: 14px;
+    color: var(--primary-dark-blue, #1A1A1A);
+    font-weight: 500;
+}
+
+.guest-dropdown-container .guest-dropdown-menu .guest-dropdown-item:not(:last-child) {
+    border-bottom: 1px solid var(--secondary-border-grey);
+}
+
+.guest-dropdown-container .guest-dropdown-menu .guest-dropdown-item .guest-dropdown-controls {
+    gap: 15px;
+}
+
+.guest-dropdown-container .guest-dropdown-menu .guest-dropdown-item .guest-dropdown-controls .guest-btn {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: 1px solid var(--primary-dark-blue);
+    color: var(--primary-dark-blue);
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    padding: 0;
+    line-height: 1;
+}
+
+.guest-dropdown-container .guest-dropdown-menu .guest-dropdown-item .guest-dropdown-controls .guest-btn:disabled {
+    border-color: var(--secondary-border-grey);
+    color: var(--secondary-border-grey);
+    cursor: not-allowed;
+}
+
+.guest-dropdown-container .guest-dropdown-menu .guest-dropdown-item .guest-dropdown-controls .guest-val {
+    min-width: 15px;
+    text-align: center;
+}

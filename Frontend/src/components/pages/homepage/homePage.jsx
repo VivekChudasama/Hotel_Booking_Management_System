@@ -4,20 +4,23 @@ import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import Spinner from 'react-bootstrap/Spinner';
 import { getHotelList } from '../../services/hotelService';
+import { getRoomList } from '../../services/roomService';
 import homeImage from '../../../assets/images/home/homeImage.png';
 import calender from '../../../assets/images/icons/calendar.svg';
 import person from '../../../assets/images/icons/person.svg';
 import location from '../../../assets/images/icons/location.svg';
 import { Messages } from '../../shared/configs/messages';
+import GuestDropdown from '../../shared/components/guestDropdown/GuestDropdown';
 import './homePage.css';
 
 const HomePage = () => {
     const navigate = useNavigate();
     const [hotels, setHotels] = useState([]);
+    const [hotelPrices, setHotelPrices] = useState({});
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
-    const { register, handleSubmit, formState: { errors }, watch } = useForm({
+    const { register, handleSubmit, formState: { errors }, watch, setValue } = useForm({
         defaultValues: {
             city: '',
             checkIn: '',
@@ -29,6 +32,7 @@ const HomePage = () => {
     });
 
     const checkInDate = watch('checkIn');
+    const hasErrors = Object.keys(errors).length > 0;
 
     const onSubmit = (data) => {
 
@@ -42,40 +46,62 @@ const HomePage = () => {
 
         navigate(`/hotels?${queryParams.toString()}`);
     };
-
     useEffect(() => {
         const fetchHotels = async () => {
             try {
                 const data = await getHotelList();
                 setHotels(data);
+
+                // Fetch room prices if a token exists
+                const token = localStorage.getItem('token');
+                if (token && data.length > 0) {
+                    const prices = {};
+                    await Promise.all(data.map(async (hotel) => {
+                        try {
+                            const rooms = await getRoomList(hotel._id);
+                            if (rooms && rooms.length > 0) {
+                                const minPrice = Math.min(...rooms.map(r => r.price_per_night));
+                                prices[hotel._id] = minPrice;
+                            }
+                        } catch (err) {
+                            console.log(err);
+                        }
+                    }));
+                    setHotelPrices(prices);
+                }
             } catch (err) {
                 setError(err.message || 'Failed to fetch hotels');
             } finally {
                 setLoading(false);
             }
         };
-
         fetchHotels();
     }, []);
 
+    const getHotelPrice = (hotel) => {
+        if (hotelPrices[hotel._id]) {
+            return hotelPrices[hotel._id];
+        }
+    }
+
     return (
-        <main>
+        <main className="homepage-wrapper">
             <div className="hero-section position-relative">
                 <img className='image w-100' src={homeImage} loading='eager' alt='home page image'></img>
                 <div className='hero-text-container position-absolute text'>
                     <p className='text-line-1 text-white m-0'>Chase elegance. Reserve your <br /> dream stay now.</p>
-                    <p className='text-line-3 text-white '>Discover the finest hotels from all over the world.</p>
+                    <p className='text-line-3 text-white'>Discover the finest hotels from all over the world.</p>
                 </div>
             </div>
-            <div className='filter-bar position-relative'>
-                <form onSubmit={handleSubmit(onSubmit)}><Row className='filter-bar-content align-items-center m-0'>
-                    <Col lg={3} md={6} className="mb-3 mb-lg-0 border-end border-light">
+            <div className={`filter-bar position-relative ${hasErrors ? 'has-errors' : ''}`}>
+                <form onSubmit={handleSubmit(onSubmit)} noValidate><Row className='filter-bar-content align-items-center m-0'>
+                    <Col lg={3} md={6} className="mb-3 mb-lg-0 border-end border-light position-relative">
                         <div className="d-flex mb-1 align-items-center">
                             <img src={location} className='filter-bar-icon' alt='location icon'></img>
                             <div className='filter-bar-title'>Where are you headed?</div>
                         </div>
                         <div className="filter-bar-input">
-                            <select className="form-select border-0 bg-transparent shadow-none p-0 filter-input-text" {...register('city', { required: Messages.booking.ERR_CITY_NAME_REQUIRED })}>
+                            <select className="form-select border-0 bg-transparent shadow-none p-0 filter-input-text" {...register('city', { required: Messages.hotel.ERR_CITY_NAME_REQUIRED })}>
                                 <option className='form-option' value="">Select City</option>
                                 <option className='form-option' value="Rajkot">Rajkot</option>
                                 <option className='form-option' value="Surat">Surat</option>
@@ -84,9 +110,9 @@ const HomePage = () => {
                                 <option className='form-option' value="Delhi">Delhi</option>
                             </select>
                         </div>
-                        {errors.city && <div className="text-danger small mt-1">{errors.city.message}</div>}
+                        {errors.city && <div className="filter-error-message text-danger small position-absolute">{errors.city.message}</div>}
                     </Col>
-                    <Col lg={2} md={6} className="mb-3 mb-lg-0 border-end border-light">
+                    <Col lg={2} md={6} className="mb-3 mb-lg-0 border-end border-light position-relative">
                         <div className="d-flex mb-1 align-items-center">
                             <img src={calender} className='filter-bar-icon' alt='calender icon'></img>
                             <div className='filter-bar-title'>Check in</div>
@@ -94,9 +120,9 @@ const HomePage = () => {
                         <div className="filter-bar-input">
                             <input type="date" className="form-control custom-input-icon border-0 bg-transparent shadow-none p-0 filter-input-text custom-date-input" {...register('checkIn', { validate: value => { if (!value) return true; const selectedDate = new Date(value); const maxDate = new Date(); maxDate.setMonth(maxDate.getMonth() + 6); if (selectedDate > maxDate) return Messages.booking.MAX_BOOKING_DATE || 'Cannot book a room more than 6 months in advance.'; return true; } })} min={new Date().toISOString().split('T')[0]} />
                         </div>
-                        {errors.checkIn && <div className="text-danger small mt-1">{errors.checkIn.message}</div>}
+                        {errors.checkIn && <div className="filter-error-message text-danger small position-absolute">{errors.checkIn.message}</div>}
                     </Col>
-                    <Col lg={2} md={6} className="mb-3 mb-lg-0 border-end border-light">
+                    <Col lg={2} md={6} className="mb-3 mb-lg-0 border-end border-light position-relative">
                         <div className="d-flex mb-1 align-items-center">
                             <img src={calender} className='filter-bar-icon' alt='calender icon'></img>
                             <div className='filter-bar-title'>Check out</div>
@@ -115,22 +141,28 @@ const HomePage = () => {
                                         }
                                     })} min={checkInDate || new Date().toISOString().split('T')[0]} />
                         </div>
-                        {errors.checkOut && <div className="text-danger small mt-1">{errors.checkOut.message}</div>}
+                        {errors.checkOut && <div className="filter-error-message text-danger small position-absolute">{errors.checkOut.message}</div>}
                     </Col>
-                    <Col lg={3} md={6} className="mb-3 mb-lg-0">
+                    <Col lg={3} md={6} className="mb-3 mb-lg-0 position-relative">
                         <div className="d-flex mb-1 align-items-center">
                             <img src={person} className='filter-bar-icon' alt='person icon'></img>
                             <div className='filter-bar-title' >Rooms | Adults, Children</div>
                         </div>
                         <div className="d-flex align-items-center filter-bar-input filter-people-input">
-                            <input type="number" className="form-control border-0 bg-transparent shadow-none p-0 filter-input-text text-center filter-input" placeholder="1" {...register('rooms', { min: { value: 1, message: Messages.booking.ERR_ROOM_COUNT } })} min="1" title="Rooms" />
-                            <span className="filter-input-text">|</span>
-                            <input type="number" className="form-control border-0 bg-transparent shadow-none p-0 filter-input-text text-center filter-input" placeholder="1" {...register('adults', { min: { value: 1, message: Messages.booking.ERR_ADULT_COUNT } })} min="1" title="Adults" />
-                            <span className="filter-input-text">,</span>
-                            <input type="number" className="form-control border-0 bg-transparent shadow-none p-0 filter-input-text text-center filter-input" placeholder="0" {...register('children', { min: { value: 0, message: Messages.booking.ERR_CHILD_COUNT } })} min="0" title="Children" />
+                            <GuestDropdown
+                                rooms={watch('rooms')}
+                                adults={watch('adults')}
+                                children={watch('children')}
+                                onRoomsChange={(val) => setValue('rooms', val, { shouldValidate: true })}
+                                onAdultsChange={(val) => setValue('adults', val, { shouldValidate: true })}
+                                onChildrenChange={(val) => setValue('children', val, { shouldValidate: true })}
+                            />
+                            <input type="number" className="d-none" {...register('rooms', { min: { value: 1, message: Messages.booking.ERR_ROOM_COUNT } })} />
+                            <input type="number" className="d-none" {...register('adults', { min: { value: 1, message: Messages.booking.ERR_ADULT_COUNT }, max: { value: 10, message: Messages.booking.ERR_ADULT_COUNT } })} />
+                            <input type="number" className="d-none" {...register('children', { min: { value: 0, message: Messages.booking.ERR_CHILD_COUNT }, max: { value: 10, message: Messages.booking.ERR_CHILD_COUNT } })} />
                         </div>
                         {(errors.rooms || errors.adults || errors.children) && (
-                            <div className="text-danger small mt-1">
+                            <div className="filter-error-message text-danger small position-absolute">
                                 {errors.rooms && <div>{errors.rooms.message}</div>}
                                 {errors.adults && <div>{errors.adults.message}</div>}
                                 {errors.children && <div>{errors.children.message}</div>}
@@ -159,26 +191,31 @@ const HomePage = () => {
                         <p>No hotels found.</p>
                     )}
                     {!loading && !error && hotels.length > 0 && (
-                        <Row className="row-cols-1 row-cols-sm-auto row-cols-md-2 row-cols-lg-auto row-cols-xl-auto hotel-container">
-                            {hotels.map((hotel) => (
-                                <Col key={`${hotel._id}`} className="mb-4">
-                                    <div className="hotel-card border-0 bg-transparent d-flex flex-column h-100 w-100" onClick={() => navigate(`/hotel/${hotel._id}`)}>
-                                        <div className="hotel-image-container mb-3">
-                                            {hotel.images && hotel.images.length > 0 ? (
-                                                <img src={hotel.images[0]} alt={hotel.name} className="hotel-card-image img-fluid" loading="lazy" />
-                                            ) : (
-                                                <div className="hotel-card-image-placeholder bg-light rounded"></div>
-                                            )}
+                        <Row className="row-cols-1 row-cols-md-2 row-cols-lg-auto row-cols-xl-auto hotel-container">
+                            {hotels.map((hotel) => {
+                                const price = getHotelPrice(hotel);
+                                return (
+                                    <Col key={`${hotel._id}`} className="mb-4">
+                                        <div className="hotel-card border-0 bg-transparent d-flex flex-column h-100 w-100" onClick={() => navigate(`/hotel/${hotel._id}`)}>
+                                            <div className="hotel-image-container mb-3">
+                                                {hotel.images && hotel.images.length > 0 ? (
+                                                    <img src={hotel.images[0]} alt={hotel.name} className="hotel-card-image img-fluid" loading="lazy" />
+                                                ) : (
+                                                    <div className="hotel-card-image-placeholder bg-light rounded"></div>
+                                                )}
+                                            </div>
+                                            <div className="hotel-info">
+                                                <h5 className="hotel-name">{hotel.name}</h5>
+                                                <p className='hotel-price'>${price} /<span className='hotel-price-per-night'>night</span> </p>
+                                                <p className="hotel-address">
+                                                    {`${hotel.address}, ${hotel.city}`}
+                                                </p>
+                                            </div>
                                         </div>
-                                        <div className="hotel-info">
-                                            <h5 className="hotel-name">{hotel.name}</h5>
-                                            <p className="hotel-address">
-                                                {`${hotel.address}, ${hotel.city}`}
-                                            </p>
-                                        </div>
-                                    </div>
-                                </Col>
-                            ))}
+                                    </Col>
+                                )
+                            }
+                            )}
                         </Row>
                     )}
                 </section>

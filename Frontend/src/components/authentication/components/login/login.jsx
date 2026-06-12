@@ -44,7 +44,7 @@ const LoginForm = () => {
                     </Toast.Body>
                 </Toast>
             </ToastContainer>
-            <form className="container-fluid login-form d-flex flex-column" onSubmit={handleSubmit(onSubmit)}>
+            <form className="container-fluid login-form d-flex flex-column" onSubmit={handleSubmit(onSubmit)} noValidate>
                 <p className="form-title">Sign in to your account</p>
                 
                 {apiError && <div className="alert alert-danger">{apiError}</div>}
