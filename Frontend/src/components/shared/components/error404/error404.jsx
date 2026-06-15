@@ -6,7 +6,7 @@ const ErrorRoute = () => {
         <div className="PageNotFound d-flex flex-column justify-content-center align-items-center">
             <p>Page Not Found </p>
             <button className='pageNotFound-button'>Home
-                <Link to="/" className="text-decoration-none " />
+                <Link to="/" className="text-decoration-none border-0" />
             </button>
         </div>
     );

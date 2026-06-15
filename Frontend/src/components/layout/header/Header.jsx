@@ -80,7 +80,7 @@ const Header = () => {
                         <Nav className="ms-auto d-flex align-items-lg-center">
                             <div className="header-nav d-flex flex-column flex-lg-row">
                                 <NavLink to="/" className={({ isActive }) => (isActive ? 'nav-link active' : 'nav-link')}>HOME</NavLink>
-                                <NavLink to="/hotels" className={({ isActive }) => (isActive ? 'nav-link active' : 'nav-link')}>SERVICES</NavLink>
+                                <NavLink to="/SERVICES" className={({ isActive }) => (isActive ? 'nav-link active' : 'nav-link')}>SERVICES</NavLink>
                                 <NavLink to="/bookings" className={({ isActive }) => (isActive ? 'nav-link active' : 'nav-link')}>BOOKINGS</NavLink>
                                 <NavLink to="/EXPLORE" className={({ isActive }) => (isActive ? 'nav-link active' : 'nav-link')}>EXPLORE</NavLink>
                                 <NavLink to="/MEMBERSHIP" className={({ isActive }) => (isActive ? 'nav-link active' : 'nav-link')}>MEMBERSHIP</NavLink>

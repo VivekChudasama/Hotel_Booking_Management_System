@@ -34,7 +34,7 @@ export class Messages {
         BOOKING_CANCELLED_SUCCESSFULLY: 'Booking cancelled successfully',
         ERR_ROOM_COUNT: 'Room count must be at least 1',
         ERR_ADULT_COUNT: 'Adult count must be at least 1 and at most 10',
-        ERR_CHILD_COUNT: 'Children count cannot be negative and must be at most 10',
+        ERR_CHILD_COUNT: 'Children count must be either 0 or a maximum of 10.',
         BOOKING_NOT_FOUND: 'Booking not found',
         ERR_FROM_DATE: 'From date is required',
         ERR_TO_DATE: 'To date is required',

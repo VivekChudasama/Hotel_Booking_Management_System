@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
-import './GuestDropdown.css';
+import './guestDropdown.css';
 
 const GuestDropdown = ({ rooms, adults, children, onRoomsChange, onAdultsChange, onChildrenChange, isSearchPage }) => {
     const [isOpen, setIsOpen] = useState(false);

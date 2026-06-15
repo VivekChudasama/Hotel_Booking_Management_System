@@ -9,7 +9,7 @@ import person from '../../../assets/images/icons/person.svg';
 import locationIcon from '../../../assets/images/icons/location.svg';
 import searchIcon from '../../../assets/images/icons/search.svg';
 import { Messages } from '../../shared/configs/messages';
-import GuestDropdown from '../../shared/components/guestDropdown/GuestDropdown';
+import GuestDropdown from '../../shared/components/guestDropdown/guestDropdown';
 import './hotelsSearchPage.css';
 
 const HotelsPage = () => {
@@ -22,6 +22,7 @@ const HotelsPage = () => {
     const [error, setError] = useState(null);
 
     const [searchTerm, setSearchTerm] = useState('');
+    const [selectedPriceRanges, setSelectedPriceRanges] = useState([]);
 
     const { register, handleSubmit, formState: { errors }, watch, reset, setValue } = useForm({
         defaultValues: {
@@ -59,9 +60,8 @@ const HotelsPage = () => {
                 const data = await getHotelList(query);
                 setHotels(data);
 
-                // Fetch room prices if a token exists
-                const token = localStorage.getItem('token');
-                if (token && data.length > 0) {
+                // Fetch room prices
+                if (data.length > 0) {
                     const prices = {};
                     await Promise.all(data.map(async (hotel) => {
                         try {
@@ -71,7 +71,7 @@ const HotelsPage = () => {
                                 prices[hotel._id] = minPrice;
                             }
                         } catch (err) {
-                            console.log(err);
+                            console.log('Error fetching room list for hotel', hotel._id, err);
                         }
                     }));
                     setHotelPrices(prices);
@@ -98,15 +98,63 @@ const HotelsPage = () => {
         navigate(`/hotels?${queryParams.toString()}`);
     };
 
-    // Filter hotels by Name.
-    const filteredHotels = hotels.filter(hotel =>
-        hotel.name.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-
     const getHotelPrice = (hotel) => {
         if (hotelPrices[hotel._id]) {
             return hotelPrices[hotel._id];
         }
+    };
+
+    const filteredHotels = hotels.filter(hotel => {
+        // Search filter
+        if (!hotel.name.toLowerCase().includes(searchTerm.toLowerCase())) {
+            return false;
+        }
+
+        // Price filter
+        if (selectedPriceRanges.length > 0) {
+            const price = getHotelPrice(hotel);
+            if (price === undefined) return false;
+
+            let matchesPrice = false;
+            if (selectedPriceRanges.includes('0-200') && price >= 0 && price <= 200) matchesPrice = true;
+            if (selectedPriceRanges.includes('200-500') && price > 200 && price <= 500) matchesPrice = true;
+            if (selectedPriceRanges.includes('500-1000') && price > 500 && price <= 1000) matchesPrice = true;
+            if (selectedPriceRanges.includes('1000-2000') && price > 1000 && price <= 2000) matchesPrice = true;
+            if (selectedPriceRanges.includes('2000-5000') && price > 2000 && price <= 5000) matchesPrice = true;
+
+            if (!matchesPrice) return false;
+        }
+
+        return true;
+    });
+
+    const priceCounts = {
+        '0-200': 0,
+        '200-500': 0,
+        '500-1000': 0,
+        '1000-2000': 0,
+        '2000-5000': 0
+    };
+
+    hotels.forEach(hotel => {
+        const price = getHotelPrice(hotel);
+        if (price !== undefined) {
+            if (price >= 0 && price <= 200) priceCounts['0-200']++;
+            else if (price > 200 && price <= 500) priceCounts['200-500']++;
+            else if (price > 500 && price <= 1000) priceCounts['500-1000']++;
+            else if (price > 1000 && price <= 2000) priceCounts['1000-2000']++;
+            else if (price > 2000 && price <= 5000) priceCounts['2000-5000']++;
+        }
+    });
+
+    const handlePriceRangeChange = (range) => {
+        setSelectedPriceRanges(prev => {
+            if (prev.includes(range)) {
+                return prev.filter(r => r !== range);
+            } else {
+                return [...prev, range];
+            }
+        });
     };
 
     const city = searchParams.get('city') || '';
@@ -141,14 +189,14 @@ const HotelsPage = () => {
                             </Col>
                             <Col lg={2} md={6} sm={6} className="mb-3 mb-lg-0 border-end border-light position-relative">
                                 <div className="d-flex align-items-center h-100 search-filter-bar-input">
-                                    <img src={calender} className='search-filter-bar-icon me-2' alt='calender icon'></img>
+                                    <img src={calender} className='search-filter-bar-icon me-2 ms-lg-2' alt='calender icon'></img>
                                     <input type="date" className="form-control search-custom-input-icon border-0 bg-transparent shadow-none p-0 search-filter-input-text search-custom-date-input position-relative fw-bold" {...register('checkOut', { validate: value => { if (!value) return true; if (checkInDate && new Date(checkInDate) >= new Date(value)) return Messages.booking.MIN_CHECK_IN_DATE || 'Check out date must be after check in date.'; if (checkInDate) { const diffDays = Math.ceil(Math.abs(new Date(value) - new Date(checkInDate)) / (1000 * 60 * 60 * 24)); if (diffDays > 60) return Messages.booking.MAX_BOOKING_DURATION || 'Cannot book a room for more than 60 days.'; } return true; } })} min={checkInDate || new Date().toISOString().split('T')[0]} />
                                 </div>
                                 {errors.checkOut && <div className="search-filter-error-message text-danger small position-absolute">{errors.checkOut.message}</div>}
                             </Col>
                             <Col lg={3} md={6} sm={6} className="mb-3 mb-lg-0 position-relative">
                                 <div className="d-flex align-items-center h-100 search-filter-bar-input search-filter-people-input">
-                                    <img src={person} className='search-filter-bar-icon me-2' alt='person icon'></img>
+                                    <img src={person} className='search-filter-bar-icon me-2 ms-lg-2' alt='person icon'></img>
                                     <div className="d-flex align-items-center w-100">
                                         <GuestDropdown
                                             isSearchPage={true}
@@ -194,7 +242,7 @@ const HotelsPage = () => {
                 ) : (
                     <Row className="g-4 hotel-search-result-container">
                         {/* Left Sidebar Columns */}
-                        <Col lg={3} md={4} sm={12} className="mb-lg-4">
+                        <Col xxl={3} lg={3} md={4} sm={12} className="hotel-search-left-container">
                             {/* Search by Hotel Name Card */}
                             <div className="sidebar-card overflow-hidden">
                                 <div className="sidebar-card-header text-white border-0">Search by hotel name</div>
@@ -210,41 +258,57 @@ const HotelsPage = () => {
                                     </div>
                                 </div>
                             </div>
+                            <h6 className=" fw-bold hotel-search-title">Filter results</h6>
                             <div className="sidebar-card overflow-hidden">
-                                <div className="sidebar-card-header text-white border-0">Price Range</div>
+                                <div className="sidebar-card-price-filter-header text-white border-0">Price Range</div>
                                 <div className=" border-0">
                                     <div className=" sidebar-price-card-body position-relative d-flex align-items-center">
-                                        <Form>
-                                                <div  className="mb-3">
-                                                    <Form.Check
-                                                        type={'checkbox'}
-                                                        label={`$0 - $200`}
-                                                    />
-                                                </div>
-                                                 <div  className="mb-3">
-                                                    <Form.Check
-                                                        type={'checkbox'}
-                                                        label={`$200 - $500`}
-                                                    />
-                                                </div>
-                                                 <div  className="mb-3">
-                                                    <Form.Check
-                                                        type={'checkbox'}
-                                                        label={`$500 - $1,000`}
-                                                    />
-                                                </div>
-                                                 <div  className="mb-3">
-                                                    <Form.Check
-                                                        type={'checkbox'}
-                                                        label={`$1,000 - $2,000`}
-                                                    />
-                                                </div>
-                                                 <div  className="mb-3">
-                                                    <Form.Check
-                                                        type={'checkbox'}
-                                                        label={`$2,000 - $5,000`}
-                                                    />
-                                                </div>
+                                        <Form className="w-100">
+                                            <div className="price-row d-flex justify-content-between align-items-center">
+                                                <Form.Check
+                                                    type={'checkbox'}
+                                                    label={`$ 0 - $ 200`}
+                                                    checked={selectedPriceRanges.includes('0-200')}
+                                                    onChange={() => handlePriceRangeChange('0-200')}
+                                                />
+                                                <span className="price-count">{priceCounts['0-200']}</span>
+                                            </div>
+                                            <div className="price-row d-flex justify-content-between align-items-center">
+                                                <Form.Check
+                                                    type={'checkbox'}
+                                                    label={`$ 200 - $ 500`}
+                                                    checked={selectedPriceRanges.includes('200-500')}
+                                                    onChange={() => handlePriceRangeChange('200-500')}
+                                                />
+                                                <span className="price-count">{priceCounts['200-500']}</span>
+                                            </div>
+                                            <div className="price-row d-flex justify-content-between align-items-center">
+                                                <Form.Check
+                                                    type={'checkbox'}
+                                                    label={`$ 500 - $ 1,000`}
+                                                    checked={selectedPriceRanges.includes('500-1000')}
+                                                    onChange={() => handlePriceRangeChange('500-1000')}
+                                                />
+                                                <span className="price-count">{priceCounts['500-1000']}</span>
+                                            </div>
+                                            <div className="price-row d-flex justify-content-between align-items-center">
+                                                <Form.Check
+                                                    type={'checkbox'}
+                                                    label={`$ 1,000 - $ 2,000`}
+                                                    checked={selectedPriceRanges.includes('1000-2000')}
+                                                    onChange={() => handlePriceRangeChange('1000-2000')}
+                                                />
+                                                <span className="price-count">{priceCounts['1000-2000']}</span>
+                                            </div>
+                                            <div className="price-row d-flex justify-content-between align-items-center">
+                                                <Form.Check
+                                                    type={'checkbox'}
+                                                    label={`$ 2,000 - $ 5,000`}
+                                                    checked={selectedPriceRanges.includes('2000-5000')}
+                                                    onChange={() => handlePriceRangeChange('2000-5000')}
+                                                />
+                                                <span className="price-count">{priceCounts['2000-5000']}</span>
+                                            </div>
                                         </Form>
                                     </div>
                                 </div>
@@ -252,71 +316,76 @@ const HotelsPage = () => {
                         </Col>
 
                         {/* Right Results Column */}
-                        <Col lg={9} md={4} sm={12}>
+                        <Col xxl={8} lg={9} md={8} sm={12} className='hotel-search-right-container'>
                             <h3 className="search-results-title mb-4">
                                 {city ? `${city}: ` : ''}{filteredHotels.length} {filteredHotels.length === 1 ? 'result' : 'results'} found
                             </h3>
 
-                            {/* {filteredHotels.length === 0 ? (
+                            {filteredHotels.length === 0 ? (
                                 <div className="text-center py-5 border rounded bg-white">
-                                    <h5 className="text-muted">No hotels found matching "{searchTerm}"</h5>
-                                    <p className="text-muted small mb-0">Try searching for another hotel name or city.</p>
+                                    <h5 className="text-muted">No hotels found</h5>
                                 </div>
                             ) : (
-                                    <div className="d-flex flex-column gap-4">
-                                        {filteredHotels.map((hotel) => {
-                                            const price = getHotelPrice(hotel);
-                                            const imageUrl = hotel.images && hotel.images[0]
-                                                ? hotel.images[0]
-                                                : "https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=600&q=80";
+                                <div className="d-flex flex-column gap-4">
+                                    {filteredHotels.map((hotel) => {
+                                        const price = getHotelPrice(hotel);
+                                        const imageUrl = hotel.images && hotel.images[0]
+                                            ? hotel.images[0]
+                                            : " ";
 
-                                            return (
-                                                <div key={`${hotel._id}`} className="hotel-result-card d-flex flex-column flex-md-row">
-                                                    <div className="hotel-result-image-wrapper">
-                                                        <img src={imageUrl} alt={hotel.name} className="hotel-result-image" />
-                                                    </div>
-                                                    <div className="hotel-result-info-wrapper d-flex flex-column flex-grow-1 p-3">
-                                                        <div className="d-flex justify-content-between align-items-start mb-2">
-                                                            <div className="pe-2">
-                                                                <div className="d-flex align-items-center flex-wrap gap-2 mb-1">
-                                                                    <h4 className="hotel-result-name m-0">{hotel.name}</h4>
-                                                                </div>
+                                        return (
+                                            <div key={`${hotel._id}`} className="hotel-result-card d-flex flex-column flex-md-row">
+                                                <div className="hotel-result-image-wrapper">
+                                                    <img src={imageUrl} alt={hotel.name} className="hotel-result-image" />
+                                                </div>
+                                                <div className="hotel-result-info-wrapper d-flex flex-column flex-grow-1 px-lg-3 px-md-3 px-sm-0 ">
+                                                    <div className="d-flex justify-content-between align-items-start mb-2">
+                                                        <div className="pe-2">
+                                                            <div className="d-flex align-items-center flex-wrap gap-2 mb-1">
+                                                                <h4 className="hotel-result-name m-0">{hotel.name}</h4>
                                                             </div>
                                                         </div>
+                                                    </div>
 
-                                                        <p className="hotel-result-description text-secondary small mb-3">
-                                                            {hotel.description.length > 220
-                                                                ? `${hotel.description.substring(0, 220)}... more`
-                                                                : hotel.description
-                                                            }
-                                                        </p>
+                                                    <p className="hotel-result-description text-secondary small mb-3">
+                                                        {hotel.description && hotel.description.length > 220
+                                                            ? `${hotel.description.substring(0, 220)}... more`
+                                                            : hotel.description
+                                                        }
+                                                    </p>
 
-                                                        <div className="d-flex justify-content-between align-items-end mt-auto pt-2 border-top border-light">
-                                                            <div>
-                                                                <div className="hotel-location d-flex align-items-center mb-3">
-                                                                    <img src={locationIcon} className="location-pin-icon me-1" alt="location" />
-                                                                    <span className="small text-secondary">{hotel.address}, {hotel.city}</span>
-                                                                </div>
-                                                                <button
-                                                                    onClick={() => navigate(`/hotel/${hotel._id}`)}
-                                                                    className="hotel-select-btn border-0"
-                                                                >
-                                                                    Select
-                                                                </button>
+                                                    <div className="hotel-result-footer d-flex justify-content-between align-items-end mt-auto pt-2 border-top border-light">
+                                                        <div>
+                                                            <div className="hotel-location d-flex align-items-center mb-3">
+                                                                <img src={locationIcon} className="location-pin-icon me-1" alt="location" />
+                                                                <span className="small text-secondary">{hotel.address}, {hotel.city}</span>
                                                             </div>
+                                                            <button
+                                                                onClick={() => navigate(`/hotel/${hotel._id}`)}
+                                                                className="hotel-select-btn border-0"
+                                                            >
+                                                                Select
+                                                            </button>
+                                                        </div>
 
-                                                            <div className="text-end hotel-price-section">
-                                                                <div className="hotel-price-duration text-secondary">1 room 1 night</div>
-                                                                <div className="hotel-price-value">${price}</div>
-                                                                <div className="hotel-price-tax text-secondary">Taxes incl.</div>
-                                                            </div>
+                                                        <div className="text-end hotel-price-section">
+                                                            {price ? (
+                                                                <>
+                                                                    <div className="hotel-price-duration text-secondary">1 room 1 night</div>
+                                                                    <div className="hotel-price-value">${price}</div>
+                                                                    <div className="hotel-price-tax text-secondary">Taxes incl.</div>
+                                                                </>
+                                                            ) : (
+                                                                <div className="hotel-price-unavailable-value text-muted">Price Unavailable</div>
+                                                            )}
                                                         </div>
                                                     </div>
                                                 </div>
-                                            );
-                                        })}
-                                    </div>
-                                )} */}
+                                            </div>
+                                        );
+                                    })}
+                                </div>
+                            )}
                         </Col>
                     </Row>
                 )}

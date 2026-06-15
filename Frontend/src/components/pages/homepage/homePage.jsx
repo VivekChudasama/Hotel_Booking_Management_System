@@ -10,7 +10,7 @@ import calender from '../../../assets/images/icons/calendar.svg';
 import person from '../../../assets/images/icons/person.svg';
 import location from '../../../assets/images/icons/location.svg';
 import { Messages } from '../../shared/configs/messages';
-import GuestDropdown from '../../shared/components/guestDropdown/GuestDropdown';
+import GuestDropdown from '../../shared/components/guestDropdown/guestDropdown';
 import './homePage.css';
 
 const HomePage = () => {
@@ -52,9 +52,8 @@ const HomePage = () => {
                 const data = await getHotelList();
                 setHotels(data);
 
-                // Fetch room prices if a token exists
-                const token = localStorage.getItem('token');
-                if (token && data.length > 0) {
+                // Fetch room prices
+                if (data.length > 0) {
                     const prices = {};
                     await Promise.all(data.map(async (hotel) => {
                         try {
@@ -64,7 +63,7 @@ const HomePage = () => {
                                 prices[hotel._id] = minPrice;
                             }
                         } catch (err) {
-                            console.log(err);
+                            console.log('Error fetching room list for hotel', hotel._id, err);
                         }
                     }));
                     setHotelPrices(prices);
@@ -82,7 +81,7 @@ const HomePage = () => {
         if (hotelPrices[hotel._id]) {
             return hotelPrices[hotel._id];
         }
-    }
+    };
 
     return (
         <main className="homepage-wrapper">
@@ -191,22 +190,29 @@ const HomePage = () => {
                         <p>No hotels found.</p>
                     )}
                     {!loading && !error && hotels.length > 0 && (
-                        <Row className="row-cols-1 row-cols-md-2 row-cols-lg-auto row-cols-xl-auto hotel-container">
+                        <Row xs={1} sm={2} md={3} lg={4} xl={5} className="g-4 hotel-container">
                             {hotels.map((hotel) => {
                                 const price = getHotelPrice(hotel);
+                                const imageUrl = hotel.images && hotel.images[0] 
+                                    ? hotel.images[0] 
+                                    : "";
                                 return (
                                     <Col key={`${hotel._id}`} className="mb-4">
                                         <div className="hotel-card border-0 bg-transparent d-flex flex-column h-100 w-100" onClick={() => navigate(`/hotel/${hotel._id}`)}>
                                             <div className="hotel-image-container mb-3">
-                                                {hotel.images && hotel.images.length > 0 ? (
-                                                    <img src={hotel.images[0]} alt={hotel.name} className="hotel-card-image img-fluid" loading="lazy" />
-                                                ) : (
-                                                    <div className="hotel-card-image-placeholder bg-light rounded"></div>
-                                                )}
+                                                <img src={imageUrl} alt={hotel.name} className="hotel-card-image img-fluid" loading="lazy" />
                                             </div>
                                             <div className="hotel-info">
                                                 <h5 className="hotel-name">{hotel.name}</h5>
-                                                <p className='hotel-price'>${price} /<span className='hotel-price-per-night'>night</span> </p>
+                                                {price ? (
+                                                    <p className='hotel-price fw-bold mb-2'>
+                                                        ${price} <span className='hotel-price-per-night'>/night</span>
+                                                    </p>
+                                                ) : (
+                                                    <p className='hotel-price fw-bold mb-2 text-muted' >
+                                                        Price Unavailable
+                                                    </p>
+                                                )}
                                                 <p className="hotel-address">
                                                     {`${hotel.address}, ${hotel.city}`}
                                                 </p>

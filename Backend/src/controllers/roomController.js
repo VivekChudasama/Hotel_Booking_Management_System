@@ -5,7 +5,7 @@ import { ResponseMessages } from '../config/response_messages.js';
 const getRoomList = async (req, res) => {
     try {
         const hotel_id = req.params.hotel_id;
-        const role = req.user.role;
+        const role = req.user?.role || 'customer';
         const query = req.query;
         const roomList = await roomService.getRoomListService(hotel_id, role, query);
         res.status(Constants.RESPONSE_STATUS_CODE.SUCCESS_CODE).json(roomList);
