@@ -27,7 +27,7 @@ const validateCreateHotel = [
     body('description').trim().notEmpty().withMessage(ResponseMessages.hotel.DESCRIPTION_REQUIRED)
         .bail()
         .isString().withMessage(ResponseMessages.common.MUST_BE_STRING)
-        .isLength({ max: 1024 }).withMessage(ResponseMessages.hotel.VALID_DESCRIPTION_LENGTH),
+        .isLength({ max: 10024 }).withMessage(ResponseMessages.hotel.VALID_DESCRIPTION_LENGTH),
 
     body('address').trim().notEmpty().withMessage(ResponseMessages.hotel.ADDRESS_REQUIRED)
         .bail()
@@ -65,7 +65,7 @@ const validateUpdateHotel = [
 
     body('description').optional().trim().notEmpty().withMessage(ResponseMessages.hotel.DESCRIPTION_REQUIRED)
         .bail()
-        .isLength({ max: 1024 }).withMessage(ResponseMessages.hotel.VALID_DESCRIPTION_LENGTH),
+        .isLength({ max: 10024 }).withMessage(ResponseMessages.hotel.VALID_DESCRIPTION_LENGTH),
 
     body('address').optional().trim().notEmpty().withMessage(ResponseMessages.hotel.ADDRESS_REQUIRED)
         .bail()

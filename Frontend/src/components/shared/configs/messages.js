@@ -57,7 +57,7 @@ export class Messages {
         VALID_ADDRESS_LENGTH: 'Address must be less than 256 characters',
         VALID_CITY_NAME_FORMAT: 'City Name can only contain letters',
         VALID_CITY_NAME_LENGTH: 'City Name must be less than 30 characters',
-        VALID_DESCRIPTION_LENGTH: 'Description must be less than 1024 characters',
+        VALID_DESCRIPTION_LENGTH: 'Description must be less than 10024 characters',
         VALID_HOTEL_NAME_FORMAT: 'Hotel name can only contain letters, numbers, spaces, dots, commas, apostrophes, and hyphens',
         HOTEL_DELETED_SUCCESSFULLY: 'Hotel deleted successfully',
         ACTIVE_BOOKINGS_EXIST: 'Cannot delete hotel because it has active bookings',

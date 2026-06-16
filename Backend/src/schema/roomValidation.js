@@ -17,7 +17,7 @@ const validateCreateRoom = [
     body('room_description').trim().notEmpty().withMessage(ResponseMessages.room.HOTEL_ROOM_DESCRIPTION_REQUIRED)
         .bail()
         .isString().withMessage(ResponseMessages.common.MUST_BE_STRING)
-        .isLength({ max: 1024 }).withMessage(ResponseMessages.hotel.VALID_DESCRIPTION_LENGTH),
+        .isLength({ max: 10024 }).withMessage(ResponseMessages.hotel.VALID_DESCRIPTION_LENGTH),
 
     body('amenities').notEmpty().withMessage(ResponseMessages.room.HOTEL_ROOM_AMENITIES_REQUIRED)
         .bail()
@@ -75,7 +75,7 @@ const validateUpdateRoom = [
     body('room_description').optional().trim().notEmpty().withMessage(ResponseMessages.room.HOTEL_ROOM_DESCRIPTION_REQUIRED)
         .bail()
         .isString().withMessage(ResponseMessages.common.MUST_BE_STRING)
-        .isLength({ max: 1024 }).withMessage(ResponseMessages.hotel.VALID_DESCRIPTION_LENGTH),
+        .isLength({ max: 10024 }).withMessage(ResponseMessages.hotel.VALID_DESCRIPTION_LENGTH),
 
     body('amenities').optional().notEmpty().withMessage(ResponseMessages.room.HOTEL_ROOM_AMENITIES_REQUIRED)
         .bail()

@@ -26,7 +26,7 @@ function AppRoutes() {
         <Route path="/hotel/:hotelId" element={<HotelDetailsPage />} />
         <Route path="/hotels" element={<HotelsSearchPage />} />
 
-        {/* Routes cannot access without JWT Token  */}
+        {/* Routes cannot access without login */}
         <Route element={<ProtectedRoute />}>
           <Route path="/bookings" />
           <Route path="/bookings/:booking_id/cancel" />
@@ -34,13 +34,17 @@ function AppRoutes() {
         </Route>
 
         {/* Admin Routes */}
-        {/* <Route element{<AdminRoutes />}>
+        <Route element={<AdminRoutes />}>
+          <Route path='/hotels/:hotel_id' />
           <Route path="/hotels/:hotel_id/room" />
           <Route path="/hotels/:room_id" />
+          <Route path='/rooms/:hotel_id/room' />
+          <Route path='/rooms/:room_id' />
           <Route path="/hotels/inventory/:room_id" />
           <Route path="/room_inventory/:room_inventory_id" />
-          <Route path='/rooms/:hotel_id/room' />
-        </Route> */}
+          <Route path='/bookings/:booking_id' />
+          <Route path='/bookings' />
+        </Route>
         <Route path="*" element={<ErrorRoute />} />
 
       </Routes >
