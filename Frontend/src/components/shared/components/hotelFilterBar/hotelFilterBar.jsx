@@ -53,15 +53,18 @@ const HotelFilterBar = () => {
 
     return (
         <main>
-            <div className={`hotel-search-back-div ${pathname === '/hotels' ? "hotel-search-back-div" : "hotel-details-page-back-div" }`}></div>
+            <div className={`hotel-search-back-div ${pathname === '/hotels' ? "hotel-search-back-div" : "hotel-details-page-back-div"}`}></div>
             <div className="hotel-search-container w-100">
-                <div className={` position-relative ${pathname === '/hotels' ? "search-filter-bar" : "hotel-details-page-filter-bar" }`}>
+                <div className={` position-relative ${pathname === '/hotels' ? "search-filter-bar" : "hotel-details-page-filter-bar"}`}>
                     <form onSubmit={handleSubmit(onSubmit)} noValidate>
                         <Row className='search-filter-bar-content align-items-center m-0'>
                             <Col lg={2} md={6} sm={6} className="mb-3 mb-lg-0 border-end border-light position-relative">
                                 <div className="d-flex align-items-center h-100 search-filter-bar-input">
                                     <img src={locationIcon} className='search-filter-bar-icon me-2' alt='location icon'></img>
-                                    <select className="form-select border-0 bg-transparent shadow-none p-0 search-filter-input-text fw-bold" {...register('city', { required: Messages.hotel.ERR_CITY_NAME_REQUIRED })}>
+                                    <select className="form-select border-0 bg-transparent shadow-none p-0 search-filter-input-text fw-bold"
+                                        {...register('city', {
+                                            required: Messages.hotel.ERR_CITY_NAME_REQUIRED
+                                        })}>
                                         <option className='form-option' value="">Select City</option>
                                         <option className='form-option' value="Rajkot">Rajkot</option>
                                         <option className='form-option' value="Surat">Surat</option>
@@ -75,14 +78,36 @@ const HotelFilterBar = () => {
                             <Col lg={2} md={6} sm={6} className="mb-3 mb-lg-0 border-end border-light position-relative">
                                 <div className="d-flex align-items-center h-100 search-filter-bar-input">
                                     <img src={calender} className='search-filter-bar-icon me-2' alt='calender icon'></img>
-                                    <input type="date" className="form-control search-custom-input-icon border-0 bg-transparent shadow-none p-0 search-filter-input-text search-custom-date-input position-relative fw-bold" {...register('checkIn', { validate: value => { if (!value) return true; const selectedDate = new Date(value); const maxDate = new Date(); maxDate.setMonth(maxDate.getMonth() + 6); if (selectedDate > maxDate) return Messages.booking.MAX_BOOKING_DATE || 'Cannot book a room more than 6 months in advance.'; return true; } })} min={new Date().toISOString().split('T')[0]} />
+                                    <input type="date" className="form-control search-custom-input-icon border-0 bg-transparent shadow-none p-0 search-filter-input-text search-custom-date-input position-relative fw-bold"
+                                        {...register('checkIn', {
+                                            required: Messages.booking.ERR_CHECK_IN_DATE,
+                                            validate: value => {
+                                                if (!value) return true; const selectedDate = new Date(value);
+                                                const maxDate = new Date(); maxDate.setMonth(maxDate.getMonth() + 6);
+                                                if (selectedDate > maxDate) return Messages.booking.MAX_BOOKING_DATE;
+                                                return true;
+                                            }
+                                        })} min={new Date().toISOString().split('T')[0]} />
                                 </div>
                                 {errors.checkIn && <div className="search-filter-error-message text-danger small position-absolute">{errors.checkIn.message}</div>}
                             </Col>
                             <Col lg={2} md={6} sm={6} className="mb-3 mb-lg-0 border-end border-light position-relative">
                                 <div className="d-flex align-items-center h-100 search-filter-bar-input">
                                     <img src={calender} className='search-filter-bar-icon me-2 ms-lg-2' alt='calender icon'></img>
-                                    <input type="date" className="form-control search-custom-input-icon border-0 bg-transparent shadow-none p-0 search-filter-input-text search-custom-date-input position-relative fw-bold" {...register('checkOut', { validate: value => { if (!value) return true; if (checkInDate && new Date(checkInDate) >= new Date(value)) return Messages.booking.MIN_CHECK_IN_DATE || 'Check out date must be after check in date.'; if (checkInDate) { const diffDays = Math.ceil(Math.abs(new Date(value) - new Date(checkInDate)) / (1000 * 60 * 60 * 24)); if (diffDays > 60) return Messages.booking.MAX_BOOKING_DURATION || 'Cannot book a room for more than 60 days.'; } return true; } })} min={checkInDate || new Date().toISOString().split('T')[0]} />
+                                    <input type="date" className="form-control search-custom-input-icon border-0 bg-transparent shadow-none p-0 search-filter-input-text search-custom-date-input position-relative fw-bold"
+                                        {...register('checkOut', {
+                                            required: Messages.booking.ERR_CHECK_OUT_DATE,
+                                            validate: value => {
+                                                if (!value) return true;
+                                                if (checkInDate && new Date(checkInDate) >= new Date(value)) return Messages.booking.MIN_CHECK_IN_DATE;
+                                                if (checkInDate) {
+                                                    const diffDays = Math.ceil(Math.abs(new Date(value) - new Date(checkInDate)) / (1000 * 60 * 60 * 24));
+                                                    if (diffDays > 60) return Messages.booking.MAX_BOOKING_DURATION
+                                                }
+                                                return true;
+                                            }
+                                        })}
+                                        min={checkInDate} />
                                 </div>
                                 {errors.checkOut && <div className="search-filter-error-message text-danger small position-absolute">{errors.checkOut.message}</div>}
                             </Col>
@@ -99,9 +124,20 @@ const HotelFilterBar = () => {
                                             onAdultsChange={(val) => setValue('adults', val, { shouldValidate: true })}
                                             onChildrenChange={(val) => setValue('children', val, { shouldValidate: true })}
                                         />
-                                        <input type="number" className="d-none" {...register('rooms', { min: { value: 1, message: Messages.booking.ERR_ROOM_COUNT } })} />
-                                        <input type="number" className="d-none" {...register('adults', { min: { value: 1, message: Messages.booking.ERR_ADULT_COUNT }, max: { value: 10, message: Messages.booking.ERR_ADULT_COUNT } })} />
-                                        <input type="number" className="d-none" {...register('children', { min: { value: 0, message: Messages.booking.ERR_CHILD_COUNT }, max: { value: 10, message: Messages.booking.ERR_CHILD_COUNT } })} />
+                                        <input type="number" className="d-none"
+                                            {...register('rooms', {
+                                                min: { value: 1, message: Messages.booking.ERR_ROOM_COUNT }
+                                            })} />
+                                        <input type="number" className="d-none"
+                                            {...register('adults', {
+                                                min: { value: 1, message: Messages.booking.ERR_ADULT_COUNT },
+                                                max: { value: 10, message: Messages.booking.ERR_ADULT_COUNT }
+                                            })} />
+                                        <input type="number" className="d-none"
+                                            {...register('children', {
+                                                min: { value: 0, message: Messages.booking.ERR_CHILD_COUNT },
+                                                max: { value: 10, message: Messages.booking.ERR_CHILD_COUNT }
+                                            })} />
                                     </div>
                                 </div>
                                 {(errors.rooms || errors.adults || errors.children) && (

@@ -6,6 +6,7 @@ import RegisterForm from './components/authentication/components/register/regist
 import HomePage from './components/pages/homePage/homePage.jsx';
 import HotelDetailsPage from './components/pages/hotelDetails/hotelDetailsPage.jsx';
 import HotelsSearchPage from './components/pages/hotelsSearchPage/hotelsSearchPage.jsx';
+import Booking from './components/pages/booking/booking.jsx'
 import ErrorRoute from './components/shared/components/error404/error404.jsx'
 
 import ProtectedRoute from './components/route/ProtectedRoute.jsx';
@@ -25,10 +26,11 @@ function AppRoutes() {
         <Route path="/register" element={<RegisterForm />} />
         <Route path="/hotel/:hotelId" element={<HotelDetailsPage />} />
         <Route path="/hotels" element={<HotelsSearchPage />} />
+        <Route path='/SERVICES' element={<Booking />}/>
 
         {/* Routes cannot access without login */}
         <Route element={<ProtectedRoute />}>
-          <Route path="/bookings" />
+          <Route path="/bookings" element={<Booking />} />
           <Route path="/bookings/:booking_id/cancel" />
           <Route path="/bookings/:user_id/booking_history" />
         </Route>

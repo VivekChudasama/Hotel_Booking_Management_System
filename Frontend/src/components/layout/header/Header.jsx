@@ -55,7 +55,7 @@ const Header = () => {
     };
 
     const { pathname } = useLocation();
-    
+
     return (
         <Navbar collapseOnSelect expand="lg" variant="dark" className={`header-container d-flex align-items-center top-0 w-100 ${pathname === '/' ? 'header-home-opacity' : ''} ${pathname === '/hotels' ? 'header-search-padding' : ''}`}>
             <Container fluid>
@@ -88,9 +88,8 @@ const Header = () => {
 
                             <div className="header-actions d-flex flex-row align-items-start mt-3 mt-lg-0 ms-lg-3">
                                 {isLoggedIn ? (
-                                    <div className="user-profile-header d-flex flex-column flex-lg-row align-items-center">
-                                        <img src={user?.profile_image || "https://via.placeholder.com/40"} alt="Profile" className="profile-img mb-2 mb-lg-0" />
-                                        <span className="text-white mx-3 mb-2 mb-lg-0">{user?.name}</span>
+                                    <div className="user-profile-header d-flex flex-row align-items-center">
+                                        <img src={user?.profile_image} alt="Profile" className="profile-img mb-2 mb-lg-0 ms-lg-5" />
                                         <button onClick={handleLogout} className="btn-header btn-primary-header border-0">Logout</button>
                                     </div>
                                 ) : (

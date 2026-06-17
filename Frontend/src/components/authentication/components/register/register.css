@@ -115,6 +115,10 @@ input[type=number] {
     -moz-appearance: textfield;
 }
 
+.register-form-conatiner .toast-message{
+    z-index: 1050;
+}
+
 /* Responsiveness */
 @media (max-width: 576px) {
     .register-form-conatiner {

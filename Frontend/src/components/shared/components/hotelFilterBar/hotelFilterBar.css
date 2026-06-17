@@ -170,11 +170,11 @@
     }
 }
 
-@media (min-width: 768px) and (max-width: 1023px) {
+@media (min-width: 768px) and (max-width: 1024px) {
 
     .hotel-details-page-filter-bar,
     .search-filter-bar {
-        max-width: 1023px !important;
+        max-width: 1024px !important;
         margin: -75px 62px 10px 63px !important;
     }
 
@@ -205,6 +205,14 @@
     .search-filter-bar .search-filter-bar-content .search-filter-people-input,
     .hotel-details-page-filter-bar .search-filter-bar-content .search-filter-people-input {
         margin-left: 10px !important;
+    }
+
+    .search-filter-bar .search-filter-bar-content .search-filter-bar-button,
+    .hotel-details-page-filter-bar .search-filter-bar-content .search-filter-bar-button {
+        display: block !important;
+        margin: 0 auto !important;
+        padding: 15px calc(25%) !important;
+        width: max-content !important;
     }
 }
 

@@ -38,6 +38,8 @@ export class Messages {
         BOOKING_NOT_FOUND: 'Booking not found',
         ERR_FROM_DATE: 'From date is required',
         ERR_TO_DATE: 'To date is required',
+        ERR_CHECK_IN_DATE: 'Check-In data is required',
+        ERR_CHECK_OUT_DATE: 'Check-Out data is required',
         MIN_CHECK_IN_DATE: 'Check-out date must be after check-in date.',
         PAST_DATE_BOOKING: 'From date cannot be in the past',
         MAX_BOOKING_DATE: 'Cannot book a room more than 6 months in advance.',

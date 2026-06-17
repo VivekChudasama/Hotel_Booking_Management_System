@@ -117,7 +117,17 @@ const HomePage = () => {
                             <div className='filter-bar-title'>Check in</div>
                         </div>
                         <div className="filter-bar-input">
-                            <input type="date" className="form-control custom-input-icon border-0 bg-transparent shadow-none p-0 filter-input-text custom-date-input" {...register('checkIn', { validate: value => { if (!value) return true; const selectedDate = new Date(value); const maxDate = new Date(); maxDate.setMonth(maxDate.getMonth() + 6); if (selectedDate > maxDate) return Messages.booking.MAX_BOOKING_DATE || 'Cannot book a room more than 6 months in advance.'; return true; } })} min={new Date().toISOString().split('T')[0]} />
+                            <input type="date" className="form-control custom-input-icon border-0 bg-transparent shadow-none p-0 filter-input-text custom-date-input"
+                                {...register('checkIn', {
+                                    required: Messages.booking.ERR_CHECK_IN_DATE,
+                                    validate: value => {
+                                        if (!value) return true;
+                                        const selectedDate = new Date(value);
+                                        const maxDate = new Date(); maxDate.setMonth(maxDate.getMonth() + 6);
+                                        if (selectedDate > maxDate) return Messages.booking.MAX_BOOKING_DATE; return true;
+                                    }
+                                })}
+                                min={new Date().toISOString().split('T')[0]} />
                         </div>
                         {errors.checkIn && <div className="filter-error-message text-danger small position-absolute">{errors.checkIn.message}</div>}
                     </Col>
@@ -130,6 +140,7 @@ const HomePage = () => {
                             <input type="date" className="form-control custom-input-icon border-0 bg-transparent shadow-none p-0 filter-input-text custom-date-input"
                                 {...register('checkOut',
                                     {
+                                        required: Messages.booking.ERR_CHECK_OUT_DATE,
                                         validate: value => {
                                             if (!value) return true;
                                             if (checkInDate && new Date(checkInDate) >= new Date(value)) return Messages.booking.MIN_CHECK_IN_DATE;
@@ -138,7 +149,7 @@ const HomePage = () => {
                                                 if (diffDays > 60) return Messages.booking.MAX_BOOKING_DURATION
                                             } return true;
                                         }
-                                    })} min={checkInDate || new Date().toISOString().split('T')[0]} />
+                                    })} min={checkInDate} />
                         </div>
                         {errors.checkOut && <div className="filter-error-message text-danger small position-absolute">{errors.checkOut.message}</div>}
                     </Col>
@@ -193,8 +204,8 @@ const HomePage = () => {
                         <Row xs={1} sm={2} md={3} lg={4} xl={5} className="g-4 hotel-container">
                             {hotels.map((hotel) => {
                                 const price = getHotelPrice(hotel);
-                                const imageUrl = hotel.images && hotel.images[0] 
-                                    ? hotel.images[0] 
+                                const imageUrl = hotel.images && hotel.images[0]
+                                    ? hotel.images[0]
                                     : "";
                                 return (
                                     <Col key={`${hotel._id}`} className="mb-4">

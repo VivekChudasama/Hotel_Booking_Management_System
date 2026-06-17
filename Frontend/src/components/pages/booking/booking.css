@@ -1,0 +1,74 @@
+.booking-form-container {
+    background-color: var(--background-gray);
+    padding: 20px 117px 0 127px !important;
+}
+
+.booking-form-container .booking-title {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--filter-bar-font-icon-color);
+}
+
+.booking-form-container .left-side-container .user-details-form,
+.booking-form-container .left-side-container .payment-detail-form,
+.booking-form-container .right-side-container .hotel-detail-container,
+.booking-form-container .right-side-container .booking-detail-container,
+.booking-form-container .right-side-container .price-detail-container {
+    border-radius: 6px;
+}
+
+.booking-form-container .left-side-container .user-details-form-container,
+.booking-form-container .left-side-container .payment-details-form-container {
+    padding: 25px 30px;
+}
+
+.booking-form-container .left-side-container .user-details-form-container .user-details-form .user-detail-form-title,
+.booking-form-container .left-side-container .payment-details-form-container .payment-detail-form .payment-detail-form-title {
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.booking-form-container .left-side-container .user-details-form-container .user-details-form .input-group-custom .form-label,
+.booking-form-container .left-side-container .payment-details-form-container .payment-detail-form .input-group-custom .form-label {
+    font-size: 14px;
+    margin: 0 0 30px 0;
+}
+
+.booking-form-container .left-side-container .user-details-form-container .user-details-form .input-group-custom .email-form-label {
+    margin-top: 30px;
+}
+
+.booking-form-container .left-side-container .user-details-form-container .user-details-form .form-gap {
+    margin-left: 40px !important;
+}
+
+.booking-form-container .left-side-container .payment-details-form-container .payment-detail-form .input-group-custom .input-container .custom-select {
+    appearance: none;
+    cursor: pointer;
+}
+
+.booking-form-container .left-side-container .user-details-form-container .user-details-form .input-group-custom .form-input-container .form-input-field,
+.booking-form-container .left-side-container .payment-details-form-container .payment-detail-form .input-group-custom .form-input-container .form-input-field,
+.booking-form-container .left-side-container .payment-details-form-container .payment-detail-form .input-group-custom .input-container .custom-select {
+    font-size: 13px;
+    padding: 10px 125px 10px 15px;
+    background-color: var(--background-gray);
+    border-radius: 4px;
+    color: var(--secondary-light-lighten);
+}
+
+.booking-form-container .left-side-container .user-details-form-container .user-details-form .input-group-custom .form-input-container .form-input-field::placeholder,
+.booking-form-container .left-side-container .payment-details-form-container .payment-detail-form .input-group-custom .form-input-container .form-input-field::placeholder,
+.booking-form-container .left-side-container .payment-details-form-container .payment-detail-form .input-group-custom .input-container .custom-select::placeholder {
+    padding: 0;
+}
+
+.booking-form-container .booking-form-btn {
+    margin: 30px auto 120px auto;
+    display: block;
+    padding: 20px 140px;
+    background-color: var(--btn-bg-color);
+    font-size: 22px;
+    font-weight: 700;
+    border-radius: 5px;
+}

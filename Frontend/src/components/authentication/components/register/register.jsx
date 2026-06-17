@@ -32,7 +32,7 @@ const RegisterForm = () => {
 
     return (
         <div className="register-form-conatiner d-flex justify-content-center align-items-center">
-            <ToastContainer position="top-end" className="p-3" style={{ zIndex: 1050 }}>
+            <ToastContainer position="top-end" className="p-3 toast-message">
                 <Toast show={toast.show} onClose={() => setToast({ ...toast, show: false })} delay={3000} autohide bg={toast.type}>
                     <Toast.Body className={toast.type === 'success' || toast.type === 'danger' ? 'text-white' : ''}>
                         {toast.message}
